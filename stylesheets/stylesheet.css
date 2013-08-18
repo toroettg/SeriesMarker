@@ -5,6 +5,15 @@ by Jason Costello, @jsncostello
 
 @import url(pygment_trac.css);
 
+/**************
+Custom Settings
+**************/
+
+img[alt='Main Window'] { width: 200px; float: left; }
+img[alt='Search Dialog'] { width: 200px; float: left; }
+img[alt='Episode List'] { width: 200px; float: left; }
+
+
 /*******************************************************************************
 MeyerWeb Reset
 *******************************************************************************/
