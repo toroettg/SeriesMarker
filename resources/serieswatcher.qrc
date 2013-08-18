@@ -1,0 +1,15 @@
+<RCC>
+  <qresource>
+    <file>icons/donate_button.gif</file>
+    <file>icons/image-missing.png</file>
+    <file>icons/image-missing.svg</file>
+    <file>icons/image-loading.png</file>
+    <file>icons/image-loading.svg</file>
+    <file>icons/system-log-out.svg</file>
+    <file>icons/go-home.svg</file>
+    <file>icons/list-remove.svg</file>
+    <file>icons/list-add.svg</file>
+    <file>icons/view-refresh.svg</file>
+    <file>icons/help-browser.svg</file>
+  </qresource>
+</RCC>

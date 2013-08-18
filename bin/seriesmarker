@@ -1,0 +1,7 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import seriesmarker.seriesmarker as seriesmarker
+
+if __name__ == "__main__":
+	seriesmarker.main()
