@@ -55,4 +55,4 @@ SourceForge [Blog](https://sourceforge.net/p/seriesmarker/blog/).
 Contact
 =======
 
-You can contact me by email at [<toroettg@gmail.com>](contact%20mail).
+You can contact me by email at <toroettg@gmail.com>.

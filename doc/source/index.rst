@@ -7,8 +7,6 @@
 Welcome to SeriesMarker's documentation!
 ========================================
 
-This guideline intends to help user's of SeriesMarker
-
 Contents:
 
 .. toctree::
