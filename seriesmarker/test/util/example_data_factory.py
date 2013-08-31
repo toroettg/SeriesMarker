@@ -23,9 +23,11 @@ from pytvdbapi.actor import Actor
 from pytvdbapi.api import Show, Season, Episode
 from pytvdbapi.banner import Banner
 from seriesmarker.test.util.examples.defiance_example import DefianceExample
+from seriesmarker.test.util.examples.dr_who_example import DrWhoExample
+from seriesmarker.test.util.examples.how_i_met_your_mother_example import \
+    HowIMetYourMotherExample
 from seriesmarker.test.util.examples.wonder_years_example import \
     WonderYearsExample
-from seriesmarker.test.util.examples.how_i_met_your_mother_example import HowIMetYourMotherExample
 
 class ExampleDataFactory(object):
     """Creates static data for testing, similar to data pytvdb would return."""
@@ -61,6 +63,8 @@ class ExampleDataFactory(object):
             return DefianceExample.show_update()
         elif name == "WONDERYEARS":
             return WonderYearsExample.show()
+        elif name == "DRWHO":
+            return DrWhoExample.show()
 
         show = Show(api=None, language=None, data=attributes)
         show.seasons = seasons
