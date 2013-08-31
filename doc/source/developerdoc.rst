@@ -36,6 +36,45 @@ Adding a new Source Code File
 5.
 	If the file contains new features, ensure you have written a test case.
 	Add it to the test package. Repeat steps 2-4 for the test file.
+	
+****************************
+Generating the Documentation
+****************************
+
+To generate the documentation for SeriesMarker, perform the following steps:
+
+1.
+	Check out SeriesMarker.
+2.
+	Change to the ``doc`` sub directory.
+3.
+	on Linux:
+		execute ``make html``.
+4.
+	The resulting documentation can be found at the ``doc/build/html``
+	sub directory. It contains an ``index.html`` file, which can be
+	opened with a browser to display the generated documentation.
+	
+*******
+Testing
+*******
+
+To run all existing test cases, after checking out SeriesMarker,
+execute the following command at SeriesMarkers' root directory:
+	
+.. code-block:: bash
+		
+	$python -m unittest seriesmarker/test/test_runner.py
+	
+To only run topic specific test cases, similar runners can be found
+in the sub packages of the test directory:
+
+.. code-block:: bash
+		
+	$python -m unittest seriesmarker/test/database/database_test_runner.py
+	$python -m unittest seriesmarker/test/gui/gui_test_runner.py
+	
+
 		
 *************************
 Distributing SeriesMarker

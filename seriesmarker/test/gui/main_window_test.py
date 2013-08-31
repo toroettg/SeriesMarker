@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
+#
 # Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -21,7 +21,6 @@
 from PySide.QtCore import Qt, QPoint
 from PySide.QtGui import QTreeView, QListView
 from PySide.QtTest import QTest
-from logilab.common.compat import raw_input
 from pytvdbapi.api import Show
 from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.net.tvdb import tvdb
@@ -145,15 +144,15 @@ class MainWindowTest(GUITestCase, PersistentDBTestCase):
         viewport = list_view.viewport()
         self.move(viewport, QPoint(100, 10))
         self.move(viewport, QPoint(100, 10))  # Needs to wait a little to let list_view recognize its new tooltip.
-        self.assertEquals(list_view.toolTip(), "<FONT COLOR=black>Dummy Overview, ToolTip test</FONT>", "ToolTip not set after mouse over")
+        self.assertEqual(list_view.toolTip(), "<FONT COLOR=black>Dummy Overview, ToolTip test</FONT>", "ToolTip not set after mouse over")
 
         self.move(viewport, QPoint(100, 20))
         self.move(viewport, QPoint(100, 20))  # Needs to wait a little to let list_view recognize its new tooltip.
-        self.assertEquals(list_view.toolTip(), "<FONT COLOR=black>Music video to go with Episode 03x16 - Sandcastles In the Sand. Full video was originally posted on YouTube: http://www.youtube.com/watch?v=bgBMFwVeIGI</FONT>", "ToolTip not changed when mouse over different series")
+        self.assertEqual(list_view.toolTip(), "<FONT COLOR=black>Music video to go with Episode 03x16 - Sandcastles In the Sand. Full video was originally posted on YouTube: http://www.youtube.com/watch?v=bgBMFwVeIGI</FONT>", "ToolTip not changed when mouse over different series")
 
         self.move(viewport, QPoint(100, 300))
         self.move(viewport, QPoint(100, 300))  # Needs to wait a little to let list_view recognize its new tooltip.
-        self.assertEquals(list_view.toolTip(), "", "ToolTip not cleared when leaving episode")
+        self.assertEqual(list_view.toolTip(), "", "ToolTip not cleared when leaving episode")
 
     def test_04_update(self):
         """Tests the GUI related part of the series update routine.
