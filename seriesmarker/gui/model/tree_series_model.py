@@ -246,22 +246,24 @@ class TreeSeriesModel(QAbstractItemModel):
 
         if isinstance(item, Series):
             cls = SeriesNode
-            position = parent_node.child_count()
+            position = bisect([node.name() for node in parent_node.children],
+                              item.series_name)
         elif isinstance(item, Season):
             cls = SeasonNode
             position = bisect([node.data.season_number for node
-                in parent_node.children], item.season_number)
+                               in parent_node.children], item.season_number)
         elif isinstance(item, Episode):
             cls = EpisodeNode
             position = bisect([node.data.episode_number for node
-                in parent_node.children], item.episode_number)
+                               in parent_node.children], item.episode_number)
 
         self.beginInsertRows(parent_index, position, position)
         parent_node.insert(position, cls(item, parent_node))
         self.endInsertRows()
 
     def removeRows(self, position, rows, parent=QModelIndex()):
-        """Removes a number of nodes from a given parent, beginning at a given position.
+        """Removes a number of nodes from a given parent, beginning
+        at a given position.
         
         :param position: The index to start removing nodes from.
         :type position: integer
@@ -270,7 +272,8 @@ class TreeSeriesModel(QAbstractItemModel):
         :param parent: The parent to remove the rows from.
         :type parent: :class:`.PySide.QtCore.QModelIndex`
         
-        :returns: True if the nodes were successfully removed, otherwise False.
+        :returns: True if the nodes were successfully removed,
+            otherwise False.
         
         :emphasis:`Overrides` :py:meth:`.QAbstractItemModel.removeRows`
         

@@ -65,6 +65,8 @@ class ExampleDataFactory(object):
             return WonderYearsExample.show()
         elif name == "DRWHO":
             return DrWhoExample.show()
+        else:
+            raise Exception("Key '{}' not found".format(name))
 
         show = Show(api=None, language=None, data=attributes)
         show.seasons = seasons
