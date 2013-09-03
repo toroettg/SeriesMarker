@@ -114,11 +114,12 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             "Series not sorted correctly in view after loading from data base"
         )
 
-    def test_03_sort_by_name(self):
+    def test_03_sort_series_by_name(self):
         tree_view = self.window.findChild(QTreeView, "tree_view")
-        viewport = tree_view.viewport()
 
-        result_list = [
+        result_list_episodes = [1,3,7,7,2,2,1]
+
+        result_list_names = [
             "Buffy the Vampire Slayer",
             "Defiance",
             "Doctor Who",
@@ -127,23 +128,24 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             "Rome: Power & Glory",
             "The Wonder Years"
         ]
-
+        
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 0)) for
                                     index in range(0, 7)],
-            result_list,
-            "Series not sorted correctly in view after loading from data base"
+            result_list_names,
+            "Series column not sorted correctly in view after loading from data base"
+        )
+        
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 1)) for
+                                    index in range(0, 7)],
+            result_list_episodes,
+            "Episode column not sorted correctly in view after loading from data base"
         )
 
         self.assertEqual(tree_view.header().isSortIndicatorShown(), True, "No column seems to be sorted.")
+        self.assertEqual(tree_view.header().sortIndicatorSection(), 0, "Not sorted by series column.")
         self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.AscendingOrder)
-
-        # Expand series
-        series_node_index = tree_view.model().index(2, 0)
-        item_rect = tree_view.visualRect(series_node_index)
-        target = item_rect.center()
-        self.click(viewport, target)
-        self.click(viewport, target, double_click=True)
 
         target = self.header_center(tree_view.header(), 0)
         self.click(tree_view.header().viewport(), target)
@@ -152,9 +154,122 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 0)) for
                                     index in range(0, 7)],
-            list(reversed(result_list)),
+            list(reversed(result_list_names)),
+            "Series column not sorted correctly after descending sort"
+        )
+        
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 1)) for
+                                    index in range(0, 7)],
+            list(reversed(result_list_episodes)),
+            "Episode column not sorted correctly after descending sort"
+        )
+        
+    def test_04_sort_season_by_name(self):
+        tree_view = self.window.findChild(QTreeView, "tree_view")
+        viewport = tree_view.viewport()
+        
+        # Expand series
+        series_node_index = tree_view.model().index(2, 0)
+        item_rect = tree_view.visualRect(series_node_index)
+        target = item_rect.center()
+        self.click(viewport, target)
+        self.click(viewport, target, double_click=True)
+        
+        self.assertEqual(tree_view.header().isSortIndicatorShown(), True, "No column seems to be sorted.")
+        self.assertEqual(tree_view.header().sortIndicatorSection(), 0, "Not sorted by series column.")
+        self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.AscendingOrder)
+        
+        result_list = [
+            "Season 0",
+            "Season 1",
+            "Season 2",
+            "Season 10",
+            "Season 11",
+            "Season 20",
+            "Season 21"
+        ]
+        
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 0,
+                series_node_index)) for index in range(0, 7)],
+            result_list,
+            "Seasons not sorted correctly in view after loading from data base"
+        )
+        
+        target = self.header_center(tree_view.header(), 0)
+        self.click(tree_view.header().viewport(), target)
+        series_node_index = tree_view.model().index(4, 0) #change of order changed index too
+
+        self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.DescendingOrder)
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 0,
+                series_node_index)) for index in range(0, 7)],
+            result_list, #season order should not change, whatever the order is
             "Series not sorted correctly after descending sort"
         )
+        
+    def test_05_sort_series_by_episodes(self):
+        tree_view = self.window.findChild(QTreeView, "tree_view")
+        target = self.header_center(tree_view.header(), 1)
+        self.click(tree_view.header().viewport(), target)
+        
+        result_list_episodes = [1,1,2,2,3,7,7]
+        
+        result_list_names = [
+            "Buffy the Vampire Slayer",
+            "The Wonder Years",
+            "Mad Love",
+            "Rome: Power & Glory",
+            "Defiance",
+            "Doctor Who",
+            "How I Met Your Mother"
+        ]
+
+        self.assertEqual(tree_view.header().isSortIndicatorShown(), True, "No column seems to be sorted.")
+        self.assertEqual(tree_view.header().sortIndicatorSection(), 1, "Not sorted by episodes column.")
+        self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.AscendingOrder)
+
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 1)) for
+                                    index in range(0, 7)],
+            result_list_episodes,
+            "Episode column not sorted correctly in view after sorting by episodes"
+        )
+        
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 0)) for
+                                    index in range(0, 7)],
+            result_list_names,
+            "Series column not sorted correctly in view after sorting by episodes"
+        )
+
+        self.click(tree_view.header().viewport(), target)
+        
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 1)) for
+                                    index in range(0, 7)],
+            list(reversed(result_list_episodes)),
+            "Episode column not sorted correctly in view after descending sort by episodes"
+        )
+        
+        self.assertEqual(
+            [tree_view.model().data(tree_view.model().index(index, 0)) for
+                                    index in range(0, 7)],
+            [
+                "Doctor Who",
+                "How I Met Your Mother",
+                "Defiance",
+                "Mad Love",
+                "Rome: Power & Glory",
+                "Buffy the Vampire Slayer",
+                "The Wonder Years",
+            ],
+            "Series column not sorted correctly in view after sorting by episodes"
+        )
+        
+        self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.DescendingOrder)
+        
 
 
     def tearDown(self):
