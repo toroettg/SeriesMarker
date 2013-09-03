@@ -45,16 +45,12 @@ class MainWindowTest(GUITestCase, PersistentDBTestCase):
         PersistentDBTestCase.setUpClass()
 
         from seriesmarker.persistence.database import db_init
-
         db_init()
 
     def setUp(self):
         from seriesmarker.gui.main_window import MainWindow
-
         self.window = MainWindow()
-
         self.window.show()
-
         QTest.qWaitForWindowShown(self.window)
 
 

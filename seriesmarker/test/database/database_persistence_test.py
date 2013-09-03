@@ -20,29 +20,24 @@
 
 from seriesmarker.test.database.base.persitent_db_test_case import \
     PersistentDBTestCase
+from seriesmarker.util import config
 import os
+import tempfile
 import unittest
 
 class DatabasePersistenceTest(PersistentDBTestCase):
 
     def test_directory_creation(self):
         from seriesmarker.persistence.database import db_init
-
-        self.deleteDatabase()
-
+        
+        self.assertFalse(os.path.exists(os.path.join(tempfile.gettempdir(), config.application_name)), "DB directory should not exist")
         db_init()
-
-        self.assertTrue(os.path.exists(self.db_path), "DB wasn't created after test")
-
-
-        os.remove(self.db_path)
-
-
-        db_init()
-
-        self.assertTrue(os.path.exists(self.db_path), "DB wasn't created after test")
-
+        self.assertTrue(os.path.exists(os.path.join(tempfile.gettempdir(), config.application_name)), "DB directory was not created after data base init")
+        db_init() #Check double invocation on same directory
+        
         self.deleteDatabase()
+        self.assertFalse(os.path.exists(os.path.join(tempfile.gettempdir(), config.application_name)), "DB directory should not exist")
+        self.deleteDatabase() #Check double invocation on same directory
 
 def get_suit():
     suite = unittest.TestSuite()

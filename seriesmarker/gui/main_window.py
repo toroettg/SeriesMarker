@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
+#
 # Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -30,12 +30,11 @@ from seriesmarker.gui.model.tree_series_model import TreeSeriesModel
 from seriesmarker.gui.resources.ui_main_window import Ui_MainWindow
 from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.net.tvdb import tvdb
-from seriesmarker.persistence.database import db_session, db_add_series, \
-    db_remove_series, db_commit, db_get_series
+from seriesmarker.persistence.database import db_get_series, db_add_series, \
+    db_remove_series, db_commit
 from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
 from seriesmarker.persistence.model import series
-from seriesmarker.persistence.model.series import Series
 import logging
 
 logger = logging.getLogger(__name__)
@@ -51,6 +50,11 @@ class MainWindow(QMainWindow):
         
         :param parent: The parent widget of the window.
         :class parent: :class:`PySide.QtGui.QWidget`
+        
+        .. todo::
+            Instead of adding each series sequentially, the model could be
+            expanded with a method to add multiple series, which
+            could speed up the application's start.
         
         """
         super(MainWindow, self).__init__(parent)
@@ -74,10 +78,8 @@ class MainWindow(QMainWindow):
         self.ui.list_view.setModel(self.model)
         self.ui.list_view.setMouseTracking(True)
 
-        for series in db_session.query(Series):
+        for series in db_get_series():
             self.model.add_item(series)
-
-        self.tree_proxy_model.sort(0, Qt.AscendingOrder)
 
     @Slot()
     def on_action_add_triggered(self):

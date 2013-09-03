@@ -40,7 +40,7 @@ class PersistentDBTestCase(unittest.TestCase):
         data_dir_path = os.path.join(tempfile.gettempdir(), config.application_name)
         cache_dir_path = os.path.join(tempfile.gettempdir(), config.application_name, "cache")
         config.dirs = AppDirsMock(data_dir_path, cache_dir_path)
-
+        
     @classmethod
     def deleteDatabase(cls):
         """Removes the temporary directory, created by :py:meth:`.setUpClass`."""
@@ -54,6 +54,10 @@ class PersistentDBTestCase(unittest.TestCase):
 
         if os.path.exists(config.dirs.user_data_dir):
             raise IOError("DB was not deleted")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.deleteDatabase()
 
 class AppDirsMock(object):
     """Emulates the appdirs package with custom directories."""
@@ -69,5 +73,3 @@ class AppDirsMock(object):
         """
         self.user_data_dir = user_data_dir
         self.user_cache_dir = user_cache_dir
-
-

@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
+#
 # Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -58,6 +58,24 @@ class GUITestCase(unittest.TestCase):
             QTest.mouseDClick(widget, Qt.MouseButton.LeftButton, pos=target, delay=self.DELAY)
         else:
             QTest.mouseClick(widget, Qt.MouseButton.LeftButton, pos=target, delay=self.DELAY)
+
+    def header_center(self, header, section):
+        """Calculates the center of a view's header section.
+        
+        :param header: The header to calculate a position for.
+        :type header: :class:`.PySide.QtGui.QHeaderView`
+        :param section: The section (column) to calculate a position for.
+        :type section: integer
+        
+        :returns: The :class:`.PySide.QtCore.QPoint` referring
+            to the section's center.
+        
+        """
+        logical_index = header.logicalIndex(section)
+        section_pos = header.sectionPosition(logical_index)
+        section_width = header.sectionSize(logical_index)
+        return QPoint(section_pos + (section_width / 2),
+                      header.size().height() / 2)
 
     def move(self, widget, target=QPoint()):
         QTest.mouseMove(widget, pos=target, delay=self.DELAY)

@@ -23,7 +23,6 @@ from PySide.QtGui import QDialog, QHeaderView
 from seriesmarker.gui.model.search.search_model import SearchModel
 from seriesmarker.gui.model.search.search_node import SearchNode
 from seriesmarker.gui.resources.ui_search_dialog import Ui_Dialog
-from seriesmarker.net.banner_loader import banner_loader
 from seriesmarker.net.tvdb import tvdb
 from PySide.QtCore import QCoreApplication
 

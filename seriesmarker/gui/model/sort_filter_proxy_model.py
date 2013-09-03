@@ -20,7 +20,8 @@
 
 from PySide.QtCore import Qt
 from PySide.QtGui import QSortFilterProxyModel
-from seriesmarker.gui.model.tree_series_model import EpisodeNode
+from seriesmarker.gui.model.episode_node import EpisodeNode
+from seriesmarker.gui.model.season_node import SeasonNode
 
 class SortFilterProxyModel(QSortFilterProxyModel):
     """Class to tweak the main view.
@@ -53,6 +54,8 @@ class SortFilterProxyModel(QSortFilterProxyModel):
             :class:`.Qt.TextAlignmentRole`.
         :returns: The unaltered return value of the method call
             on the source model for other roles.
+            
+        :emphasis:`Overrides` :py:meth:`.QAbstractItemModel.data`
         
         """
         if role == Qt.DecorationRole:
@@ -74,6 +77,8 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         
         :returns: True if a described row should be displayed, otherwise False.
         
+        :emphasis:`Overrides` :py:meth:`.QSortFilterProxyModel.filterAcceptsRow`
+        
         """
         index = self.sourceModel().index(source_row, 0, source_parent)
         item = self.sourceModel().node_at(index)
@@ -82,6 +87,39 @@ class SortFilterProxyModel(QSortFilterProxyModel):
             return False
         else:
             return True
+        
+    def lessThan(self, left, right):
+        """Defines the sort order of elements, displayed in the proxy's view.
+        
+        This method sorts :class:`.SeasonNode` elements by their season
+        number, instead of their :class:`.Qt.DisplayRole` (which would lead
+        to the alphanumeric sort order of 'Season 10' < 'Season 2').
+        
+        :param left: The index of the left item to be sorted.
+        :type left: :class:`.PySide.QtCore.QModelIndex`
+        :param right: The index of the right item to be sorted.
+        :type right: :class:`.PySide.QtCore.QModelIndex`
+        
+        :returns: True if the value of the item referred to by the given
+            index left is less than the value of the item referred to by
+            the given index right , otherwise returns false.
+        
+        :emphasis:`Overrides` :py:meth:`.QSortFilterProxyModel.lessThan`
+        
+        """
+        left_node = self.sourceModel().data(left, Qt.UserRole)
+        right_node = self.sourceModel().data(right, Qt.UserRole)
+          
+        if isinstance(left_node, SeasonNode):
+            left_data = left_node.data.season_number
+            right_data = right_node.data.season_number
+               
+            if self.sortOrder() == Qt.AscendingOrder:
+                return left_data < right_data
+            else:
+                return left_data > right_data
+                
+        return super().lessThan(left, right)
 
     def pop_related_series(self, index):
         """Relays the method call to the source model.

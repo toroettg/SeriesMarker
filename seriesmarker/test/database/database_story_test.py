@@ -1,25 +1,25 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
+#
 # Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 
 from seriesmarker.persistence.database import db_add_series, db_remove_series, \
-    db_commit
+    db_commit, db_get_series
 from seriesmarker.persistence.exception import EntityExistsException, \
     EntityNotFoundException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
@@ -37,8 +37,10 @@ from seriesmarker.persistence.model.season import Season
 from seriesmarker.persistence.model.series import Series
 from seriesmarker.persistence.model.series_extra import SeriesExtra
 from seriesmarker.persistence.model.writer import Writer
-from seriesmarker.test.database.base.memory_db_test_case import MemoryDBTestCase
+from seriesmarker.test.database.base.memory_db_test_case import \
+    MemoryDBTestCase
 from seriesmarker.test.util.example_data_factory import ExampleDataFactory
+import random
 import unittest
 
 class DatabaseStoryTest(MemoryDBTestCase):
@@ -484,6 +486,31 @@ class DatabaseStoryTest(MemoryDBTestCase):
         self.assertEqual(role.extra.image_url, pytvdb_update_role.image_url, "Simple banner attribute (RoleURL) did not change")
         # ##
 
+    def test_sort_on_load(self):
+        """Test ensures an alphanumeric order of series when loading
+        from data base."""
+
+        series = ["HIMYM", "DRWHO", "BUFFY", "MADLOVE", "ROMEPG",
+                  "WONDERYEARS", "DEFIANCE"]
+        random.shuffle(series)
+
+        for series_name in series:
+            db_add_series(SeriesFactory().new_series(
+                ExampleDataFactory.new_pytvdb_show(series_name)))
+
+        self.assertEqual(
+            [series.series_name for series in db_get_series()],
+            [
+                "Buffy the Vampire Slayer",
+                "Defiance",
+                "Doctor Who",
+                "How I Met Your Mother",
+                "Mad Love",
+                "Rome: Power & Glory",
+                "The Wonder Years"
+            ],
+            "Series not sorted correctly after loading from data base"
+        )
 
 def get_suit():
     suite = unittest.TestSuite()
