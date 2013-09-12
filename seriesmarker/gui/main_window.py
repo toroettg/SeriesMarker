@@ -18,9 +18,11 @@
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 
+import logging
+
 from PySide.QtCore import Slot, QModelIndex, Qt, QCoreApplication
-from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, \
-    QHeaderView, QApplication
+from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, QHeaderView, \
+    QApplication
 from seriesmarker.gui.about_dialog import AboutDialog
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.season_node import SeasonNode
@@ -35,7 +37,7 @@ from seriesmarker.persistence.database import db_get_series, db_add_series, \
 from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
 from seriesmarker.persistence.model import series
-import logging
+
 
 logger = logging.getLogger(__name__)
 

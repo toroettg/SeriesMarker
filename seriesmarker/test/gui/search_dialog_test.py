@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
+#
 # Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -41,14 +41,14 @@ class SearchDialogTest(GUITestCase):
         self.click(self.dialog.ui.search_button)
 
         self.assertEqual(self.dialog.model.rowCount(), 5, "Search did not return expected results")
-        self.assertEqual(self.dialog.model.data(self.dialog.model.index(1, 0)), "How I Met Your Mother", "First result not as expected")
+        self.assertEqual(self.dialog.model.data(self.dialog.model.index(0, 0)), "How I Met Your Mother", "First result not as expected")
 
     def test_search_by_keyhit(self):
         self.type(self.dialog.ui.search_text_field, "how i")
         self.keyhit(self.dialog.ui.search_text_field, Qt.Key_Enter);
 
         self.assertEqual(self.dialog.model.rowCount(), 5, "Search did not return expected results")
-        self.assertEqual(self.dialog.model.data(self.dialog.model.index(1, 0)), "How I Met Your Mother", "First result not as expected")
+        self.assertEqual(self.dialog.model.data(self.dialog.model.index(0, 0)), "How I Met Your Mother", "First result not as expected")
 
     def test_clear_on_new_search(self):
         self.type(self.dialog.ui.search_text_field, "how i")

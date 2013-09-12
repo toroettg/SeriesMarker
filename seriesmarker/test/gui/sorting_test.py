@@ -34,11 +34,11 @@ import unittest
 class SortingTest(GUITestCase, PersistentDBTestCase):
     """Performs tests of the application's main window's features
     related to sorting.
-    
+
     .. note::
         Cases in this test depend on a specific execution order.
         Therefore, case names are numbered.
-    
+
     """
     @classmethod
     def setUpClass(cls):
@@ -117,7 +117,9 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
     def test_03_sort_series_by_name(self):
         tree_view = self.window.findChild(QTreeView, "tree_view")
 
-        result_list_episodes = [1,3,7,7,2,2,1]
+        result_list_episodes = ["  0 / 1  ", "  0 / 3  ", "  0 / 7  ",
+                                "  0 / 7  ", "  0 / 2  ", "  0 / 2  ",
+                                "  0 / 1  "]
 
         result_list_names = [
             "Buffy the Vampire Slayer",
@@ -128,14 +130,14 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             "Rome: Power & Glory",
             "The Wonder Years"
         ]
-        
+
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 0)) for
                                     index in range(0, 7)],
             result_list_names,
             "Series column not sorted correctly in view after loading from data base"
         )
-        
+
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 1)) for
                                     index in range(0, 7)],
@@ -157,29 +159,29 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             list(reversed(result_list_names)),
             "Series column not sorted correctly after descending sort"
         )
-        
+
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 1)) for
                                     index in range(0, 7)],
             list(reversed(result_list_episodes)),
             "Episode column not sorted correctly after descending sort"
         )
-        
+
     def test_04_sort_season_by_name(self):
         tree_view = self.window.findChild(QTreeView, "tree_view")
         viewport = tree_view.viewport()
-        
+
         # Expand series
         series_node_index = tree_view.model().index(2, 0)
         item_rect = tree_view.visualRect(series_node_index)
         target = item_rect.center()
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
-        
+
         self.assertEqual(tree_view.header().isSortIndicatorShown(), True, "No column seems to be sorted.")
         self.assertEqual(tree_view.header().sortIndicatorSection(), 0, "Not sorted by series column.")
         self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.AscendingOrder)
-        
+
         result_list = [
             "Season 0",
             "Season 1",
@@ -189,33 +191,35 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             "Season 20",
             "Season 21"
         ]
-        
+
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 0,
                 series_node_index)) for index in range(0, 7)],
             result_list,
             "Seasons not sorted correctly in view after loading from data base"
         )
-        
+
         target = self.header_center(tree_view.header(), 0)
         self.click(tree_view.header().viewport(), target)
-        series_node_index = tree_view.model().index(4, 0) #change of order changed index too
+        series_node_index = tree_view.model().index(4, 0)  # change of order changed index too
 
         self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.DescendingOrder)
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 0,
                 series_node_index)) for index in range(0, 7)],
-            result_list, #season order should not change, whatever the order is
+            result_list,  # season order should not change, whatever the order is
             "Series not sorted correctly after descending sort"
         )
-        
+
     def test_05_sort_series_by_episodes(self):
         tree_view = self.window.findChild(QTreeView, "tree_view")
         target = self.header_center(tree_view.header(), 1)
         self.click(tree_view.header().viewport(), target)
-        
-        result_list_episodes = [1,1,2,2,3,7,7]
-        
+
+        result_list_episodes = ["  0 / 1  ", "  0 / 1  ", "  0 / 2  ",
+                                "  0 / 2  ", "  0 / 3  ", "  0 / 7  ",
+                                "  0 / 7  "]
+
         result_list_names = [
             "Buffy the Vampire Slayer",
             "The Wonder Years",
@@ -236,7 +240,7 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             result_list_episodes,
             "Episode column not sorted correctly in view after sorting by episodes"
         )
-        
+
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 0)) for
                                     index in range(0, 7)],
@@ -245,14 +249,14 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         )
 
         self.click(tree_view.header().viewport(), target)
-        
+
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 1)) for
                                     index in range(0, 7)],
             list(reversed(result_list_episodes)),
             "Episode column not sorted correctly in view after descending sort by episodes"
         )
-        
+
         self.assertEqual(
             [tree_view.model().data(tree_view.model().index(index, 0)) for
                                     index in range(0, 7)],
@@ -267,10 +271,8 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             ],
             "Series column not sorted correctly in view after sorting by episodes"
         )
-        
-        self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.DescendingOrder)
-        
 
+        self.assertEqual(tree_view.header().sortIndicatorOrder(), Qt.DescendingOrder)
 
     def tearDown(self):
         QTest.mouseMove(self.window, delay=2000)  # Emulates waiting, can be removed

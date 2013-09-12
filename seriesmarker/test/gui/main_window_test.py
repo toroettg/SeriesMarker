@@ -92,6 +92,8 @@ class MainWindowTest(GUITestCase, PersistentDBTestCase):
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
 
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), "  0 / 7  ", "Initial series episode count not zero.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_node_index)), 2, "Initial season episode count not correct.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2)), "0.0%", "Initial series progress not zero.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_node_index)), "0.0%", "Initial season progress not zero.")
 
@@ -104,6 +106,8 @@ class MainWindowTest(GUITestCase, PersistentDBTestCase):
         episode = tree_view.model().data(tree_view.currentIndex(), Qt.UserRole).data.episodes[0]
         self.assertTrue(episode.extra.watched, "Episode was not toggled")
 
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), "  1 / 7  ", "Series episode count not correctly updated after toggle.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_node_index)), 2, "Season episode count should not be altered.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2)), "14.3%", "Series progress not correctly updated after toggle.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_node_index)), "50.0%", "Season progress not correctly updated after toggle.")
 
@@ -172,31 +176,31 @@ class MainWindowTest(GUITestCase, PersistentDBTestCase):
         viewport = tree_view.viewport()
 
         # Expand series
-        series_index = tree_view.model().index(0, 0)
-        item_rect = tree_view.visualRect(series_index)
+        series_node_index = tree_view.model().index(0, 0)
+        item_rect = tree_view.visualRect(series_node_index)
         target = item_rect.center()
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
 
         # Expand season
-        season2_index = tree_view.model().index(1, 0, series_index)
+        season2_index = tree_view.model().index(1, 0, series_node_index)
         season_rect = tree_view.visualRect(season2_index)
         target = season_rect.center()
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
 
-        series_node = tree_view.model().data(series_index, Qt.UserRole)
+        series_node = tree_view.model().data(series_node_index, Qt.UserRole)
         season2_node = tree_view.model().data(season2_index, Qt.UserRole)
 
         # Checking displayed series/episode information before update
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), 7, "Initial series episode count not met.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), "  1 / 7  ", "Initial series episode count not met.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2)), "14.3%", "Initial series progress not met.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_index)), 2, "Initial season 1 episode count not met.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_index)), "50.0%", "Initial season 0 progress not met.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 1, series_index)), 4, "Initial season 1 episode count not met.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 2, series_index)), "0.0%", "Initial season 1 progress not zero.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 1, series_index)), 1, "Initial season 2 episode count not met.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 2, series_index)), "0.0%", "Initial season 2 progress not met.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_node_index)), 2, "Initial season 0 episode count not met.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_node_index)), "50.0%", "Initial season 0 progress not met.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 1, series_node_index)), 4, "Initial season 1 episode count not met.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 2, series_node_index)), "0.0%", "Initial season 1 progress not zero.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 1, series_node_index)), 1, "Initial season 2 episode count not met.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 2, series_node_index)), "0.0%", "Initial season 2 progress not met.")
 
         update_button = self.window.ui.toolBar.widgetForAction(self.window.ui.action_update)
 
@@ -210,18 +214,20 @@ class MainWindowTest(GUITestCase, PersistentDBTestCase):
         self.assertEqual(season2_node._children[0].data.id, 300336, "Wrong episode node left after update")
 
         # Checking displayed series/episode information after first update
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), 1, "Series episode count display not corrected after first update.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), "  0 / 1  ", "Series episode count display not corrected after first update.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2)), "0.0%", "Series progress not corrected after first update.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_index)), 1, "Season 2 episode count display not corrected after removing episodes.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_index)), "0.0%", "Season 2 progress not corrected after removing episodes.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_node_index)), 1, "Season 2 episode count display not corrected after removing episodes.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_node_index)), "0.0%", "Season 2 progress not corrected after removing episodes.")
 
         # Toggle episode, check display state to ensure it has updated
         list_view = self.window.findChild(QListView, "list_view")
         viewport = list_view.viewport()
         target = QPoint(10, 10)  # TODO find more generic way to click list_view item
         self.click(viewport, target)
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), "  1 / 1  ", "Series episode count not correctly updated after toggle.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_node_index)), 1, "Season 2 episode count should not be changed after toggle.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2)), "100.0%", "Series progress not correctly updated after toggle.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_index)), "100.0%", "Season 2 progress not correctly updated after toggle.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_node_index)), "100.0%", "Season 2 progress not correctly updated after toggle.")
 
         tvdb.get = MagicMock(return_value=ExampleDataFactory.new_pytvdb_show("HIMYM"))
 
@@ -233,14 +239,14 @@ class MainWindowTest(GUITestCase, PersistentDBTestCase):
         self.assertEqual([episode.data.id for episode in season2_node._children], [177831, 300336, 300337, 300338], "Episode order not as expected after update")
 
         # Checking displayed series/episode information after second update
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), 7, "Series episode count display not corrected after second update.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1)), "  1 / 7  ", "Series episode count display not corrected after second update.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2)), "14.3%", "Series progress not corrected after second update.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_index)), 2, "Season 0 episode count display not met after adding season.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_index)), "0.0%", "Season 0 progress not met after adding season.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 1, series_index)), 4, "Season 1 episode count display not met after adding episodes.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 2, series_index)), "25.0%", "Season 1 progress not corrected after adding episodes.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 1, series_index)), 1, "Season 2 episode count display not met after adding season.")
-        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 2, series_index)), "0.0%", "Season 2 progress not met after adding season.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 1, series_node_index)), 2, "Season 0 episode count display not met after adding season.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2, series_node_index)), "0.0%", "Season 0 progress not met after adding season.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 1, series_node_index)), 4, "Season 1 episode count display not met after adding episodes.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(1, 2, series_node_index)), "25.0%", "Season 1 progress not corrected after adding episodes.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 1, series_node_index)), 1, "Season 2 episode count display not met after adding season.")
+        self.assertEqual(tree_view.model().data(tree_view.model().index(2, 2, series_node_index)), "0.0%", "Season 2 progress not met after adding season.")
 
     def test_05_remove(self):
         self.assertEqual(self.window.model.rowCount(), 1, "Selected series was not added to model")

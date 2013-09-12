@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '../resources/main_window.ui'
 #
-# Created: Fri Aug 16 23:38:34 2013
+# Created: Thu Sep 12 03:57:07 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.2.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,7 +31,10 @@ class Ui_MainWindow(object):
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
         self.tree_view = QtGui.QTreeView(self.splitter)
+        self.tree_view.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
+        self.tree_view.setAlternatingRowColors(False)
         self.tree_view.setSortingEnabled(True)
+        self.tree_view.setAllColumnsShowFocus(True)
         self.tree_view.setObjectName("tree_view")
         self.list_view = QtGui.QListView(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -49,7 +52,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.splitter, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 761, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 761, 19))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
