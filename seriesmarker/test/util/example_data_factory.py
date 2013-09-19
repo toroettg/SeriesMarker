@@ -19,9 +19,12 @@
 #==============================================================================
 
 from datetime import date
+
 from pytvdbapi.actor import Actor
 from pytvdbapi.api import Show, Season, Episode
 from pytvdbapi.banner import Banner
+
+from seriesmarker.test.util.examples.buffy_example import BuffyExample
 from seriesmarker.test.util.examples.defiance_example import DefianceExample
 from seriesmarker.test.util.examples.dr_who_example import DrWhoExample
 from seriesmarker.test.util.examples.how_i_met_your_mother_example import \
@@ -29,15 +32,13 @@ from seriesmarker.test.util.examples.how_i_met_your_mother_example import \
 from seriesmarker.test.util.examples.wonder_years_example import \
     WonderYearsExample
 
+
 class ExampleDataFactory(object):
     """Creates static data for testing, similar to data pytvdb would return."""
     @staticmethod
     def new_pytvdb_show(name):
         if name == "BUFFY":
-            attributes = ExampleDataFactory.buffy_attributes()
-            seasons = {}
-            banners = []
-            roles = []
+            return BuffyExample.show()
         elif name == "HIMYM":
             return HowIMetYourMotherExample.show()
         elif name == "HIMYM-UPDATE":
@@ -78,38 +79,7 @@ class ExampleDataFactory(object):
 
         return show
 
-    @staticmethod
-    def buffy_attributes():
-        attributes = {
-                    'Actors': ['Sarah Michelle Gellar', 'Alyson Hannigan', 'Emma Caulfield', 'Michelle Trachtenberg', 'Anthony Head', 'James Marsters'],
-                    'Airs_DayOfWeek': '',
-                    'Airs_Time': '',
-                    'ContentRating': 'TV-PG',
-                    'FirstAired': date(1997, 3, 10),
-                    'Genre': ['Action and Adventure', 'Comedy', 'Drama', 'Fantasy'],
-                    'IMDB_ID': 'tt0118276',
-                    'Language': 'en',
-                    'Network': 'The WB',
-                    'NetworkID': '',
-                    'Overview': "In every generation there is a Chosen One. She alone will stand against the vampires, the demons and the forces of darkness. She is the Slayer. Sarah Michelle Gellar stars as Buffy Summers, The Chosen One, the one girl in all the world with the strength and skill to fight the vampires. With the help of her close friends, Willow (Alyson Hannigan ), Xander (Nicholas Brendon), and her Watcher Giles (Anthony Stewart Head) she balances slaying, family, friendships, and relationships.",
-                    'Rating': 9.0,
-                    'RatingCount': 104,
-                    'Runtime': 60,
-                    'SeriesID': 10,
-                    'SeriesName': 'Buffy the Vampire Slayer',
-                    'Status': 'Ended',
-                    'added': '',
-                    'addedBy': '',
-                    'banner': 'graphical/70327-g23.jpg',
-                    'fanart': 'fanart/original/70327-3.jpg',
-                    'id': 70327,
-                    'lastupdated': 1338772285,
-                    'poster': 'posters/70327-10.jpg',
-                   # 'seasons': TODO
-                    'zap2it_id': 'EP00213110'
-                 }
 
-        return attributes
 
 
     @staticmethod
