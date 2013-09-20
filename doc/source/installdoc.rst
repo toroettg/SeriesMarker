@@ -69,8 +69,8 @@ after its installation has been finished.
 To prevent this error, or to resolve it, the runtime components can be
 obtained at the following locations:
 
-* `Microsoft Visual C++ Redistirbutable Package (x86)`_
-* `Microsoft Visual C++ Redistirbutable Package (x64)`_
+* `Microsoft Visual C++ Redistributable Package (x86)`_
+* `Microsoft Visual C++ Redistributable Package (x64)`_
 
 
 Obtaining the Installer
@@ -275,6 +275,21 @@ for convenience. Also visit `setuptools`_ and `pip`_ and install
 them as well. It is also recommended to add your Python`s `Scripts` directory
 to your `Path` afterwards.
 
+PySide
+^^^^^^
+
+There are two possible options to install `PySide`_ on your system: installing
+it from a binary, or completely building it from source.
+
+Binary Install
+""""""""""""""
+
+Visit `PySide Binaries for Microsoft Windows <PySide_Binaries_Windows>`_,
+download, and execute the matching installer for your system. 
+
+Building from Source
+""""""""""""""""""""
+
 For `PySide`_ to be built successfully, additional dependencies must be
 installed first: its make-dependencies. Those are not `Python`_ packages and,
 thus, can not be installed by using `pip`_. PySide´s
@@ -294,9 +309,9 @@ following software installed:
 	
 	While PySide´s `Building on Windows <PySide_Building_on_Windows>`_ lists
 	the	`Microsoft Windows SDK`_ as an prerequisite only, skipping the
-	installation of	`Microsoft Visual Studio`_ seems to cause errors while
-	building `PySide`_ due to missing libraries. It is therefore recommended
-	to install `Microsoft Visual Studio` instead (it includes the SDK). 
+	installation of	`Microsoft Visual Studio`_ causes an error while
+	building `PySide`_ due to the missing tool `nmake`. It is therefore
+	necessary to install `Microsoft Visual Studio` instead (it includes the SDK). 
 	Also make sure to install the version on which your `Qt`_ libraries
 	depend on, which currently is edition 2010,
 	called `Visual 2010 C++ Express` on the site.
@@ -463,8 +478,8 @@ You may now continue with the :ref:`User Guide` or explore the software on your 
 .. _MacPorts_Guide: https://www.macports.org/guide/#using
 .. _Mac App Store: https://www.apple.com/de/osx/apps/app-store.html
 .. _Microsoft .NET Framework: https://www.microsoft.com/en-us/download/details.aspx?id=17718
-.. _Microsoft Visual C++ Redistirbutable Package (x86): https://www.microsoft.com/en-us/download/details.aspx?id=8328
-.. _Microsoft Visual C++ Redistirbutable Package (x64): https://www.microsoft.com/en-us/download/details.aspx?id=13523
+.. _Microsoft Visual C++ Redistributable Package (x86): https://www.microsoft.com/en-us/download/details.aspx?id=8328
+.. _Microsoft Visual C++ Redistributable Package (x64): https://www.microsoft.com/en-us/download/details.aspx?id=13523
 .. _Microsoft Visual Studio: https://www.microsoft.com/visualstudio/
 .. _Microsoft Windows SDK: https://www.microsoft.com/en-us/download/details.aspx?id=8279
 .. _NMAKE: https://msdn.microsoft.com/en-us/library/dd9y37ha.aspx

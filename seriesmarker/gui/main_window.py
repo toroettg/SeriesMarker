@@ -21,8 +21,8 @@
 import logging
 
 from PySide.QtCore import Slot, QModelIndex, Qt, QCoreApplication
-from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, QHeaderView, \
-    QApplication
+from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, \
+    QHeaderView, QApplication
 from seriesmarker.gui.about_dialog import AboutDialog
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.season_node import SeasonNode
@@ -36,7 +36,6 @@ from seriesmarker.persistence.database import db_get_series, db_add_series, \
     db_remove_series, db_commit
 from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
-from seriesmarker.persistence.model import series
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +47,7 @@ class MainWindow(QMainWindow):
         """Creates a new window instance.
         
         Initializes the different views and loads series information
-        from the database into the view's models for displaying them. 
+        from the database into the view's models for displaying them.
         
         :param parent: The parent widget of the window.
         :class parent: :class:`PySide.QtGui.QWidget`
@@ -64,7 +63,9 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.action_about_qt.setIcon(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"))
+        self.ui.action_about_qt.setIcon(
+            QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png")
+        )
         self.ui.action_about.setMenu(self.ui.menuAbout)
         self.ui.menubar.setVisible(False)
 
@@ -97,7 +98,8 @@ class MainWindow(QMainWindow):
                 db_add_series(series)
                 self.model.add_item(series)
             except EntityExistsException:
-                logger.warning("Series '{name}' already exists, ignoring add request".format(name=series.series_name))
+                logger.warning("Series '{name}' already exists, "
+                    "ignoring add request".format(name=series.series_name))
 
     @Slot()
     def on_action_remove_triggered(self):
@@ -114,7 +116,7 @@ class MainWindow(QMainWindow):
         """Sequentially updates all series in the database.
         
         .. todo::
-            Update should also recognize/announce updated episodes. 
+            Update should also recognize/announce updated episodes.
         
         """
         series_factory = SeriesFactory()
