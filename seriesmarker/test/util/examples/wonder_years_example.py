@@ -91,7 +91,7 @@ class WonderYearsExample(BaseExample):
             'filename': 'episodes/72888/102650.jpg',
             'id': 102650,
             'lastupdated': 1347794625,
-           #'season' : ignored
+           # 'season' : ignored
             'seasonid': 4959,
             'seriesid': 72888,
         }
@@ -102,7 +102,7 @@ class WonderYearsExample(BaseExample):
         return {1: season1}
 
     @classmethod
-    def roles(cls):
+    def roles(cls, show):
         mirror = "http://thetvdb.com"
 
         attributes = {
@@ -114,6 +114,6 @@ class WonderYearsExample(BaseExample):
             'image_url': 'http://thetvdb.com/banners/',
         }
 
-        actor1 = Actor(mirror=mirror, data=attributes, show=None)
+        actor1 = Actor(mirror=mirror, data=attributes, show=show)
 
         return [actor1]

@@ -22,7 +22,6 @@ from PySide.QtCore import Qt
 from PySide.QtGui import QSortFilterProxyModel
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.season_node import SeasonNode
-from seriesmarker.gui.model.series_node import SeriesNode
 
 
 class SortFilterProxyModel(QSortFilterProxyModel):
@@ -100,7 +99,12 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         This method also sorts the episodes column (column 1) by
         the number of total watched episodes rather than the displayed
         string of the column (so '1/7' may come before '1/2' if
-        the related series name is also the lesser one). 
+        the related series name is also the lesser one).
+        
+        Series are sorted by numerical progress first, then by total
+        number of watched episodes and finally by series name. 
+        Completed series (progress = 100.0%) are being ignored by progress
+        sort and added at the end of the list in alphanumerical order.
         
         :param left: The index of the left item to be sorted.
         :type left: :class:`.PySide.QtCore.QModelIndex`
@@ -117,18 +121,48 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         left_node = self.sourceModel().data(left, Qt.UserRole)
         right_node = self.sourceModel().data(right, Qt.UserRole)
 
-        if isinstance(left_node, SeasonNode):
+        column = left.column()
+
+        def _by_name(left_node, right_node):
+            left_data = left_node.name()
+            right_data = right_node.name()
+            if self.sortOrder() == Qt.DescendingOrder:
+                return right_data < left_data
+            else:
+                return left_data < right_data
+
+        def _by_episodes(left_node, right_node):
+            left_data = left_node.checked_count()
+            right_data = right_node.checked_count()
+            if left_data == right_data:
+                return _by_name(left_node, right_node)
+            else:
+                return left_data < right_data
+
+        if isinstance(left_node, SeasonNode):  #Always sort seasons by number
             left_data = left_node.data.season_number
             right_data = right_node.data.season_number
             if self.sortOrder() == Qt.DescendingOrder:
-                left_data, right_data = right_data, left_data
-        elif isinstance(left_node, SeriesNode) and left.column() == 1:  # Sort by episodes
-            left_data = left_node.checked_count()
-            right_data = right_node.checked_count()
-        else:
+                return right_data < left_data
+            else:
+                return left_data < right_data
+        elif column == 0:  #Sort by series name
             return super().lessThan(left, right)
-
-        return left_data < right_data
+        elif column == 1:  # Sort by episodes
+            return _by_episodes(left_node, right_node)
+        elif column == 2:  # Sort by progress
+            left_data = round(left_node.checked_count() / left_node.leaf_count(), 3)
+            right_data = round(right_node.checked_count() / right_node.leaf_count(), 3)
+            if left_data == 1 and right_data == 1:
+                return _by_name(left_node, right_node)
+            elif left_data == 1:
+                return True if self.sortOrder() == Qt.DescendingOrder else False
+            elif right_data == 1:
+                return False if self.sortOrder() == Qt.DescendingOrder else True
+            elif left_data == right_data:
+                return _by_episodes(left_node, right_node)
+            else:
+                return left_data < right_data
 
     def pop_related_series(self, index):
         """Relays the method call to the source model.

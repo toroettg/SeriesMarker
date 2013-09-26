@@ -92,6 +92,8 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
             name = series_node.name()
             if name == "How I Met Your Mother":
                 select = 6
+            elif name == "Rome: Power & Glory":
+                select = 2
             else:
                 select = 1
             episodes = []
@@ -104,10 +106,10 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         result = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
             ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 7  ", "14.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
             ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
             ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  1 / 2  ", "50.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
             ("The Wonder Years", "  1 / 1  ", "100.0%")
         ]
         self._check_displayed_data(0, Qt.AscendingOrder, result, "Sort view after adding a series")
@@ -116,10 +118,10 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         result = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
             ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 7  ", "14.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
             ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
             ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  1 / 2  ", "50.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
             ("The Wonder Years", "  1 / 1  ", "100.0%")
         ]
         self._check_displayed_data(0, Qt.AscendingOrder, result, "Sort view after loading from data base")
@@ -130,10 +132,10 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         result = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
             ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 7  ", "14.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
             ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
             ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  1 / 2  ", "50.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
             ("The Wonder Years", "  1 / 1  ", "100.0%")
         ]
         self._check_displayed_data(0, Qt.AscendingOrder, result, "Sort view after loading from data base")
@@ -151,7 +153,7 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
 
         result = [
             ("Season 0", 1, "100.0%"),
-            ("Season 1", 1, "0.0%"),
+            ("Season 1", 6, "0.0%"),
             ("Season 2", 1, "0.0%"),
             ("Season 10", 1, "0.0%"),
             ("Season 11", 1, "0.0%"),
@@ -173,13 +175,13 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         result_asc = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
             ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 7  ", "14.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
             ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  1 / 2  ", "50.0%"),
             ("The Wonder Years", "  1 / 1  ", "100.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
             ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
         ]
-        result_dsc = list(result_asc[-1:]) + result_asc[0:-1]
+        result_dsc = list(reversed(result_asc[-2:])) + result_asc[0:-2]
 
         self.click(self.tree_view.header().viewport(), target)
         self._check_displayed_data(1, Qt.AscendingOrder, result_asc, "Sort view after ascending sort by episodes")
@@ -189,11 +191,7 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
     def test_06_sort_series_by_progress(self):
         """Tests 'intelligent' sorting by progress.
         
-        Series are sorted by numerical progress first, then by total
-        number of watched episodes and finally by series name. 
-        
-        Completed series (progress = 100.0%) are being ignored by progress
-        sort and added at the end of the list in alphanumerical order.
+        .. seealso:: :meth:`.SortFilterProxyModel.lessThan`
         
         """
         target = self.header_center(self.tree_view.header(), 2)
@@ -201,8 +199,8 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         result_asc = [
             ("Doctor Who", "  1 / 12 ", "8.3%"),
             ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Rome: Power & Glory", "  1 / 2  ", "50.0%"),
-            ("Mad Love", "  2 / 4  ", "50.0%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
             ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
             ("The Wonder Years", "  1 / 1  ", "100.0%")
@@ -214,6 +212,40 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         self._check_displayed_data(2, Qt.AscendingOrder, result_asc, "Sort view after ascending sort by progress")
         self.click(self.tree_view.header().viewport(), target)
         self._check_displayed_data(2, Qt.DescendingOrder, result_dsc, "Sort view after descending sort by progress")
+
+    def test_07_secondary_sorting(self):
+        """Checks if entries with equal primary sort value are correctly
+        being sorted by series name."""
+        target = self.header_center(self.tree_view.header(), 2)
+
+        result_pre = [
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%")
+        ]
+
+        result = [
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+        ]
+
+        self.click(self.tree_view.header().viewport(), target)
+        self.click(self.tree_view.header().viewport(), target)
+        self._check_displayed_data(2, Qt.DescendingOrder, result_pre, "Sort view after descending sort by progress")
+
+        target = self.header_center(self.tree_view.header(), 1)
+
+        self.click(self.tree_view.header().viewport(), target)
+        self._check_displayed_data(1, Qt.AscendingOrder, result, "Sort view after ascending sort by episodes")
 
     def tearDown(self):
         QTest.mouseMove(self.window, delay=2000)  # Emulates waiting, can be removed
