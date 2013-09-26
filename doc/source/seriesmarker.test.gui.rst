@@ -24,6 +24,14 @@ gui Package
     :members:
     :undoc-members:
     :show-inheritance:
+    
+:mod:`sorting_test` Module
+--------------------------------
+
+.. automodule:: seriesmarker.test.gui.sorting_test
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Subpackages
 -----------

@@ -19,32 +19,21 @@
 #==============================================================================
 
 from datetime import date
-from pytvdbapi.actor import Actor
+
 from pytvdbapi.api import Show, Season, Episode
 from pytvdbapi.banner import Banner
 
-class DrWhoExample(object):
+from seriesmarker.test.util.examples.base_example import BaseExample
+
+
+class DrWhoExample(BaseExample):
     """Standard example for various test cases.
     
     .. seealso:: 
         :py:func:`.test_04_update` 
     """
-    @staticmethod
-    def show():
-        show = Show(api=None, language=None, data=DrWhoExample.series_attributes())
-        show.seasons = DrWhoExample.seasons(show)
-        show.banner_objects = DrWhoExample.banners(show)
-        show.actor_objects = DrWhoExample.roles(show)
-        return show
-
-    @staticmethod
-    def show_update():
-        show = DrWhoExample.show()
-        show.seasons = DrWhoExample.seasons_update(show)
-        return show
-
-    @staticmethod
-    def series_attributes():
+    @classmethod
+    def series_attributes(cls):
         attributes = {
             'Actors': ['William Hartnell', 'Patrick Troughton', 'Jon Pertwee', 'Tom Baker', 'Sylvester McCoy', 'Peter Davison', 'Paul McGann', 'Richard Hurndall', 'Colin Baker', 'Sarah Sutton', 'Elizabeth Sladen', 'William Russell', 'Jacqueline Hill', 'Carole Ann Ford', "Maureen O'Brien", 'Mark Strickson', 'Bonnie Langford', 'Mary Tamm', 'Nicola Bryant', 'Caroline John', 'Louise Jameson', 'Katy Manning', 'Janet Fielding', 'Lalla Ward', 'Deborah Watling', 'Eric Roberts', 'Daphne Ashbrook', 'Sophie Aldred', 'Anthony Ainley', 'Geoffrey Beevers', 'Peter Pratt', 'Roger Delgado'],
             'Airs_DayOfWeek': 'Saturday',
@@ -77,8 +66,8 @@ class DrWhoExample(object):
 
         return attributes
 
-    @staticmethod
-    def seasons(show):
+    @classmethod
+    def seasons(cls, show):
         seasons = dict()
 
         attributes01 = {
@@ -150,6 +139,156 @@ class DrWhoExample(object):
             'thumb_height': 300,
             'thumb_width': 400,
             'tms_export': 1374789754,
+        }
+
+        attributes12 = {
+            'Combined_episodenumber': 2,
+            'Combined_season': 1,
+            'DVD_chapter': '',
+            'DVD_discid': '',
+            'DVD_episodenumber': '',
+            'DVD_season': '',
+            'Director': 'Waris Hussein',
+            'EpImgFlag': '',
+            'EpisodeName': 'The Cave of Skulls',
+            'EpisodeNumber': 2,
+            'FirstAired': date(1963, 11, 30),
+            'GuestStars': ['Jeremy Young', 'Howard Lang', 'Alethea Charlton', 'Eileen Way', 'Derek Newark'],
+            'IMDB_ID': '',
+            'Language': 'en',
+            'Overview': 'Earth, 100,000 B.C. The enigmatic Doctor, afraid that schoolteachers Ian Chesterton and Barbara Wright will reveal his secrets to the people of 20th century Earth, has taken them and his granddaughter Susan back to the dawn of human history. There, the four travellers are dragged into the savage politics of a tribe of cavemen who have lost the secret of making fire…',
+            'ProductionCode': 'A',
+            'Rating': 6.8,
+            'RatingCount': 14,
+            'SeasonNumber': 1,
+            'Writer': 'Anthony Coburn',
+            'absolute_number': '',
+            'filename': 'episodes/76107/183206.jpg',
+            'id': 183206,
+            'lastupdated': 1200766733,
+           # 'season' : ignored
+            'seasonid': 9666,
+            'seriesid': 76107,
+        }
+
+        attributes13 = {
+            'Combined_episodenumber': 3,
+            'Combined_season': 2,
+            'DVD_chapter': '',
+            'DVD_discid': '',
+            'DVD_episodenumber': '',
+            'DVD_season': '',
+            'Director': 'Mervyn Pinfield, Douglas Camfield',
+            'EpImgFlag': 1,
+            'EpisodeName': 'Crisis',
+            'EpisodeNumber': 3,
+            'FirstAired': date(1964, 11, 14),
+            'GuestStars': ['Alan Tilvern', 'Reginald Barratt', 'Rosemary Johnson', 'Fred Ferris'],
+            'IMDB_ID': '',
+            'Language': 'en',
+            'Overview': 'Earth, 1964. An accident on landing vastly reduces the TARDIS and the travellers in size. They come across a scheme run by Forester, a ruthless businessman and his misguided scientist colleague Smithers to launch a new insecticide which is capable of destroying the local ecology. Forester is prepared to commit murder to secure the success of this project - can the inch-high travellers somehow foil him?',
+            'ProductionCode': 'L',
+            'Rating': 7.0,
+            'RatingCount': 6,
+            'SeasonNumber': 2,
+            'Writer': 'Louis Marks',
+            'absolute_number': '',
+            'filename': 'episodes/76107/183214.jpg',
+            'id': 183214,
+            'lastupdated': 1234645307,
+           # 'season' : ignored
+            'seasonid': 9677,
+            'seriesid': 76107,
+        }
+
+        attributes14 = {
+            'Combined_episodenumber': 4,
+            'Combined_season': 1,
+            'DVD_chapter': '',
+            'DVD_discid': '',
+            'DVD_episodenumber': '',
+            'DVD_season': '',
+            'Director': 'Waris Hussein',
+            'EpImgFlag': '',
+            'EpisodeName': 'The Firemaker',
+            'EpisodeNumber': 4,
+            'FirstAired': date(1963, 12, 14),
+            'GuestStars': ['Jeremy Young', 'Howard Lang', 'Alethea Charlton', 'Eileen Way', 'Derek Newark'],
+            'IMDB_ID': '',
+            'Language': 'en',
+            'Overview': 'The TARDIS crew must make fire for the early humans to stay alive. But once they do, they may not be allowed to leave!',
+            'ProductionCode': 'A',
+            'Rating': 6.7,
+            'RatingCount': 9,
+            'SeasonNumber': 1,
+            'Writer': 'Anthony Coburn',
+            'absolute_number': '',
+            'filename': 'episodes/76107/183208.jpg',
+            'id': 183208,
+            'lastupdated': 1200767219,
+           # 'season' : ignored
+            'seasonid': 9666,
+            'seriesid': 76107,
+        }
+
+        attributes15 = {
+            'Combined_episodenumber': 5,
+            'Combined_season': 1,
+            'DVD_chapter': '',
+            'DVD_discid': '',
+            'DVD_episodenumber': '',
+            'DVD_season': '',
+            'Director': 'Christopher Barry',
+            'EpImgFlag': '',
+            'EpisodeName': 'The Dead Planet',
+            'EpisodeNumber': 5,
+            'FirstAired': date(1963, 12, 21),
+            'GuestStars': '',
+            'IMDB_ID': '',
+            'Language': 'en',
+            'Overview': 'Time Unknown, Planet Unknown. The TARDIS lands in an eerie petrified forest overlooking a magnificent steel city.  The Doctor wants to explore the city – but what is waiting there?',
+            'ProductionCode': 'B',
+            'Rating': 7.1,
+            'RatingCount': 12,
+            'SeasonNumber': 1,
+            'Writer': 'Terry Nation',
+            'absolute_number': '',
+            'filename': 'episodes/76107/183209.jpg',
+            'id': 183209,
+            'lastupdated': 1200767339,
+           # 'season' : ignored
+            'seasonid': 9666,
+            'seriesid': 76107,
+        }
+
+        attributes16 = {
+            'Combined_episodenumber': 6,
+            'Combined_season': 1,
+            'DVD_chapter': '',
+            'DVD_discid': '',
+            'DVD_episodenumber': '',
+            'DVD_season': '',
+            'Director': 'Christopher Barry',
+            'EpImgFlag': '',
+            'EpisodeName': 'The Survivors',
+            'EpisodeNumber': 6,
+            'FirstAired': date(1963, 12, 28),
+            'GuestStars': ['Michael  Summerton', 'Peter Hawkins', 'David Graham', 'Robert Jewell', 'Kevin Manser', 'Gerald Taylor'],
+            'IMDB_ID': '',
+            'Language': 'en',
+            'Overview': 'The dead planet is not uninhabited after all. The Doctor is about to meet what will become his greatest enemies. And he and his crew are dying of radiation sickness.',
+            'ProductionCode': 'B',
+            'Rating': 7.4,
+            'RatingCount': 9,
+            'SeasonNumber': 1,
+            'Writer': 'Terry Nation',
+            'absolute_number': '',
+            'filename': 'episodes/76107/183210.jpg',
+            'id': 183210,
+            'lastupdated': 1200767442,
+           # 'season' : ignored
+            'seasonid': 9666,
+            'seriesid': 76107,
         }
 
         attributes21 = {
@@ -326,13 +465,19 @@ class DrWhoExample(object):
         for season_number in [0, 1, 2, 10, 11, 20, 21]:
             season = Season(season_number, show)
             season.episodes = dict()
-            season.episodes[1] = Episode(lcl["attributes{}1".format(season_number)], season)
+
+            if season_number == 1:
+                range_limit = 7
+            else:
+                range_limit = 2
+            for episode_number in range(1, range_limit):
+                season.episodes[episode_number] = Episode(lcl["attributes{}{}".format(season_number, episode_number)], season)
             seasons[season_number] = season
 
         return seasons
 
-    @staticmethod
-    def banners(show):
+    @classmethod
+    def banners(cls, show):
         mirror = "http://thetvdb.com"
 
         attributes = {
@@ -461,7 +606,3 @@ class DrWhoExample(object):
 
         lcl = locals()
         return [lcl["banner{}".format(number)] for number in range(1, 10)]
-
-    @staticmethod
-    def roles(show):
-        return []
