@@ -40,25 +40,25 @@ class SearchDialogTest(GUITestCase):
         self.type(self.dialog.ui.search_text_field, "how i")
         self.click(self.dialog.ui.search_button)
 
-        self.assertEqual(self.dialog.model.rowCount(), 5, "Search did not return expected results")
+        self.assertEqual(self.dialog.model.rowCount(), 7, "Search did not return expected results")
         self.assertEqual(self.dialog.model.data(self.dialog.model.index(0, 0)), "How I Met Your Mother", "First result not as expected")
 
     def test_search_by_keyhit(self):
         self.type(self.dialog.ui.search_text_field, "how i")
         self.keyhit(self.dialog.ui.search_text_field, Qt.Key_Enter);
 
-        self.assertEqual(self.dialog.model.rowCount(), 5, "Search did not return expected results")
+        self.assertEqual(self.dialog.model.rowCount(), 7, "Search did not return expected results")
         self.assertEqual(self.dialog.model.data(self.dialog.model.index(0, 0)), "How I Met Your Mother", "First result not as expected")
 
     def test_clear_on_new_search(self):
         self.type(self.dialog.ui.search_text_field, "how i")
         self.click(self.dialog.ui.search_button)
 
-        self.assertEqual(self.dialog.model.rowCount(), 5, "Search did not return expected results")
+        self.assertEqual(self.dialog.model.rowCount(), 7, "Search did not return expected results")
 
         self.click(self.dialog.ui.search_button)
 
-        self.assertEqual(self.dialog.model.rowCount(), 5, "Search did not clear model")
+        self.assertEqual(self.dialog.model.rowCount(), 7, "Search did not clear model")
 
         self.click(self.dialog.ui.search_text_field)
         self.keyhit(self.dialog.ui.search_text_field, Qt.Key_End)

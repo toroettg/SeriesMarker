@@ -12,4 +12,8 @@
     <file>icons/view-refresh.svg</file>
     <file>icons/help-browser.svg</file>
   </qresource>
+  <qresource prefix="Koloria">
+    <file>icons/Checkmark.png</file>
+    <file>icons/Error_Symbol.png</file>
+  </qresource>
 </RCC>

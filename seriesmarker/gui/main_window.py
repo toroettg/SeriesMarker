@@ -21,8 +21,8 @@
 import logging
 
 from PySide.QtCore import Slot, QModelIndex, Qt, QCoreApplication
-from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, \
-    QHeaderView, QApplication
+from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, QHeaderView, \
+    QApplication, QMenu
 from seriesmarker.gui.about_dialog import AboutDialog
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.season_node import SeasonNode
@@ -77,6 +77,8 @@ class MainWindow(QMainWindow):
         self.ui.tree_view.setModel(self.tree_proxy_model)
         self.ui.tree_view.sortByColumn(0, Qt.AscendingOrder)
         self.ui.tree_view.header().setResizeMode(QHeaderView.ResizeToContents)
+        self.ui.tree_view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ui.tree_view.customContextMenuRequested.connect(self._handle_context_menu)
 
         self.ui.list_view.setModel(self.model)
         self.ui.list_view.setMouseTracking(True)
@@ -201,6 +203,25 @@ class MainWindow(QMainWindow):
         self.ui.list_view.setWrapping(True)
         self.ui.list_view.setWordWrap(True)
         self.ui.list_view.setViewMode(QListView.IconMode)
+
+    def _handle_context_menu(self, pos):
+        index = self.ui.tree_view.indexAt(pos)
+        if index.isValid():
+            pos = self.ui.tree_view.viewport().mapToGlobal(pos)
+            menu = QMenu("Wut?")
+            menu.addAction(self.ui.action_mark_watched)
+            menu.addAction(self.ui.action_mark_unwatched)
+            menu.addSeparator()
+            menu.addAction(self.ui.action_remove)
+            menu.exec_(pos)
+
+    @Slot()
+    def on_action_mark_watched_triggered(self):
+        print("WATCHED")
+
+    @Slot()
+    def on_action_mark_unwatched_triggered(self):
+        print("UNWATCHED")
 
     @Slot(QModelIndex)
     def on_list_view_entered(self, index):

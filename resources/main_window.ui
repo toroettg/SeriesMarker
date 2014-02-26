@@ -230,6 +230,30 @@
     <string>Ctrl+X</string>
    </property>
   </action>
+  <action name="action_mark_watched">
+   <property name="icon">
+    <iconset resource="serieswatcher.qrc">
+     <normaloff>:/Koloria/icons/Checkmark.png</normaloff>:/Koloria/icons/Checkmark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark watched</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark all Episodes as watched</string>
+   </property>
+  </action>
+  <action name="action_mark_unwatched">
+   <property name="icon">
+    <iconset resource="serieswatcher.qrc">
+     <normaloff>:/Koloria/icons/Error_Symbol.png</normaloff>:/Koloria/icons/Error_Symbol.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark unwatched</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark all Episodes as unwatched</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="serieswatcher.qrc"/>
