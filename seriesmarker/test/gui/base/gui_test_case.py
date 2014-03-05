@@ -34,15 +34,14 @@ along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from PySide.QtCore import Qt, QPoint
-from PySide.QtGui import QApplication, QWidget, QCursor
-from PySide.QtTest import QTest
 import sys
 import unittest
 
+from PySide.QtCore import Qt, QPoint
+from PySide.QtGui import QApplication, QWidget, QCursor
+from PySide.QtTest import QTest
 
 class GUITestCase(unittest.TestCase):
-
     DELAY = 750
     DELAY_TYPING = 50
 
@@ -51,31 +50,32 @@ class GUITestCase(unittest.TestCase):
         if QApplication.instance() == None:
             cls.app = QApplication(sys.argv)
 
-
-    def click(self, widget, target=QPoint(), double_click=False):
+    def click(self, widget, target=QPoint(), double_click=False,
+            mouse_button=Qt.MouseButton.LeftButton):
         self.move(widget, target)
         if double_click:
-            QTest.mouseDClick(widget, Qt.MouseButton.LeftButton, pos=target, delay=self.DELAY)
+            QTest.mouseDClick(widget, mouse_button, pos=target,
+                delay=self.DELAY)
         else:
-            QTest.mouseClick(widget, Qt.MouseButton.LeftButton, pos=target, delay=self.DELAY)
+            QTest.mouseClick(widget, mouse_button, pos=target, delay=self.DELAY)
 
     def header_center(self, header, section):
         """Calculates the center of a view's header section.
-        
+
         :param header: The header to calculate a position for.
         :type header: :class:`.PySide.QtGui.QHeaderView`
         :param section: The section (column) to calculate a position for.
         :type section: integer
-        
+
         :returns: The :class:`.PySide.QtCore.QPoint` referring
             to the section's center.
-        
+
         """
         logical_index = header.logicalIndex(section)
         section_pos = header.sectionPosition(logical_index)
         section_width = header.sectionSize(logical_index)
         return QPoint(section_pos + (section_width / 2),
-                      header.size().height() / 2)
+            header.size().height() / 2)
 
     def move(self, widget, target=QPoint()):
         QTest.mouseMove(widget, pos=target, delay=self.DELAY)
@@ -87,4 +87,5 @@ class GUITestCase(unittest.TestCase):
         QTest.keyClicks(widget, text, delay=self.DELAY_TYPING)
 
     def keyhit(self, widget, key):
-        QTest.keyClick(self.dialog.ui.search_text_field, key, delay=self.DELAY_TYPING)
+        QTest.keyClick(self.dialog.ui.search_text_field, key,
+            delay=self.DELAY_TYPING)

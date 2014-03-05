@@ -18,21 +18,23 @@
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 
-from PySide.QtGui import QApplication
 from logging.handlers import RotatingFileHandler
-from seriesmarker.gui.main_window import MainWindow
-from seriesmarker.persistence.database import db_init
-from seriesmarker.util import config
 import logging
 import os
 import sys
 
+from PySide.QtGui import QApplication
+from seriesmarker.gui.main_window import MainWindow
+from seriesmarker.persistence.database import db_init
+from seriesmarker.util import config
+
+
 def main():
     """Main entry of program.
-    
+
     Initializes logging, database access, the Qt framework,
     and displays the main window to the user.
-    
+
     """
     _init_logging()
 
@@ -53,7 +55,7 @@ def _init_logging(loglevel=config.loglevel):
     .. seealso:: :mod:`.config`
 
     :param loglevel: The level of logging to use.
-    
+
     """
     if not os.path.exists(config.dirs.user_log_dir):
         os.makedirs(config.dirs.user_log_dir)
@@ -67,8 +69,7 @@ def _init_logging(loglevel=config.loglevel):
     file_handler = RotatingFileHandler(log_path, maxBytes=5 * 1024 * 1024,
                                        backupCount=1)
     file_handler.setFormatter(logging.Formatter(
-        "%(asctime)s [%(levelname)-8s] %(name)-40s - %(message)s")
-    )
+        "%(asctime)s [%(levelname)-8s] %(name)-40s - %(message)s"))
     file_handler.setLevel(loglevel)
 
     logging.getLogger("pytvdbapi").setLevel(logging.INFO)

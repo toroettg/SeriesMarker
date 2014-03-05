@@ -19,33 +19,38 @@
 #==============================================================================
 
 import os
-import seriesmarker.util.config as config
 import shutil
 import tempfile
-import unittest
 
-class PersistentDBTestCase(unittest.TestCase):
+from seriesmarker.test.database.base.db_test_case import DBTestCase
+
+import seriesmarker.util.config as config
+
+class PersistentDBTestCase(DBTestCase):
     """Prepares the execution of persistent test cases for deriving
     classes, i.e., data is stored at a temporary location on the hard
     disk and is available to multiple test cases."""
+
     @classmethod
     def setUpClass(cls):
         """
         Modifies SeriesMarker's database location to let it point at
         a temporary directory.
-        
+
         :emphasis:`Overrides` :py:meth:`.unittest.TestCase.setUpClass`
-        
+
         """
-        data_dir_path = os.path.join(tempfile.gettempdir(), config.application_name)
-        cache_dir_path = os.path.join(tempfile.gettempdir(), config.application_name, "cache")
+        data_dir_path = os.path.join(tempfile.gettempdir(),
+            config.application_name)
+        cache_dir_path = os.path.join(tempfile.gettempdir(),
+            config.application_name, "cache")
         config.dirs = AppDirsMock(data_dir_path, cache_dir_path)
-        
+
     @classmethod
     def deleteDatabase(cls):
         """Removes the temporary directory, created by :py:meth:`.setUpClass`."""
         if os.path.commonprefix([config.dirs.user_data_dir,
-            tempfile.gettempdir()]) == tempfile.gettempdir():
+                                 tempfile.gettempdir()]) == tempfile.gettempdir():
             # Prevent accidental deletion of real user data dir - should never happen
             try:
                 shutil.rmtree(config.dirs.user_data_dir)
@@ -61,15 +66,16 @@ class PersistentDBTestCase(unittest.TestCase):
 
 class AppDirsMock(object):
     """Emulates the appdirs package with custom directories."""
+
     def __init__(self, user_data_dir, user_cache_dir):
         """Sets the path to custom directories, which shall be returned
         by appdirs related method calls at runtime.
-        
+
         :param user_data_dir: The path of the user data directory to return.
         :type user_data_dir: string
         :param user_cache_dir: The path of the user cache directory to return.
         :type user_cache_dir: string
-        
+
         """
         self.user_data_dir = user_data_dir
         self.user_cache_dir = user_cache_dir

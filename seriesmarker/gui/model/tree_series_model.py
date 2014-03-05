@@ -22,14 +22,15 @@ from bisect import bisect
 
 from PySide.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PySide.QtGui import QFont
+
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.season_node import SeasonNode
 from seriesmarker.gui.model.series_node import SeriesNode
 from seriesmarker.gui.model.tree_node import TreeNode
+from seriesmarker.persistence.database import db_commit
 from seriesmarker.persistence.model.episode import Episode
 from seriesmarker.persistence.model.season import Season
 from seriesmarker.persistence.model.series import Series
-
 
 class TreeSeriesModel(QAbstractItemModel):
     """This model is used to display series data (including seasons and
@@ -40,6 +41,7 @@ class TreeSeriesModel(QAbstractItemModel):
     seasons and episodes), which contain the actual data to display.
 
     """
+
     def __init__(self, series_list=None, parent=None):
         """Initializes the model and adds given series to it.
 
@@ -56,7 +58,6 @@ class TreeSeriesModel(QAbstractItemModel):
         if series_list != None:
             for series in series_list:
                 self.root.append(SeriesNode(series, self.root))
-
 
     def headerData(self, section, orientation, role):
         """Defines the header data displayed in the GUI.
@@ -196,8 +197,9 @@ class TreeSeriesModel(QAbstractItemModel):
         parent_node = self.node_at(parent_index)
 
         try:
-            row = next(index for index, child_node in
-                enumerate(parent_node.children) if child_node.data is item)
+            row = next(
+                index for index, child_node in enumerate(parent_node.children)
+                if child_node.data is item)
         except StopIteration:
             return QModelIndex()
         else:
@@ -258,15 +260,17 @@ class TreeSeriesModel(QAbstractItemModel):
         if isinstance(item, Series):
             cls = SeriesNode
             position = bisect([node.name() for node in parent_node.children],
-                              item.series_name)
+                item.series_name)
         elif isinstance(item, Season):
             cls = SeasonNode
-            position = bisect([node.data.season_number for node
-                               in parent_node.children], item.season_number)
+            position = bisect(
+                [node.data.season_number for node in parent_node.children],
+                item.season_number)
         elif isinstance(item, Episode):
             cls = EpisodeNode
-            position = bisect([node.data.episode_number for node
-                               in parent_node.children], item.episode_number)
+            position = bisect(
+                [node.data.episode_number for node in parent_node.children],
+                item.episode_number)
 
         self.beginInsertRows(parent_index, position, position)
         parent_node.insert(position, cls(item, parent_node))
@@ -350,6 +354,7 @@ class TreeSeriesModel(QAbstractItemModel):
         node = self.node_at(index)
         if role == Qt.CheckStateRole:
             node.toggle_check()
+            db_commit()
             # Need to update display of progress for all parents in branch
             parent_node = node.parent
             while parent_node is not self.root:
