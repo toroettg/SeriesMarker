@@ -22,6 +22,7 @@ from PySide.QtCore import QSize
 
 from seriesmarker.gui.model.decorated_node import DecoratedNode
 
+
 class TreeNode(DecoratedNode):
     """Base class to store series data in a :class:`PySide.QtCore.QAbstractItemModel`."""
 
@@ -209,16 +210,6 @@ class TreeNode(DecoratedNode):
 
     def check(self, state):
         """Sets the checked state of the node.
-
-        .. seealso::
-
-            :py:meth:`.checked`
-
-        """
-        pass
-
-    def toggle_check(self):
-        """Toggles the checked state of the node.
 
         .. seealso::
 

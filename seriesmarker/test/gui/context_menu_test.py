@@ -23,6 +23,7 @@ import unittest
 from seriesmarker.test.database.base.memory_db_test_case import MemoryDBTestCase
 from seriesmarker.test.gui.base.main_window_test import MainWindowTest
 
+
 class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
     """Checks the functionality of the context menu in the main view.
 
@@ -46,9 +47,9 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         from seriesmarker.persistence.model.series import Series
 
         self.assertEqual(self.db_session.query(Series).count(), 1,
-            "No Series to remove in database.")
+                         "No Series to remove in database.")
         self.assertEqual(self.window.model.rowCount(), 1,
-            "Model/View does not contain a Series.")
+                         "Model/View does not contain a Series.")
 
     def test_delete_by_series(self):
         """Tests the removal of a series via context menu, by clicking on itself."""
@@ -58,9 +59,9 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         from seriesmarker.persistence.model.series import Series
 
         self.assertEqual(self.db_session.query(Series).count(), 0,
-            "Series was not removed from DB")
+                         "Series was not removed from DB")
         self.assertEqual(self.window.model.rowCount(), 0,
-            "Model was not cleared")
+                         "Model was not cleared")
 
     def test_delete_by_season(self):
         """Tests the removal of a series via context menu, by clicking on a season."""
@@ -71,9 +72,9 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         from seriesmarker.persistence.model.series import Series
 
         self.assertEqual(self.db_session.query(Series).count(), 0,
-            "Series was not removed from DB")
+                         "Series was not removed from DB")
         self.assertEqual(self.window.model.rowCount(), 0,
-            "Model was not cleared")
+                         "Model was not cleared")
 
     def test_mark_watched_by_series(self):
         def check_result(check_mark_unwatched=False):
@@ -86,17 +87,17 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
                 for episode in season.episodes:
                     if episode.extra.watched:
                         watched_count = watched_count + 1
-                    episode_count = episode_count + 1
+                    episode_count += 1
 
             target_count = 0 if check_mark_unwatched else watched_count
 
             self.assertEqual(target_count, watched_count,
-                "Not every episode has been marked correctly.")
+                             "Not every episode has been marked correctly.")
 
             self.assertEqual("  {} / {}  ".format(target_count, episode_count),
-                self.window.ui.tree_view.model().data(
-                    self.window.ui.tree_view.model().index(0, 1)),
-                "Watched marking not displayed correctly")
+                             self.window.ui.tree_view.model().data(
+                                 self.window.ui.tree_view.model().index(0, 1)),
+                             "Watched marking not displayed correctly")
 
         viewport, target = self.find_click_target()
 
@@ -114,5 +115,12 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
     def test_mark_watched_when_partial_watched(self):
         self.fail()
 
-if __name__ == '__main__':
-    unittest.main()
+
+def get_suit():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(ContextMenuTest))
+    return suite
+
+
+if __name__ == "__main__":
+    unittest.TextTestRunner(verbosity=2).run(get_suit())

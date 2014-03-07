@@ -26,8 +26,8 @@ from PySide.QtCore import Qt, QModelIndex
 from PySide.QtGui import QTreeView
 from PySide.QtTest import QTest
 from pytvdbapi.api import Show
-from seriesmarker.gui.search_dialog import SearchDialog
 
+from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.test.database.base.persitent_db_test_case import \
     PersistentDBTestCase
 from seriesmarker.test.gui.base.gui_test_case import GUITestCase
@@ -43,6 +43,7 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         Therefore, case names are numbered.
 
     """
+
     @classmethod
     def setUpClass(cls):
         GUITestCase.setUpClass()
@@ -58,9 +59,9 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         QTest.qWaitForWindowShown(self.window)
         self.tree_view = self.window.findChild(QTreeView, "tree_view")
 
-
     def test_01_sort_on_add(self):
-        add_button = self.window.ui.toolBar.widgetForAction(self.window.ui.action_add)
+        add_button = self.window.ui.toolBar.widgetForAction(
+            self.window.ui.action_add)
 
         Show.update = MagicMock()
 
@@ -75,13 +76,16 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         SearchDialog.exec_ = MagicMock(return_value=SearchDialog.Accepted)
         SearchDialog.result_value = MagicMock(side_effect=series)
 
-        self.assertEqual(self.window.model.rowCount(), 0, "Default model is not empty")
+        self.assertEqual(self.window.model.rowCount(), 0,
+                         "Default model is not empty")
 
         for x in range(len(series)):  # @UnusedVariable
             self.click(add_button)
 
-        self.assertEqual(SearchDialog.exec_.call_count, 7, "'Add' not called correctly")
-        self.assertEqual(self.window.model.rowCount(), 7, "Selected series were not added")
+        self.assertEqual(SearchDialog.exec_.call_count, 7,
+                         "'Add' not called correctly")
+        self.assertEqual(self.window.model.rowCount(), 7,
+                         "Selected series were not added")
 
         # Create progress by marking specific episodes watched
         model = self.tree_view.model()
@@ -101,46 +105,45 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
                 for episode_node in season_node.children:
                     episodes.append(episode_node)
             for index in range(0, select):
-                episodes[index].toggle_check()
+                episodes[index].check(Qt.Checked)
 
-        result = [
-            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-            ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 12 ", "8.3%"),
-            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-            ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-            ("The Wonder Years", "  1 / 1  ", "100.0%")
-        ]
-        self._check_displayed_data(0, Qt.AscendingOrder, result, "Sort view after adding a series")
+        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                  ("Defiance", "  1 / 3  ", "33.3%"),
+                  ("Doctor Who", "  1 / 12 ", "8.3%"),
+                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+                  ("Mad Love", "  1 / 2  ", "50.0%"),
+                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                  ("The Wonder Years", "  1 / 1  ", "100.0%")]
+        self._check_displayed_data(0, Qt.AscendingOrder, result,
+                                   "Sort view after adding a series")
 
     def test_02_sort_on_load(self):
-        result = [
-            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-            ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 12 ", "8.3%"),
-            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-            ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-            ("The Wonder Years", "  1 / 1  ", "100.0%")
-        ]
-        self._check_displayed_data(0, Qt.AscendingOrder, result, "Sort view after loading from data base")
+        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                  ("Defiance", "  1 / 3  ", "33.3%"),
+                  ("Doctor Who", "  1 / 12 ", "8.3%"),
+                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+                  ("Mad Love", "  1 / 2  ", "50.0%"),
+                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                  ("The Wonder Years", "  1 / 1  ", "100.0%")]
+        self._check_displayed_data(0, Qt.AscendingOrder, result,
+                                   "Sort view after loading from data base")
 
     def test_03_sort_series_by_name(self):
         target = self.header_center(self.tree_view.header(), 0)
 
-        result = [
-            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-            ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 12 ", "8.3%"),
-            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-            ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-            ("The Wonder Years", "  1 / 1  ", "100.0%")
-        ]
-        self._check_displayed_data(0, Qt.AscendingOrder, result, "Sort view after loading from data base")
+        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                  ("Defiance", "  1 / 3  ", "33.3%"),
+                  ("Doctor Who", "  1 / 12 ", "8.3%"),
+                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+                  ("Mad Love", "  1 / 2  ", "50.0%"),
+                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                  ("The Wonder Years", "  1 / 1  ", "100.0%")]
+        self._check_displayed_data(0, Qt.AscendingOrder, result,
+                                   "Sort view after loading from data base")
         self.click(self.tree_view.header().viewport(), target)
-        self._check_displayed_data(0, Qt.DescendingOrder, list(reversed(result)), "Sort view after descending sort by name")
+        self._check_displayed_data(0, Qt.DescendingOrder,
+                                   list(reversed(result)),
+                                   "Sort view after descending sort by name")
 
     def test_04_sort_season_by_name(self):
         # Expand series
@@ -151,113 +154,117 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
 
-        result = [
-            ("Season 0", 1, "100.0%"),
-            ("Season 1", 6, "0.0%"),
-            ("Season 2", 1, "0.0%"),
-            ("Season 10", 1, "0.0%"),
-            ("Season 11", 1, "0.0%"),
-            ("Season 20", 1, "0.0%"),
-            ("Season 21", 1, "0.0%")
-        ]
+        result = [("Season 0", 1, "100.0%"), ("Season 1", 6, "0.0%"),
+                  ("Season 2", 1, "0.0%"), ("Season 10", 1, "0.0%"),
+                  ("Season 11", 1, "0.0%"), ("Season 20", 1, "0.0%"),
+                  ("Season 21", 1, "0.0%")]
 
-        self._check_displayed_data(0, Qt.AscendingOrder, result, "Sort season after loading from data base", parent=series_node_index)
+        self._check_displayed_data(0, Qt.AscendingOrder, result,
+                                   "Sort season after loading from data base",
+                                   parent=series_node_index)
 
         target = self.header_center(self.tree_view.header(), 0)
         self.click(self.tree_view.header().viewport(), target)
-        series_node_index = self.tree_view.model().index(4, 0)  # change of order changed index too
+        series_node_index = self.tree_view.model().index(4,
+                                                         0)  # change of order changed index too
 
-        self._check_displayed_data(0, Qt.DescendingOrder, result, "Changing sort order should not alter season order", parent=series_node_index)
+        self._check_displayed_data(0, Qt.DescendingOrder, result,
+                                   "Changing sort order should not alter season order",
+                                   parent=series_node_index)
 
     def test_05_sort_series_by_episodes(self):
         target = self.header_center(self.tree_view.header(), 1)
 
-        result_asc = [
-            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-            ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 12 ", "8.3%"),
-            ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("The Wonder Years", "  1 / 1  ", "100.0%"),
-            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-        ]
+        result_asc = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                      ("Defiance", "  1 / 3  ", "33.3%"),
+                      ("Doctor Who", "  1 / 12 ", "8.3%"),
+                      ("Mad Love", "  1 / 2  ", "50.0%"),
+                      ("The Wonder Years", "  1 / 1  ", "100.0%"),
+                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                      ("How I Met Your Mother", "  6 / 7  ", "85.7%"), ]
         result_dsc = list(reversed(result_asc[-2:])) + result_asc[0:-2]
 
         self.click(self.tree_view.header().viewport(), target)
-        self._check_displayed_data(1, Qt.AscendingOrder, result_asc, "Sort view after ascending sort by episodes")
+        self._check_displayed_data(1, Qt.AscendingOrder, result_asc,
+                                   "Sort view after ascending sort by episodes")
         self.click(self.tree_view.header().viewport(), target)
-        self._check_displayed_data(1, Qt.DescendingOrder, result_dsc, "Sort view after descending sort by episodes")
+        self._check_displayed_data(1, Qt.DescendingOrder, result_dsc,
+                                   "Sort view after descending sort by episodes")
 
     def test_06_sort_series_by_progress(self):
         """Tests 'intelligent' sorting by progress.
-        
+
         .. seealso:: :meth:`.SortFilterProxyModel.lessThan`
-        
+
         """
         target = self.header_center(self.tree_view.header(), 2)
 
-        result_asc = [
-            ("Doctor Who", "  1 / 12 ", "8.3%"),
-            ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-            ("The Wonder Years", "  1 / 1  ", "100.0%")
-        ]
+        result_asc = [("Doctor Who", "  1 / 12 ", "8.3%"),
+                      ("Defiance", "  1 / 3  ", "33.3%"),
+                      ("Mad Love", "  1 / 2  ", "50.0%"),
+                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                      ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+                      ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                      ("The Wonder Years", "  1 / 1  ", "100.0%")]
 
         result_dsc = list(reversed(result_asc[0:5])) + result_asc[5:]
 
         self.click(self.tree_view.header().viewport(), target)
-        self._check_displayed_data(2, Qt.AscendingOrder, result_asc, "Sort view after ascending sort by progress")
+        self._check_displayed_data(2, Qt.AscendingOrder, result_asc,
+                                   "Sort view after ascending sort by progress")
         self.click(self.tree_view.header().viewport(), target)
-        self._check_displayed_data(2, Qt.DescendingOrder, result_dsc, "Sort view after descending sort by progress")
+        self._check_displayed_data(2, Qt.DescendingOrder, result_dsc,
+                                   "Sort view after descending sort by progress")
 
     def test_07_secondary_sorting(self):
         """Checks if entries with equal primary sort value are correctly
         being sorted by series name."""
         target = self.header_center(self.tree_view.header(), 2)
 
-        result_pre = [
-            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-            ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 12 ", "8.3%"),
-            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-            ("The Wonder Years", "  1 / 1  ", "100.0%")
-        ]
+        result_pre = [("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                      ("Mad Love", "  1 / 2  ", "50.0%"),
+                      ("Defiance", "  1 / 3  ", "33.3%"),
+                      ("Doctor Who", "  1 / 12 ", "8.3%"),
+                      ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                      ("The Wonder Years", "  1 / 1  ", "100.0%")]
 
-        result = [
-            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-            ("Defiance", "  1 / 3  ", "33.3%"),
-            ("Doctor Who", "  1 / 12 ", "8.3%"),
-            ("Mad Love", "  1 / 2  ", "50.0%"),
-            ("The Wonder Years", "  1 / 1  ", "100.0%"),
-            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-        ]
+        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                  ("Defiance", "  1 / 3  ", "33.3%"),
+                  ("Doctor Who", "  1 / 12 ", "8.3%"),
+                  ("Mad Love", "  1 / 2  ", "50.0%"),
+                  ("The Wonder Years", "  1 / 1  ", "100.0%"),
+                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"), ]
 
         self.click(self.tree_view.header().viewport(), target)
         self.click(self.tree_view.header().viewport(), target)
-        self._check_displayed_data(2, Qt.DescendingOrder, result_pre, "Sort view after descending sort by progress")
+        self._check_displayed_data(2, Qt.DescendingOrder, result_pre,
+                                   "Sort view after descending sort by progress")
 
         target = self.header_center(self.tree_view.header(), 1)
 
         self.click(self.tree_view.header().viewport(), target)
-        self._check_displayed_data(1, Qt.AscendingOrder, result, "Sort view after ascending sort by episodes")
+        self._check_displayed_data(1, Qt.AscendingOrder, result,
+                                   "Sort view after ascending sort by episodes")
 
     def tearDown(self):
-        QTest.mouseMove(self.window, delay=2000)  # Emulates waiting, can be removed
+        QTest.mouseMove(self.window,
+                        delay=2000)  # Emulates waiting, can be removed
         self.window.close()
         super().tearDown()
 
-    def _check_displayed_data(self, expected_section, expected_order, expected_result, msg, parent=QModelIndex()):
+    def _check_displayed_data(self, expected_section, expected_order,
+                              expected_result, msg, parent=QModelIndex()):
         header = self.tree_view.header()
-        self.assertEqual(header.isSortIndicatorShown(), True, "No column seems to be sorted.")
-        self.assertEqual(header.sortIndicatorSection(), expected_section, "Not sorted by correct column.")
-        self.assertEqual(header.sortIndicatorOrder(), expected_order, "Not sorted by correct order.")
+        self.assertEqual(header.isSortIndicatorShown(), True,
+                         "No column seems to be sorted.")
+        self.assertEqual(header.sortIndicatorSection(), expected_section,
+                         "Not sorted by correct column.")
+        self.assertEqual(header.sortIndicatorOrder(), expected_order,
+                         "Not sorted by correct order.")
 
+        #@formatter:off
         model = self.tree_view.model()
         for column in range(0, 3):
             self.assertEqual(
@@ -268,11 +275,14 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
                     msg
                 )
             )
+        #@formatter:on
+
 
 def get_suit():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(SortingTest))
     return suite
+
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(get_suit())

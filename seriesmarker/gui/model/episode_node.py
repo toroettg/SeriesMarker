@@ -17,10 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
+from PySide.QtCore import Qt
 
 from PySide.QtGui import QIcon
 
 from seriesmarker.gui.model.tree_node import TreeNode
+
 
 class EpisodeNode(TreeNode):
     """Provides data for display about an :class:`.Episode`."""
@@ -49,13 +51,23 @@ class EpisodeNode(TreeNode):
     def check(self, state):
         """Sets the checked state of the node.
 
+        The checked state indicates whether or not an episode has been
+        watched. When the state is set, the tree of the node is
+        traversed upwards to its root, and the cached count of watched
+        episodes in its branch is updated accordingly.
+
         :param state: The checked state to set.
-        :type state: boolean
+        :type state: :class:`Qt.CheckState`
 
         :emphasis:`Overrides` :py:meth:`.TreeNode.check`
 
         """
-        self.data.extra.watched = state
+        if state == Qt.Checked:
+            self.data.extra.watched = True
+            self._adjust_caches(0, 1)
+        elif state == Qt.Unchecked:
+            self.data.extra.watched = False
+            self._adjust_caches(0, -1)
 
     def checked(self):
         """Gets the checked state of the node.
@@ -65,22 +77,7 @@ class EpisodeNode(TreeNode):
         :emphasis:`Overrides` :py:meth:`.TreeNode.checked`
 
         """
-        return self.data.extra.watched
-
-    def toggle_check(self):
-        """Toggles the checked state of the node.
-
-        The checked state indicates whether or not an episode has been
-        watched. When the state is toggled, the tree of the node is
-        traversed upwards to its root, and the cached count of watched
-        episodes in its branch is updated accordingly.
-
-        :emphasis:`Overrides` :meth:`.TreeNode.toggle_check`
-
-        """
-        was_checked = self.data.extra.watched
-        self.data.extra.watched = not was_checked
-        self._adjust_caches(0, -1 if was_checked else 1)
+        return Qt.Checked if self.data.extra.watched else Qt.Unchecked
 
     def decoration(self, index):
         """Retuns a snapshot image of the episode the node is related to.
@@ -102,4 +99,3 @@ class EpisodeNode(TreeNode):
         """
         return QIcon(
             ":/trolltech/styles/commonstyle/images/viewdetailed-128.png")
-

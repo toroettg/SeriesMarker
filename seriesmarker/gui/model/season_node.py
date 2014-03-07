@@ -21,6 +21,7 @@
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.tree_node import TreeNode
 
+
 class SeasonNode(TreeNode):
     """Provides data for display about a :class:`.Season`."""
 
@@ -74,10 +75,6 @@ class SeasonNode(TreeNode):
         :emphasis:`Overrides` :py:meth:`.TreeNode.check`
 
         """
-        changed = 0
         for child in self.children:
-            if not child.checked():
+            if state != child.checked():
                 child.check(state)
-                changed = changed + 1
-
-        self._adjust_caches(0, changed if state else -changed)

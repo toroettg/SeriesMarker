@@ -32,6 +32,7 @@ from seriesmarker.persistence.model.episode import Episode
 from seriesmarker.persistence.model.season import Season
 from seriesmarker.persistence.model.series import Series
 
+
 class TreeSeriesModel(QAbstractItemModel):
     """This model is used to display series data (including seasons and
     episodes) in a :class:`.MainWindow`.
@@ -105,8 +106,9 @@ class TreeSeriesModel(QAbstractItemModel):
         :returns: The node at the given index itself for :class:`.Qt.UserRole`.
         :returns: The :py:meth:`~.DecoratedNode.decoration` of the node
             at the given index for :class:`.Qt.DecorationRole`.
-        :returns: The :py:meth:`~.TreeNode.checked` state of the node
-            at the given index for :class:`.Qt.CheckedStateRole`.
+        :returns: The :class:`.Qt.CheckState` representing the
+            :py:meth:`~.TreeNode.checked` state of the node at the given index
+            for :class:`.Qt.CheckedStateRole`.
         :returns: The text alignment to use for the string representation of
             the node at the given index for :class:`.Qt.TextAlignmentRole`.
         :returns: A monospace-family :class:`.PySide.QtGui.QFont` for column 1
@@ -251,8 +253,8 @@ class TreeSeriesModel(QAbstractItemModel):
 
         :param item: The item to add to the model.
         :type item: object
-        :param parent_node: The node to add the item as child to.
-        :type parent_node: :class:`.TreeNode`
+        :param parent_index: The index of the node to add the item to.
+        :type parent_index: :class:`.PySide.QtCore.QModelIndex`
 
         """
         parent_node = self.node_at(parent_index)
@@ -260,7 +262,7 @@ class TreeSeriesModel(QAbstractItemModel):
         if isinstance(item, Series):
             cls = SeriesNode
             position = bisect([node.name() for node in parent_node.children],
-                item.series_name)
+                              item.series_name)
         elif isinstance(item, Season):
             cls = SeasonNode
             position = bisect(
@@ -333,7 +335,7 @@ class TreeSeriesModel(QAbstractItemModel):
 
         :param index: The position to set the value at.
         :type index: :class:`.PySide.QtCore.QModelIndex`
-        :param value: Value to be set at given index: boolean for
+        :param value: Value to be set at given index: :class:`Qt.CheckState` for
             :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
             for :class:`Qt.DecorationRole`.
         :type value: object
@@ -347,13 +349,13 @@ class TreeSeriesModel(QAbstractItemModel):
         .. todo::
             Update of parent's progress kinda ugly (also being updated if
             not necessary - i.e. cache had not been set, yet.
-            Updating may be done in toggle_check(), but needs reference
+            Updating may be done in check(value), but needs reference
             to index and model - add reference to each node?
 
         """
         node = self.node_at(index)
         if role == Qt.CheckStateRole:
-            node.toggle_check()
+            node.check(value)
             db_commit()
             # Need to update display of progress for all parents in branch
             parent_node = node.parent
@@ -381,7 +383,7 @@ class TreeSeriesModel(QAbstractItemModel):
         :type index: :class:`.PySide.QtCore.QModelIndex`
 
         :returns: The flags :class:`.Qt.ItemIsUserCheckable` and
-            :class:`.Qt.ItemIsUserCheckable` for :class:`.TreeNode`
+            :class:`.Qt.ItemIsUserEnabled` for :class:`.TreeNode`
             types that implement :py:meth:`~.TreeNode.checked`.
         :returns: The flag :class:`.Qt.ItemIsEnabled` otherwise.
 

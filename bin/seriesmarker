@@ -4,4 +4,4 @@
 import seriesmarker.seriesmarker as seriesmarker
 
 if __name__ == "__main__":
-	seriesmarker.main()
+    seriesmarker.main()

@@ -225,11 +225,8 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_action_mark_watched_triggered(self):
-        #index = self.tree_proxy_model.mapToSource(
-        #   )
-        index = self.ui.tree_view.currentIndex()
-
-        self.tree_proxy_model.node_at(index).check(True)
+        self.tree_proxy_model.setData(self.ui.tree_view.currentIndex(),
+            Qt.Checked, Qt.CheckStateRole)
 
     @Slot()
     def on_action_mark_unwatched_triggered(self):
