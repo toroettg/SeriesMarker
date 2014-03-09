@@ -322,7 +322,7 @@ class TreeSeriesModel(QAbstractItemModel):
         self.removeRow(node.child_index())
         return node.data
 
-    def setData(self, index, value, role=Qt.CheckStateRole):
+    def setData(self, index, value, role=Qt.EditRole):
         """Sets the given value of the given role at the given index.
 
         This method is called whenever an episode is marked
@@ -359,18 +359,18 @@ class TreeSeriesModel(QAbstractItemModel):
             db_commit()
             # Need to update display of progress for all parents in branch
             parent_node = node.parent
-            while parent_node is not self.root:
-                child_index = parent_node.child_index()
-                episode_index = self.createIndex(child_index, 1, parent_node)
-                progress_index = self.createIndex(child_index, 2, parent_node)
+            while parent_node is not None:
+                episode_index = self.createIndex(index.row(), 1, parent_node)
+                progress_index = self.createIndex(index.row(), 2, parent_node)
                 self.dataChanged.emit(episode_index, progress_index)
                 parent_node = parent_node.parent
+            return True
         elif role == Qt.DecorationRole:
             node.banner_loaded(value)
+            self.dataChanged.emit(index, index)
+            return True
         else:
             return False
-        self.dataChanged.emit(index, index)
-        return True
 
     def flags(self, index):
         """Describes the item flags for a given index.

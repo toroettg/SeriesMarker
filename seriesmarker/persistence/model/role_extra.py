@@ -33,7 +33,7 @@ class RoleExtra(Base):
 
     role_id = Column(Integer, ForeignKey("role.id"))
 
-    image_url = Column("ImageURL", String)
+    image_url = Column("BannerURL", String)
 
     def __repr__(self):
         return "<RoleExtra('%s','%s')>" % (self.id, self.image_url)

@@ -18,7 +18,6 @@
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 from PySide.QtCore import Qt
-
 from PySide.QtGui import QIcon
 
 from seriesmarker.gui.model.tree_node import TreeNode

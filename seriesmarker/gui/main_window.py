@@ -40,6 +40,7 @@ from seriesmarker.persistence.factory.series_factory import SeriesFactory
 
 logger = logging.getLogger(__name__)
 
+
 class MainWindow(QMainWindow):
     """Displays the main application window."""
 
@@ -112,7 +113,7 @@ class MainWindow(QMainWindow):
 
         series = self.model.pop_related_series(index)
 
-        if series != None:
+        if series is not None:
             db_remove_series(series)
 
     @Slot()
@@ -160,7 +161,7 @@ class MainWindow(QMainWindow):
 
                 for removed_episode in removed_episodes:
                     episode_index = self.model.index_of(removed_episode,
-                        season_index)
+                                                        season_index)
                     episode_row = self.model.node_at(
                         episode_index).child_index()
                     self.model.removeRow(episode_row, season_index)
@@ -225,12 +226,15 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_action_mark_watched_triggered(self):
+        """Marks all episodes of the currently selected series as watched."""
         self.tree_proxy_model.setData(self.ui.tree_view.currentIndex(),
-            Qt.Checked, Qt.CheckStateRole)
+                                      Qt.Checked, role=Qt.CheckStateRole)
 
     @Slot()
     def on_action_mark_unwatched_triggered(self):
-        print("UNWATCHED")
+        """Marks all episodes of the currently selected series as unwatched."""
+        self.tree_proxy_model.setData(self.ui.tree_view.currentIndex(),
+                                      Qt.Unchecked, role=Qt.CheckStateRole)
 
     @Slot(QModelIndex)
     def on_list_view_entered(self, index):
@@ -239,6 +243,8 @@ class MainWindow(QMainWindow):
         A tooltip is set, when the mouse hovers above an episode in
         the list view.
 
+        :param index: The index of the item whose view has been entered.
+        :type index: :class:`.QtCore.QModelIndex`
         """
         node = self.model.node_at(index)
 
@@ -278,9 +284,3 @@ class MainWindow(QMainWindow):
     def on_action_exit_triggered(self):
         """Terminates the application normally."""
         QApplication.exit()
-
-
-
-
-
-

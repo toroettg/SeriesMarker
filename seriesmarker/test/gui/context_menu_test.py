@@ -20,6 +20,8 @@
 
 import unittest
 
+from PySide.QtCore import Qt
+
 from seriesmarker.test.database.base.memory_db_test_case import MemoryDBTestCase
 from seriesmarker.test.gui.base.main_window_test import MainWindowTest
 
@@ -79,6 +81,7 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
     def test_mark_watched_by_series(self):
         def check_result(check_mark_unwatched=False):
             from seriesmarker.persistence.model.series import Series
+
             series = self.db_session.query(Series).one()
 
             episode_count = watched_count = 0
@@ -93,11 +96,9 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
 
             self.assertEqual(target_count, watched_count,
                              "Not every episode has been marked correctly.")
-
-            self.assertEqual("  {} / {}  ".format(target_count, episode_count),
-                             self.window.ui.tree_view.model().data(
-                                 self.window.ui.tree_view.model().index(0, 1)),
-                             "Watched marking not displayed correctly")
+            self.check_tree_view_displays(
+                "  {} / {}  ".format(target_count, episode_count),
+                self.get_index(series_number=0, column=1))
 
         viewport, target = self.find_click_target()
 
@@ -109,8 +110,41 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         self.window.ui.action_mark_unwatched.trigger()
         check_result(True)
 
+
     def test_mark_watched_by_season(self):
-        self.fail()
+        def _check_result(check_state):
+            from seriesmarker.persistence.model.episode import Episode
+
+            series_index = self.get_index(series_number=0, column=1)
+            episode_count = self.db_session.query(Episode).count()
+
+            season_index = self.get_index(series_number=0, season_number=1)
+            season_episode_count = self.tree_view.model().node_at(
+                season_index).child_count()
+
+            target_count = 0 if check_state == Qt.Unchecked else season_episode_count
+
+            for i in range(season_episode_count):
+                self.check_list_view_displays(check_state, episode_number=i,
+                                              column=0, role=Qt.CheckStateRole)
+
+            self.check_tree_view_displays(
+                "  {} / {}  ".format(target_count, episode_count), series_index)
+
+        self.expand_series()
+        self.click(*self.find_click_target(season_number=1))
+
+        _check_result(Qt.Unchecked)
+
+        self.window.ui.action_mark_watched.trigger()
+
+        _check_result(Qt.Checked)
+
+        self.click(*self.find_click_target(season_number=1))
+        self.window.ui.action_mark_unwatched.trigger()
+
+        _check_result(Qt.Checked)
+
 
     def test_mark_watched_when_partial_watched(self):
         self.fail()
