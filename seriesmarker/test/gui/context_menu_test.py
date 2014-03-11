@@ -20,7 +20,7 @@
 
 import unittest
 
-from PySide.QtCore import Qt
+from PySide.QtCore import Qt, QPoint
 
 from seriesmarker.test.database.base.memory_db_test_case import MemoryDBTestCase
 from seriesmarker.test.gui.base.main_window_test import MainWindowTest
@@ -110,7 +110,6 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         self.window.ui.action_mark_unwatched.trigger()
         check_result(True)
 
-
     def test_mark_watched_by_season(self):
         def _check_result(check_state):
             from seriesmarker.persistence.model.episode import Episode
@@ -143,11 +142,31 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         self.click(*self.find_click_target(season_number=1))
         self.window.ui.action_mark_unwatched.trigger()
 
-        _check_result(Qt.Checked)
-
+        _check_result(Qt.Unchecked)
 
     def test_mark_watched_when_partial_watched(self):
-        self.fail()
+        self.expand_series()
+        self.click(*self.find_click_target(season_number=1))
+
+        self.click(*self.find_click_target(season_number=1, episode_number=0,
+                                           offset=QPoint(10, 10)))
+        self.click(*self.find_click_target(season_number=1, episode_number=2,
+                                           offset=QPoint(10, 10)))
+        self.check_count_marked_episodes_equals(season_number=1, expected=2)
+
+        self.click(*self.find_click_target(season_number=1))
+        self.window.ui.action_mark_watched.trigger()
+        self.check_count_marked_episodes_equals(season_number=1, expected=4)
+
+        self.click(*self.find_click_target(season_number=1, episode_number=1,
+                                           offset=QPoint(10, 10)))
+        self.click(*self.find_click_target(season_number=1, episode_number=3,
+                                           offset=QPoint(10, 10)))
+        self.check_count_marked_episodes_equals(season_number=1, expected=2)
+
+        self.click(*self.find_click_target(season_number=1))
+        self.window.ui.action_mark_unwatched.trigger()
+        self.check_count_marked_episodes_equals(season_number=1, expected=0)
 
 
 def get_suit():

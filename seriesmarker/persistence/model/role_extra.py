@@ -20,8 +20,7 @@
 
 from seriesmarker.persistence.database import Base
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.sql.sqltypes import String
-from sqlalchemy.types import Integer
+from sqlalchemy.types import Integer, String
 
 
 class RoleExtra(Base):

@@ -1,10 +1,7 @@
 from unittest.mock import MagicMock
 
 from PySide.QtCore import Qt
-
-from PySide.QtGui import QTreeView
-from PySide.QtGui import QListView
-
+from PySide.QtGui import QTreeView, QListView
 from PySide.QtTest import QTest
 from pytvdbapi.api import Show
 
@@ -57,7 +54,8 @@ class MainWindowTest(GUITestCase):
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
 
-    def find_click_target(self, series_number=0, season_number=None):
+    def find_click_target(self, series_number=0, season_number=None,
+                          episode_number=None, offset=None):
         """Finds the coordinates of an item in the tree view.
 
         :param series_number: The number of the series to find the coordinates for.
@@ -68,17 +66,18 @@ class MainWindowTest(GUITestCase):
         :returns: The viewport of the tree view and the coordinates of the item's center.
 
         """
-        return self.tree_view.viewport(), self.tree_view.visualRect(
-            self.get_index(series_number, season_number)).center()
+        index = self.get_index(series_number, season_number, episode_number)
+        view = self.list_view if episode_number is not None else self.tree_view
+        if offset:
+            target = view.visualRect(index).topLeft() + offset
+        else:
+            target = view.visualRect(index).center()
+        return view.viewport(), target
 
     def check_list_view_displays(self, expected, episode_number, column=1,
                                  role=Qt.DisplayRole):
-        season_index = self.list_view.rootIndex()
-        index = self.list_view.model().index(episode_number, column,
-                                             season_index)
-
+        index = self.get_index(episode_number=episode_number, column=column)
         data = self.list_view.model().data(index, role)
-
         self.assertEqual(expected, data,
                          "Displayed data for episode incorrect.")
 
@@ -86,16 +85,35 @@ class MainWindowTest(GUITestCase):
         self.assertEqual(expected, self.tree_view.model().data(index),
                          "Displayed data for index incorrect.")
 
+    def check_count_marked_episodes_equals(self, expected, series_number=0,
+                                           season_number=0):
+
+        season_node = self.tree_view.model().data(
+            self.get_index(series_number, season_number), Qt.UserRole)
+
+        count_watched = 0
+        for i in range(season_node.child_count()):
+            if self.list_view.model().data(
+                    self.get_index(series_number, season_number, i),
+                    Qt.CheckStateRole) == Qt.Checked:
+                count_watched += 1
+        self.assertEqual(expected, count_watched,
+                         "Number of watched episodes did not match.")
+
     def get_index(self, series_number=0, season_number=None,
                   episode_number=None, column=0):
-        model = self.tree_view.model()
-
-        node_index = model.index(series_number, column)
-        if season_number:
-            node_index = model.index(season_number, column, node_index)
-            if episode_number:
-                node_index = model.index(episode_number, column, node_index)
-        return node_index
+        if episode_number is not None:
+            node_index = self.list_view.model().index(episode_number, column,
+                                                      self.list_view.rootIndex())
+        else:
+            node_index = self.tree_view.model().index(series_number, column)
+            if season_number is not None:
+                node_index = self.tree_view.model().index(season_number, column,
+                                                          node_index)
+        if node_index.isValid():
+            return node_index
+        else:
+            self.fail("Requested index is invalid.")
 
     def tearDown(self):
         QTest.mouseMove(self.window,

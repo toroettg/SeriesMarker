@@ -320,11 +320,11 @@ It is also necessary to add `CMake`_ and `qmake`_ to your `Path`:
 
 *
 	`CMake`_ will ask you if it shall be added to your path while installing,
- 	otherwise it can be found in its install directory, e.g.,
- 	``C:\Program Files\CMake 2.8\bin``.
+    otherwise it can be found in its install directory, e.g.,
+    ``C:\Program Files\CMake 2.8\bin``.
 *
-	`qmake`_ was installed along with `Qt`_ and can be found in its install
-	directory, e.g., ``C:\Qt\4.8.5\bin``.
+    `qmake`_ was installed along with `Qt`_ and can be found in its install
+    directory, e.g., ``C:\Qt\4.8.5\bin``.
 
 
 Install SeriesMarker
@@ -335,7 +335,7 @@ With the prerequisites fulfilled, SeriesMarker can now be built. Open the
 
 .. code-block:: none
 
-	pip install SeriesMarker
+    pip install SeriesMarker
 
 This will fetch, build, and install SeriesMarker together with its
 :ref:`dependencies <dependencies>` from source.
@@ -346,7 +346,7 @@ e.g.,
 
 .. code-block:: none
 
-	C:\Python33\python.exe C:\Python33\Scripts\seriesmarker
+    C:\Python33\python.exe C:\Python33\Scripts\seriesmarker
 
 as the shortcut's `Target`. SeriesMarker can then be executed conveniently
 via the shortcut.
@@ -384,13 +384,13 @@ in the `Mac App Store`_ on your system for free. It also requires the
 More information can be found at `Installing MacPorts <MacPorts_Install>`_.
 
 .. note::
-	It is not sufficient to install the `Command Line Tools` only,
-	leaving out `Xcode`_.
+    It is not sufficient to install the `Command Line Tools` only,
+    leaving out `Xcode`_.
 
 .. note::
-	If you intend to create a distributable binary for OS X as well,
-	you should also fulfill the :ref:`distribute_osx_pre_plus` before
-	continuing.
+    If you intend to create a distributable binary for OS X as well,
+    you should also fulfill the :ref:`distribute_osx_pre_plus` before
+    continuing.
 
 
 .. _building_osx_install_deps:
@@ -404,20 +404,20 @@ for more information):
 
 .. code-block:: bash
 
-	$sudo port selfupdate
+    $sudo port selfupdate
 
 The following commands will install those of SeriesMarker's
 :ref:`dependencies <dependencies>`, which are available as ports:
 
 .. code-block:: bash
 
-	$sudo port install python33
-	$sudo port install py33-pyside
-	$sudo port install py33-sqlalchemy
+    $sudo port install python33
+    $sudo port install py33-pyside
+    $sudo port install py33-sqlalchemy
 
 .. note::
-	In the default configuration of `MacPorts`_, pre-build packages are
-	loaded instead of building them from source.
+    In the default configuration of `MacPorts`_, pre-build packages are
+    loaded instead of building them from source.
 
 The commands mentioned above will also install all necessary
 make-dependencies, including `Qt`_.
@@ -428,9 +428,9 @@ as well:
 
 .. code-block:: bash
 
-	$sudo port install py33-pip
-	$sudo pip-3.3 install pytvdbapi
-	$sudo pip-3.3 install appdirs
+    $sudo port install py33-pip
+    $sudo pip-3.3 install pytvdbapi
+    $sudo pip-3.3 install appdirs
 
 
 Install SeriesMarker
@@ -441,20 +441,20 @@ the `SeriesMarker Package Site`_, build, and install the application.
 
 .. code-block:: bash
 
-	$sudo pip-3.3 install --no-deps SeriesMarker
+    $sudo pip-3.3 install --no-deps SeriesMarker
 
 .. note::
-	Due to the mix of installation methods, some packages are not being
-	recognized correctly by `pip`_. The parameter ``--no-deps`` prevents
-	it from re-building SeriesMarkers' :ref:`dependencies <dependencies>`,
-	which have been installed beforehand.
+    Due to the mix of installation methods, some packages are not being
+    recognized correctly by `pip`_. The parameter ``--no-deps`` prevents
+    it from re-building SeriesMarkers' :ref:`dependencies <dependencies>`,
+    which have been installed beforehand.
 
 The location of the SeriesMarker executable is displayed at the end of the
 install process by `pip`_, e.g.:
 
 .. code-block:: none
 
-	/opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin/seriesmarker
+    /opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin/seriesmarker
 
 SeriesMarker can now be started from within a shell at this path. You may
 want to create a shortcut to the executable for your convenience, e.g., in
@@ -462,7 +462,7 @@ your applications directory:
 
 .. code-block:: bash
 
-	$ln -s /opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin/seriesmarker /Applications/SeriesMarker
+    $ln -s /opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin/seriesmarker /Applications/SeriesMarker
 
 You may now continue with the :ref:`User Guide` or explore the software on your own.
 
