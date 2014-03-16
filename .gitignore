@@ -11,3 +11,6 @@ MANIFEST
 .project
 .pydevproject
 .settings
+
+#PyCharm
+.idea
