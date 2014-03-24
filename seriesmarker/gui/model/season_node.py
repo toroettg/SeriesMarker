@@ -65,16 +65,3 @@ class SeasonNode(TreeNode):
         """
         if self.data.banner:
             return self.data.banner.extra.banner_url
-
-    def check(self, state):
-        """Sets the checked state for each child to the given state.
-
-        :param state: The checked state to set.
-        :type state: boolean
-
-        :emphasis:`Overrides` :py:meth:`.TreeNode.check`
-
-        """
-        for child in self.children:
-            if state != child.checked():
-                child.check(state)

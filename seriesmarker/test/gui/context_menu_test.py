@@ -20,7 +20,7 @@
 
 import unittest
 
-from PySide.QtCore import Qt, QPoint
+from PySide.QtCore import Qt
 
 from seriesmarker.test.database.base.memory_db_test_case import MemoryDBTestCase
 from seriesmarker.test.gui.base.main_window_test import MainWindowTest
@@ -42,20 +42,19 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
     def setUp(self):
         MemoryDBTestCase.setUp(self)
         MainWindowTest.setUp(self)
-        add_button = self.window.ui.toolBar.widgetForAction(
-            self.window.ui.action_add)
-        self.click(add_button)
+
+        self.check_count_series_equals(0)
+        self.click_add_button()
+        self.check_count_series_equals(1)
 
         from seriesmarker.persistence.model.series import Series
 
         self.assertEqual(self.db_session.query(Series).count(), 1,
                          "No Series to remove in database.")
-        self.assertEqual(self.window.model.rowCount(), 1,
-                         "Model/View does not contain a Series.")
 
     def test_delete_by_series(self):
         """Tests the removal of a series via context menu, by clicking on itself."""
-        self.click(*self.find_click_target())
+        self.select(series_number=0)
         self.window.ui.action_remove.trigger()
 
         from seriesmarker.persistence.model.series import Series
@@ -68,7 +67,7 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
     def test_delete_by_season(self):
         """Tests the removal of a series via context menu, by clicking on a season."""
         self.expand_series()
-        self.click(*self.find_click_target(season_number=0))
+        self.select(series_number=0, season_number=0)
         self.window.ui.action_remove.trigger()
 
         from seriesmarker.persistence.model.series import Series
@@ -100,13 +99,11 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
                 "  {} / {}  ".format(target_count, episode_count),
                 self.get_index(series_number=0, column=1))
 
-        viewport, target = self.find_click_target()
-
-        self.click(viewport, target)
+        self.select(series_number=0)
         self.window.ui.action_mark_watched.trigger()
         check_result()
 
-        self.click(viewport, target)
+        self.select(series_number=0)
         self.window.ui.action_mark_unwatched.trigger()
         check_result(True)
 
@@ -124,14 +121,16 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
             target_count = 0 if check_state == Qt.Unchecked else season_episode_count
 
             for i in range(season_episode_count):
-                self.check_list_view_displays(check_state, episode_number=i,
+                self.check_list_view_displays(check_state, series_number=0,
+                                              season_number=1, episode_number=i,
                                               column=0, role=Qt.CheckStateRole)
 
-            self.check_tree_view_displays(
-                "  {} / {}  ".format(target_count, episode_count), series_index)
+                self.check_tree_view_displays(
+                    "  {} / {}  ".format(target_count, episode_count),
+                    series_index)
 
         self.expand_series()
-        self.click(*self.find_click_target(season_number=1))
+        self.select(series_number=0, season_number=1)
 
         _check_result(Qt.Unchecked)
 
@@ -139,32 +138,31 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
 
         _check_result(Qt.Checked)
 
-        self.click(*self.find_click_target(season_number=1))
+        self.select(series_number=0, season_number=1)
         self.window.ui.action_mark_unwatched.trigger()
 
         _check_result(Qt.Unchecked)
 
     def test_mark_watched_when_partial_watched(self):
         self.expand_series()
-        self.click(*self.find_click_target(season_number=1))
+        self.select(series_number=0, season_number=1)
 
-        self.click(*self.find_click_target(season_number=1, episode_number=0,
-                                           offset=QPoint(10, 10)))
-        self.click(*self.find_click_target(season_number=1, episode_number=2,
-                                           offset=QPoint(10, 10)))
+        self.mark_episode(series_number=0, season_number=1, episode_number=0)
+        self.mark_episode(series_number=0, season_number=1, episode_number=2)
+
         self.check_count_marked_episodes_equals(season_number=1, expected=2)
 
-        self.click(*self.find_click_target(season_number=1))
+        self.select(series_number=0, season_number=1)
         self.window.ui.action_mark_watched.trigger()
         self.check_count_marked_episodes_equals(season_number=1, expected=4)
 
-        self.click(*self.find_click_target(season_number=1, episode_number=1,
-                                           offset=QPoint(10, 10)))
-        self.click(*self.find_click_target(season_number=1, episode_number=3,
-                                           offset=QPoint(10, 10)))
+        self.mark_episode(series_number=0, season_number=1, episode_number=1,
+                          expected=Qt.Unchecked)
+        self.mark_episode(series_number=0, season_number=1, episode_number=3,
+                          expected=Qt.Unchecked)
         self.check_count_marked_episodes_equals(season_number=1, expected=2)
 
-        self.click(*self.find_click_target(season_number=1))
+        self.select(series_number=0, season_number=1)
         self.window.ui.action_mark_unwatched.trigger()
         self.check_count_marked_episodes_equals(season_number=1, expected=0)
 

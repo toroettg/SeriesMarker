@@ -20,7 +20,7 @@
 
 import unittest
 
-from seriesmarker.test.gui import search_dialog_test, main_window_test, \
+from seriesmarker.test.gui import search_dialog_test, story_test, \
     sorting_test, context_menu_test
 
 
@@ -28,7 +28,7 @@ def get_suit():
     gui_suites = unittest.TestSuite()
 
     gui_suites.addTest(search_dialog_test.get_suit())
-    gui_suites.addTest(main_window_test.get_suit())
+    gui_suites.addTest(story_test.get_suit())
     gui_suites.addTest(sorting_test.get_suit())
     gui_suites.addTest(context_menu_test.get_suit())
 

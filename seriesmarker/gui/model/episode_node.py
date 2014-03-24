@@ -63,15 +63,16 @@ class EpisodeNode(TreeNode):
         """
         if state == Qt.Checked:
             self.data.extra.watched = True
-            self._adjust_caches(0, 1)
+            return 1
         elif state == Qt.Unchecked:
             self.data.extra.watched = False
-            self._adjust_caches(0, -1)
+            return -1
 
     def checked(self):
         """Gets the checked state of the node.
 
-        :returns: True if the episode is marked as watched, otherwise False.
+        :returns: :class:`Qt.Checked` if the episode is marked as watched,
+            otherwise :class:`Qt.Unchecked`.
 
         :emphasis:`Overrides` :py:meth:`.TreeNode.checked`
 

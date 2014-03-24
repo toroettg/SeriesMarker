@@ -19,6 +19,7 @@
 #==============================================================================
 
 from bisect import bisect
+import logging
 
 from PySide.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PySide.QtGui import QFont
@@ -31,6 +32,8 @@ from seriesmarker.persistence.database import db_commit
 from seriesmarker.persistence.model.episode import Episode
 from seriesmarker.persistence.model.season import Season
 from seriesmarker.persistence.model.series import Series
+
+logger = logging.getLogger(__name__)
 
 
 class TreeSeriesModel(QAbstractItemModel):
@@ -150,6 +153,82 @@ class TreeSeriesModel(QAbstractItemModel):
                 else:
                     return Qt.AlignCenter
         return None
+
+    def setData(self, index, value, role=Qt.EditRole):
+        """Sets the given value of the given role at the given index.
+
+        This method is called whenever an episode is marked
+        as (un)watched in the GUI. It then toggles the watched state
+        of the corresponding :class:`.Episode`.
+
+        This method is also called whenever a banner was loaded to set
+        a :class:`.PySide.QtGui.Pixmap` as the node's decoration and
+        refresh the views afterwards.
+
+        :param index: The position to set the value at.
+        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :param value: Value to be set at given index: :class:`Qt.CheckState` for
+            :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
+            for :class:`Qt.DecorationRole`.
+        :type value: object
+        :param role: Determines the kind of data to set for the item.
+        :type role: integer
+
+        :returns: True if successful, otherwise False.
+
+        :emphasis:`Overrides` :py:meth:`.QAbstractItemModel.setData`
+
+        .. todo::
+            Update of parent's progress kinda ugly (also being updated if
+            not necessary - i.e. cache had not been set, yet.
+            Updating may be done in check(value), but needs reference
+            to index and model - add reference to each node? Example:
+              check(state):
+                self.checkstate = state
+                self.cache += delta
+                model.dataChanged.emit(self.index)
+
+        """
+        node = self.node_at(index)
+        if role == Qt.CheckStateRole:
+            def visit(node, index):
+                logger.debug("Visiting {}".format(node))
+                delta = 0
+                for i, child_node in enumerate(node.children):
+                    if node.checked() != value:
+                        delta += visit(child_node, self.createIndex(i, 0, node))
+                if delta:
+                    logger.debug("  Change emitted {}".format(delta))
+                    episode_index = self.createIndex(index.row(), 1,
+                                                     node.parent)
+                    progress_index = self.createIndex(index.row(), 2,
+                                                      node.parent)
+                    self.dataChanged.emit(episode_index, progress_index)
+                    node._checked_cache += delta
+                result = node.check(value)
+                delta += result if result is not None else 0
+
+                return delta
+
+            delta = visit(node, index)
+            db_commit()
+            # Need to update display of progress for all parents in branch
+            parent_node = node.parent
+            while parent_node is not None:
+                if parent_node._checked_cache is not None:
+                    parent_node._checked_cache += delta
+
+                episode_index = self.createIndex(index.row(), 1, parent_node)
+                progress_index = self.createIndex(index.row(), 2, parent_node)
+                self.dataChanged.emit(episode_index, progress_index)
+                parent_node = parent_node.parent
+            return True
+        elif role == Qt.DecorationRole:
+            node.banner_loaded(value)
+            self.dataChanged.emit(index, index)
+            return True
+        else:
+            return False
 
     def index(self, row, column, parent=QModelIndex()):
         """Returns the index of the item at the given row
@@ -321,56 +400,6 @@ class TreeSeriesModel(QAbstractItemModel):
             node = node.parent
         self.removeRow(node.child_index())
         return node.data
-
-    def setData(self, index, value, role=Qt.EditRole):
-        """Sets the given value of the given role at the given index.
-
-        This method is called whenever an episode is marked
-        as (un)watched in the GUI. It then toggles the watched state
-        of the corresponding :class:`.Episode`.
-
-        This method is also called whenever a banner was loaded to set
-        a :class:`.PySide.QtGui.Pixmap` as the node's decoration and
-        refresh the views afterwards.
-
-        :param index: The position to set the value at.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
-        :param value: Value to be set at given index: :class:`Qt.CheckState` for
-            :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
-            for :class:`Qt.DecorationRole`.
-        :type value: object
-        :param role: Determines the kind of data to set for the item.
-        :type role: integer
-
-        :returns: True if successful, otherwise False.
-
-        :emphasis:`Overrides` :py:meth:`.QAbstractItemModel.setData`
-
-        .. todo::
-            Update of parent's progress kinda ugly (also being updated if
-            not necessary - i.e. cache had not been set, yet.
-            Updating may be done in check(value), but needs reference
-            to index and model - add reference to each node?
-
-        """
-        node = self.node_at(index)
-        if role == Qt.CheckStateRole:
-            node.check(value)
-            db_commit()
-            # Need to update display of progress for all parents in branch
-            parent_node = node.parent
-            while parent_node is not None:
-                episode_index = self.createIndex(index.row(), 1, parent_node)
-                progress_index = self.createIndex(index.row(), 2, parent_node)
-                self.dataChanged.emit(episode_index, progress_index)
-                parent_node = parent_node.parent
-            return True
-        elif role == Qt.DecorationRole:
-            node.banner_loaded(value)
-            self.dataChanged.emit(index, index)
-            return True
-        else:
-            return False
 
     def flags(self, index):
         """Describes the item flags for a given index.

@@ -29,6 +29,8 @@ class TreeNode(DecoratedNode):
     def __init__(self, data, parent=None):
         """Initializes the node.
 
+        :param model: The model the node has been added to.
+        :type index: :class:`.QtCore.QAbstractItemModel`
         :param data: The data the node contains.
         :type data: object
         :param parent: The node's parent in the tree.
@@ -216,4 +218,4 @@ class TreeNode(DecoratedNode):
             :py:meth:`.checked`
 
         """
-        pass
+        return None

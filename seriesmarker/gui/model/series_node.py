@@ -21,6 +21,7 @@
 from seriesmarker.gui.model.season_node import SeasonNode
 from seriesmarker.gui.model.tree_node import TreeNode
 
+
 class SeriesNode(TreeNode):
     """Provides data for display about a :class:`.Series`."""
 
@@ -51,18 +52,6 @@ class SeriesNode(TreeNode):
 
         """
         return self.data.series_name
-
-    def check(self, state):
-        """Sets the checked state for each child to the given state.
-
-        :param state: The checked state to set.
-        :type state: boolean
-
-        :emphasis:`Overrides` :py:meth:`.TreeNode.check`
-
-        """
-        for child in self.children:
-            child.check(state)
 
     def banner_url(self):
         """Defines the decoration of the node.
