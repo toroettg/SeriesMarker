@@ -50,5 +50,5 @@ application_dependencies = ['pytvdbapi', 'PySide', 'appdirs', 'SQLAlchemy']  #: 
 
 dirs = AppDirs(application_name, application_author)  #: Defines platform-independent directories, used by the application.
 
-loglevel = logging.DEBUG  #: The default log level (=INFO) of the application.
+loglevel = logging.INFO  #: The default log level (=INFO) of the application.
 

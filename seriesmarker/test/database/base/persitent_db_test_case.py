@@ -23,8 +23,8 @@ import shutil
 import tempfile
 
 from seriesmarker.test.database.base.db_test_case import DBTestCase
-
 import seriesmarker.util.config as config
+
 
 class PersistentDBTestCase(DBTestCase):
     """Prepares the execution of persistent test cases for deriving
@@ -41,10 +41,11 @@ class PersistentDBTestCase(DBTestCase):
 
         """
         data_dir_path = os.path.join(tempfile.gettempdir(),
-            config.application_name)
+                                     config.application_name)
         cache_dir_path = os.path.join(tempfile.gettempdir(),
-            config.application_name, "cache")
+                                      config.application_name, "cache")
         config.dirs = AppDirsMock(data_dir_path, cache_dir_path)
+        cls.deleteDatabase()
 
     @classmethod
     def deleteDatabase(cls):
@@ -63,6 +64,7 @@ class PersistentDBTestCase(DBTestCase):
     @classmethod
     def tearDownClass(cls):
         cls.deleteDatabase()
+
 
 class AppDirsMock(object):
     """Emulates the appdirs package with custom directories."""

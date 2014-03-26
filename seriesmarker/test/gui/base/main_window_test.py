@@ -29,11 +29,13 @@ class MainWindowTest(GUITestCase):
             return_value=ExampleDataFactory.new_pytvdb_show("HIMYM"))
         Show.update = MagicMock()
 
-    def click_add_button(self):
+    def click_add_button(self, times=1):
         add_button = self.window.ui.toolBar.widgetForAction(
             self.window.ui.action_add)
-        self.click(add_button)
-        SearchDialog.exec_.assert_called_once_with()
+        for i in range(times):
+            self.click(add_button)
+        self.assertEqual(SearchDialog.exec_.call_count, times,
+                         "'Add' not called correctly")
 
     def expand_series(self, series_number=0):
         """Expands the series with given index in the main window.
@@ -66,14 +68,14 @@ class MainWindowTest(GUITestCase):
         self.assertEqual(expected, self.list_view.model().data(episode_index,
                                                                Qt.CheckStateRole),
                          "Model did not return expected CheckState for episode")
-        self.assertEqual(expected, episode_node.checked(),
-                         "Node did not return expected value from checked() method.")
         if expected == Qt.Checked:
             expected_boolean = True
         elif expected == Qt.Unchecked:
             expected_boolean = False
         else:
             expected_boolean = None
+        self.assertEqual(expected_boolean, episode_node.checked(),
+                         "Node did not return expected value from checked() method.")
         self.assertEqual(expected_boolean, episode_node.data.extra.watched,
                          "Episode was not toggled")
 

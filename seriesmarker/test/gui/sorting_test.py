@@ -23,18 +23,16 @@ import unittest
 from unittest.mock import MagicMock
 
 from PySide.QtCore import Qt, QModelIndex
-from PySide.QtGui import QTreeView
-from PySide.QtTest import QTest
 from pytvdbapi.api import Show
 
 from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.test.database.base.persitent_db_test_case import \
     PersistentDBTestCase
-from seriesmarker.test.gui.base.gui_test_case import GUITestCase
+from seriesmarker.test.gui.base.main_window_test import MainWindowTest
 from seriesmarker.test.util.example_data_factory import ExampleDataFactory
 
 
-class SortingTest(GUITestCase, PersistentDBTestCase):
+class SortingTest(MainWindowTest, PersistentDBTestCase):
     """Performs tests of the application's main window's features
     related to sorting.
 
@@ -46,23 +44,14 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
 
     @classmethod
     def setUpClass(cls):
-        GUITestCase.setUpClass()
+        MainWindowTest.setUpClass()
         PersistentDBTestCase.setUpClass()
 
         from seriesmarker.persistence.database import db_init
+
         db_init()
 
-    def setUp(self):
-        from seriesmarker.gui.main_window import MainWindow
-        self.window = MainWindow()
-        self.window.show()
-        QTest.qWaitForWindowShown(self.window)
-        self.tree_view = self.window.findChild(QTreeView, "tree_view")
-
     def test_01_sort_on_add(self):
-        add_button = self.window.ui.toolBar.widgetForAction(
-            self.window.ui.action_add)
-
         Show.update = MagicMock()
 
         series = []
@@ -78,44 +67,47 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
 
         self.assertEqual(self.window.model.rowCount(), 0,
                          "Default model is not empty")
-
-        for x in range(len(series)):  # @UnusedVariable
-            self.click(add_button)
-
-        self.assertEqual(SearchDialog.exec_.call_count, 7,
-                         "'Add' not called correctly")
+        self.click_add_button(times=len(series))
         self.assertEqual(self.window.model.rowCount(), 7,
                          "Selected series were not added")
 
-        # Create progress by marking specific episodes watched
-        model = self.tree_view.model()
-        for series_number in range(0, model.rowCount()):
-            series_index = model.index(series_number, 0)
-            series_node = model.node_at(series_index)
+        def prepare_next_test():
+            # Create progress by marking specific episodes watched
+            model = self.window.model
+            for series_number in range(0, model.rowCount()):
+                series_index = model.index(series_number, 0)
+                series_node = model.node_at(series_index)
 
-            name = series_node.name()
-            if name == "How I Met Your Mother":
-                select = 6
-            elif name == "Rome: Power & Glory":
-                select = 2
-            else:
-                select = 1
-            episodes = []
-            for season_node in series_node.children:
-                for episode_node in season_node.children:
-                    episodes.append(episode_node)
-            for index in range(0, select):
-                episodes[index].check(Qt.Checked)
+                name = series_node.name()
+                if name == "How I Met Your Mother":
+                    select = 6
+                elif name == "Rome: Power & Glory":
+                    select = 2
+                else:
+                    select = 1
+                episodes = []
+                for season_node in series_node.children:
+                    season_index = model.index(season_node.child_index(), 0,
+                                               series_index)
+                    for episode_node in season_node.children:
+                        episode_index = model.index(episode_node.child_index(),
+                                                    0, season_index)
+                        episodes.append(episode_index)
+                for index in range(0, select):
+                    model.setData(episodes[index], Qt.Checked,
+                                  role=Qt.CheckStateRole)
 
-        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                  ("Defiance", "  1 / 3  ", "33.3%"),
-                  ("Doctor Who", "  1 / 12 ", "8.3%"),
-                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-                  ("Mad Love", "  1 / 2  ", "50.0%"),
-                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                  ("The Wonder Years", "  1 / 1  ", "100.0%")]
-        self._check_displayed_data(0, Qt.AscendingOrder, result,
-                                   "Sort view after adding a series")
+            result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+                      ("Defiance", "  1 / 3  ", "33.3%"),
+                      ("Doctor Who", "  1 / 12 ", "8.3%"),
+                      ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+                      ("Mad Love", "  1 / 2  ", "50.0%"),
+                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                      ("The Wonder Years", "  1 / 1  ", "100.0%")]
+            self._check_displayed_data(0, Qt.AscendingOrder, result,
+                                       "Sort view after adding a series")
+
+        prepare_next_test()
 
     def test_02_sort_on_load(self):
         result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
@@ -247,12 +239,6 @@ class SortingTest(GUITestCase, PersistentDBTestCase):
         self.click(self.tree_view.header().viewport(), target)
         self._check_displayed_data(1, Qt.AscendingOrder, result,
                                    "Sort view after ascending sort by episodes")
-
-    def tearDown(self):
-        QTest.mouseMove(self.window,
-                        delay=2000)  # Emulates waiting, can be removed
-        self.window.close()
-        super().tearDown()
 
     def _check_displayed_data(self, expected_section, expected_order,
                               expected_result, msg, parent=QModelIndex()):

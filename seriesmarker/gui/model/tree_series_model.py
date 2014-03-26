@@ -46,22 +46,15 @@ class TreeSeriesModel(QAbstractItemModel):
 
     """
 
-    def __init__(self, series_list=None, parent=None):
-        """Initializes the model and adds given series to it.
+    def __init__(self, parent=None):
+        """Initializes the model with a given parent.
 
-        :param series_list: A list of :class:`.Series` to add.
-        :type series_list: list
         :param parent: The parent of the model.
         :type parent: :class:`.PySide.QtCore.QObject`
 
         """
         super().__init__(parent)
-
         self.root = TreeNode("Series")
-
-        if series_list != None:
-            for series in series_list:
-                self.root.append(SeriesNode(series, self.root))
 
     def headerData(self, section, orientation, role):
         """Defines the header data displayed in the GUI.
@@ -143,7 +136,13 @@ class TreeSeriesModel(QAbstractItemModel):
             elif role == Qt.DecorationRole:
                 return node.decoration(index)
             elif role == Qt.CheckStateRole:
-                return node.checked()
+                state = node.checked()
+                if state == True:
+                    return Qt.Checked
+                elif state == False:
+                    return Qt.Unchecked
+                else:
+                    return None
             elif role == Qt.FontRole:
                 if column == 1:
                     return QFont("Monospace")
@@ -179,10 +178,9 @@ class TreeSeriesModel(QAbstractItemModel):
         :emphasis:`Overrides` :py:meth:`.QAbstractItemModel.setData`
 
         .. todo::
-            Update of parent's progress kinda ugly (also being updated if
-            not necessary - i.e. cache had not been set, yet.
-            Updating may be done in check(value), but needs reference
-            to index and model - add reference to each node? Example:
+            Update of CheckState / progress kinda ugly, may be done in
+            check(value), but needs reference to index and model - add
+            reference to each node? Example:
               check(state):
                 self.checkstate = state
                 self.cache += delta
@@ -191,38 +189,47 @@ class TreeSeriesModel(QAbstractItemModel):
         """
         node = self.node_at(index)
         if role == Qt.CheckStateRole:
-            def visit(node, index):
-                logger.debug("Visiting {}".format(node))
-                delta = 0
-                for i, child_node in enumerate(node.children):
-                    if node.checked() != value:
-                        delta += visit(child_node, self.createIndex(i, 0, node))
-                if delta:
-                    logger.debug("  Change emitted {}".format(delta))
-                    episode_index = self.createIndex(index.row(), 1,
-                                                     node.parent)
-                    progress_index = self.createIndex(index.row(), 2,
-                                                      node.parent)
-                    self.dataChanged.emit(episode_index, progress_index)
-                    node._checked_cache += delta
-                result = node.check(value)
-                delta += result if result is not None else 0
+            if value == Qt.Checked:
+                value = True
+            elif value == Qt.Unchecked:
+                value = False
+            else:
+                value = None
 
+            def notify_change(index):
+                node = self.node_at(index)
+                episode_index = self.createIndex(index.row(), 1, node)
+                progress_index = self.createIndex(index.row(), 2, node)
+                self.dataChanged.emit(episode_index, progress_index)
+
+            def traverse_down(node, index):
+                delta = 0
+                for child_node in node.children:
+                    delta += traverse_down(child_node,
+                                           self.index(child_node.child_index(),
+                                                      0, index))
+                delta += node.check(value)
+                if delta and node.checked_cache is not None and not isinstance(
+                        node, EpisodeNode):
+                    #Need to inform about cache changes only
+                    node.checked_cache += delta
+                    notify_change(index)
                 return delta
 
-            delta = visit(node, index)
-            db_commit()
-            # Need to update display of progress for all parents in branch
-            parent_node = node.parent
-            while parent_node is not None:
-                if parent_node._checked_cache is not None:
-                    parent_node._checked_cache += delta
+            def traverse_up(node, index):
+                if node is not self.root and node.checked_cache is not None:
+                    node.checked_cache += delta
+                    notify_change(index)
+                    traverse_up(node.parent, index.parent())
 
-                episode_index = self.createIndex(index.row(), 1, parent_node)
-                progress_index = self.createIndex(index.row(), 2, parent_node)
-                self.dataChanged.emit(episode_index, progress_index)
-                parent_node = parent_node.parent
-            return True
+            delta = traverse_down(node, index)
+            if delta:
+                db_commit()
+                # Need to update display of progress for all parents in branch
+                traverse_up(node.parent, index.parent())
+                return True
+            else:
+                return False
         elif role == Qt.DecorationRole:
             node.banner_loaded(value)
             self.dataChanged.emit(index, index)
@@ -257,7 +264,7 @@ class TreeSeriesModel(QAbstractItemModel):
         else:
             return self.createIndex(row, column, child_node)
 
-    def index_of(self, item, parent_index=QModelIndex()):
+    def index_of(self, item, parent=QModelIndex()):
         """Looks up the index of the item's node in the model.
 
         The method checks the children of the parent, referred by the given
@@ -266,16 +273,16 @@ class TreeSeriesModel(QAbstractItemModel):
 
         :param item: Data contained in a :class:`.TreeNode` to look for.
         :type item: object
-        :param parent_index: The index referring to the parent
+        :param parent: The index referring to the parent
             node of the given item's node.
-        :type parent_index: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`.PySide.QtCore.QModelIndex`
 
         :returns: A :class:`.PySide.QtCore.QModelIndex`, referring to
             the node which contains the given item if the search was
             successful, otherwise an invalid index.
 
         """
-        parent_node = self.node_at(parent_index)
+        parent_node = self.node_at(parent)
 
         try:
             row = next(
@@ -284,7 +291,7 @@ class TreeSeriesModel(QAbstractItemModel):
         except StopIteration:
             return QModelIndex()
         else:
-            return self.index(row, 0, parent_index)
+            return self.index(row, 0, parent)
 
     def parent(self, child_index):
         """Returns the index referring to the parent of the node referred by

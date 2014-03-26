@@ -43,7 +43,7 @@ class TreeNode(DecoratedNode):
         self.data = data
         self._children = []
         self._leaf_cache = None
-        self._checked_cache = None
+        self.checked_cache = None
 
     @property
     def children(self):
@@ -92,12 +92,12 @@ class TreeNode(DecoratedNode):
         :returns: The count of checked nodes in the node's branch.
 
         """
-        if self._checked_cache == None:
+        if self.checked_cache == None:
             count = 1 if self.checked() else 0
             for child in self._children:
                 count = count + child.checked_count()
-            self._checked_cache = count
-        return self._checked_cache
+            self.checked_cache = count
+        return self.checked_cache
 
     def child(self, index):
         """Returns the node's child at the given index.
@@ -175,8 +175,8 @@ class TreeNode(DecoratedNode):
         else:
             delta_leaves = 0  # Do not propagate beyond uninitialized nodes
 
-        if self._checked_cache != None and delta_checks:
-            self._checked_cache = self._checked_cache + delta_checks
+        if self.checked_cache != None and delta_checks:
+            self.checked_cache = self.checked_cache + delta_checks
         else:
             delta_checks = 0  # Do not propagate beyond uninitialized nodes
 
@@ -213,9 +213,12 @@ class TreeNode(DecoratedNode):
     def check(self, state):
         """Sets the checked state of the node.
 
+        :returns: The difference between the number of checked nodes before the
+            call and after.
+
         .. seealso::
 
             :py:meth:`.checked`
 
         """
-        return None
+        return 0

@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
-from PySide.QtCore import Qt
 from PySide.QtGui import QIcon
 
 from seriesmarker.gui.model.tree_node import TreeNode
@@ -56,28 +55,30 @@ class EpisodeNode(TreeNode):
         episodes in its branch is updated accordingly.
 
         :param state: The checked state to set.
-        :type state: :class:`Qt.CheckState`
+        :type state: boolean
 
         :emphasis:`Overrides` :py:meth:`.TreeNode.check`
 
         """
-        if state == Qt.Checked:
-            self.data.extra.watched = True
-            return 1
-        elif state == Qt.Unchecked:
-            self.data.extra.watched = False
-            return -1
+        if state != self.data.extra.watched:
+            self.data.extra.watched = state
+            if state:
+                return 1
+            else:
+                return -1
+        else:
+            return 0
 
     def checked(self):
         """Gets the checked state of the node.
 
-        :returns: :class:`Qt.Checked` if the episode is marked as watched,
-            otherwise :class:`Qt.Unchecked`.
+        :returns: True if the episode is marked as watched,
+            otherwise False.
 
         :emphasis:`Overrides` :py:meth:`.TreeNode.checked`
 
         """
-        return Qt.Checked if self.data.extra.watched else Qt.Unchecked
+        return True if self.data.extra.watched else False
 
     def decoration(self, index):
         """Retuns a snapshot image of the episode the node is related to.
