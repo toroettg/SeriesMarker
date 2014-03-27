@@ -119,8 +119,8 @@ class TreeSeriesModel(QAbstractItemModel):
             column = index.column()
 
             if role == Qt.DisplayRole:
-                episodes = node.leaf_count()
-                watched = node.checked_count()
+                episodes = node.leaf_count
+                watched = node.checked_count
 
                 if column == 0:
                     return node.name()
@@ -181,11 +181,12 @@ class TreeSeriesModel(QAbstractItemModel):
             Update of CheckState / progress kinda ugly, may be done in
             check(value), but needs reference to index and model - add
             reference to each node? Example:
-              check(state):
-                self.checkstate = state
-                self.cache += delta
-                model.dataChanged.emit(self.index)
+                for change in changes:
+                    self.dataChanged.emit(change.get_index())
 
+        .. todo::
+            After upgrade to QT5, use SignalSpy in test case to check if only
+             changes are emitted if there was really a change after checking.
         """
         node = self.node_at(index)
         if role == Qt.CheckStateRole:
@@ -196,44 +197,42 @@ class TreeSeriesModel(QAbstractItemModel):
             else:
                 value = None
 
+            changes = node.check(value)
+
+            try:
+                next(item for item in changes if item)
+            except StopIteration:
+                #Filter seasons without changes ([] in changes) for early exit
+                return False
+
+            db_commit()
+
             def notify_change(index):
-                node = self.node_at(index)
+                node = index.internalPointer()
                 episode_index = self.createIndex(index.row(), 1, node)
                 progress_index = self.createIndex(index.row(), 2, node)
                 self.dataChanged.emit(episode_index, progress_index)
 
-            def traverse_down(node, index):
-                delta = 0
-                for child_node in node.children:
-                    delta += traverse_down(child_node,
-                                           self.index(child_node.child_index(),
-                                                      0, index))
-                delta += node.check(value)
-                if delta and node.checked_cache is not None and not isinstance(
-                        node, EpisodeNode):
-                    #Need to inform about cache changes only
-                    node.checked_cache += delta
+            def traverse_down(item, index):
+                if isinstance(item, list) and item:
+                    for pos, value in enumerate(item):
+                        traverse_down(value, index.child(pos, 0))
                     notify_change(index)
-                return delta
 
             def traverse_up(node, index):
-                if node is not self.root and node.checked_cache is not None:
-                    node.checked_cache += delta
+                if node is not self.root:
                     notify_change(index)
                     traverse_up(node.parent, index.parent())
 
-            delta = traverse_down(node, index)
-            if delta:
-                db_commit()
-                # Need to update display of progress for all parents in branch
-                traverse_up(node.parent, index.parent())
-                return True
-            else:
-                return False
+            traverse_down(changes, index)
+            traverse_up(node.parent, index.parent())
+            return True
+
         elif role == Qt.DecorationRole:
             node.banner_loaded(value)
             self.dataChanged.emit(index, index)
             return True
+
         else:
             return False
 

@@ -321,10 +321,6 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         self.assertEqual(self.window.model.rowCount(), 0,
                          "Model was not cleared")
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.deleteDatabase()
-
 
 def get_suit():
     suite = unittest.TestSuite()

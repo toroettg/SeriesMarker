@@ -48,7 +48,6 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         PersistentDBTestCase.setUpClass()
 
         from seriesmarker.persistence.database import db_init
-
         db_init()
 
     def test_01_sort_on_add(self):

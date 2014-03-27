@@ -46,7 +46,7 @@ class EpisodeNode(TreeNode):
         """
         return self.data.episode_name
 
-    def check(self, state):
+    def _check(self, state, origin):
         """Sets the checked state of the node.
 
         The checked state indicates whether or not an episode has been
@@ -56,18 +56,33 @@ class EpisodeNode(TreeNode):
 
         :param state: The checked state to set.
         :type state: boolean
+        :param origin: The node which initiated the check call. Used to
+            determine when to traverse the tree upward.
+        :type: :class:`.TreeNode`
 
-        :emphasis:`Overrides` :py:meth:`.TreeNode.check`
+        .. seealso::
+
+            :py:meth:`.TreeNode.check`
+
+        :emphasis:`Overrides` :py:meth:`.TreeNode._check`
 
         """
+        changed = None
+        total_changed = 0
         if state != self.data.extra.watched:
             self.data.extra.watched = state
-            if state:
-                return 1
-            else:
-                return -1
+            changed = self
+            total_changed = 1 if state else -1
+        if changed and origin is self:
+            parent = self.parent
+            while parent and parent._checked_cache is not None:
+                parent._checked_cache += total_changed
+                parent = parent.parent
+            return [self]
+        elif changed and origin is not self:
+            return total_changed, self
         else:
-            return 0
+            return 0, None
 
     def checked(self):
         """Gets the checked state of the node.

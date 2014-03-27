@@ -23,8 +23,8 @@ import shutil
 import tempfile
 
 from seriesmarker.test.database.base.db_test_case import DBTestCase
-import seriesmarker.util.config as config
 
+import seriesmarker.util.config as config
 
 class PersistentDBTestCase(DBTestCase):
     """Prepares the execution of persistent test cases for deriving

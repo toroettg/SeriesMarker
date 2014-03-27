@@ -134,8 +134,8 @@ class SortFilterProxyModel(QSortFilterProxyModel):
                 return left_data < right_data
 
         def _by_episodes(left_node, right_node):
-            left_data = left_node.checked_count()
-            right_data = right_node.checked_count()
+            left_data = left_node.checked_count
+            right_data = right_node.checked_count
             if left_data == right_data:
                 return _by_name(left_node, right_node)
             else:
@@ -154,9 +154,9 @@ class SortFilterProxyModel(QSortFilterProxyModel):
             return _by_episodes(left_node, right_node)
         elif column == 2:  # Sort by progress
             left_data = round(
-                left_node.checked_count() / left_node.leaf_count(), 3)
+                left_node.checked_count / left_node.leaf_count, 3)
             right_data = round(
-                right_node.checked_count() / right_node.leaf_count(), 3)
+                right_node.checked_count / right_node.leaf_count, 3)
             if left_data == 1 and right_data == 1:
                 return _by_name(left_node, right_node)
             elif left_data == 1:
