@@ -3,13 +3,19 @@ Changelog
 #########
 
 ==========================
+Version x.x.x (xxxx-xx-xx)
+==========================
+
+* Batch-marking of Series / Seasons via context menu.
+
+==========================
 Version 0.0.3 (2013-08-18)
 ==========================
 
 The project has moved; check out the new `SeriesMarker Project Site`_.
 
 * Installer for OS X are available for `Download`_.
-* The setup script can now be used to create distributable binaries on OS X. 
+* The setup script can now be used to create distributable binaries on OS X.
 * The documentation now includes install and build instructions.
 
 ==========================

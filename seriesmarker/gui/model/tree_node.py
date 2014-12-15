@@ -230,10 +230,19 @@ class TreeNode(DecoratedNode):
         """
         return None
 
-    def check(self, state):
+    def check(self, state, origin=None):
         """Sets the checked state of the node.
 
+        The checked state indicates whether or not an episode has been
+        watched. When the state is set, the tree of the node is
+        traversed upwards to its root, and the cached count of watched
+        episodes in its branch is updated accordingly.
 
+        :param state: The checked state to set.
+        :type state: boolean
+        :param origin: The node which initiated the check call. Used to
+            determine when to traverse the tree upward.
+        :type: :class:`.TreeNode`
 
         :returns: A (immutable) tuple of all changed nodes.
 
@@ -242,21 +251,12 @@ class TreeNode(DecoratedNode):
             :py:meth:`.checked`
 
         """
-        return self._check(state, self)
-
-    def _check(self, state, origin):
-        """Traverses the tree downward
-
-        .. seealso::
-
-            :py:meth:`.check`
-
-        """
         changed = []
         total_changed = 0
+        origin = self if origin is None else origin
 
         for child in self.children:
-            count, result = child._check(state, self)
+            count, result = child.check(state, origin)
             if result is not None:
                 changed.append(result)
                 total_changed += count
@@ -267,5 +267,5 @@ class TreeNode(DecoratedNode):
                 while parent and parent._checked_cache is not None:
                     parent._checked_cache += total_changed
                     parent = parent.parent
-                return changed
-        return total_changed, changed
+                return tuple(changed)
+        return total_changed, tuple(changed)

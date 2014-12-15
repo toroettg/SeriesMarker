@@ -48,6 +48,7 @@ def main():
 
     sys.exit(app.exec_())
 
+
 def _init_logging(loglevel=config.loglevel):
     """Initializes logging with the given log level, default as
     specified by the configuration file.

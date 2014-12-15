@@ -96,39 +96,45 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
                     model.setData(episodes[index], Qt.Checked,
                                   role=Qt.CheckStateRole)
 
-            result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+            result = [
+                ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
                       ("Defiance", "  1 / 3  ", "33.3%"),
                       ("Doctor Who", "  1 / 12 ", "8.3%"),
                       ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
                       ("Mad Love", "  1 / 2  ", "50.0%"),
                       ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                      ("The Wonder Years", "  1 / 1  ", "100.0%")]
+                      ("The Wonder Years", "  1 / 1  ", "100.0%")
+            ]
             self._check_displayed_data(0, Qt.AscendingOrder, result,
                                        "Sort view after adding a series")
 
         prepare_next_test()
 
     def test_02_sort_on_load(self):
-        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+        result = [
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
                   ("Defiance", "  1 / 3  ", "33.3%"),
                   ("Doctor Who", "  1 / 12 ", "8.3%"),
                   ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
                   ("Mad Love", "  1 / 2  ", "50.0%"),
                   ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                  ("The Wonder Years", "  1 / 1  ", "100.0%")]
+                  ("The Wonder Years", "  1 / 1  ", "100.0%")
+        ]
         self._check_displayed_data(0, Qt.AscendingOrder, result,
                                    "Sort view after loading from data base")
 
     def test_03_sort_series_by_name(self):
         target = self.header_center(self.tree_view.header(), 0)
 
-        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+        result = [
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
                   ("Defiance", "  1 / 3  ", "33.3%"),
                   ("Doctor Who", "  1 / 12 ", "8.3%"),
                   ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
                   ("Mad Love", "  1 / 2  ", "50.0%"),
                   ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                  ("The Wonder Years", "  1 / 1  ", "100.0%")]
+                  ("The Wonder Years", "  1 / 1  ", "100.0%")
+        ]
         self._check_displayed_data(0, Qt.AscendingOrder, result,
                                    "Sort view after loading from data base")
         self.click(self.tree_view.header().viewport(), target)
@@ -145,10 +151,15 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
 
-        result = [("Season 0", 1, "100.0%"), ("Season 1", 6, "0.0%"),
-                  ("Season 2", 1, "0.0%"), ("Season 10", 1, "0.0%"),
-                  ("Season 11", 1, "0.0%"), ("Season 20", 1, "0.0%"),
-                  ("Season 21", 1, "0.0%")]
+        result = [
+            ("Season 0", 1, "100.0%"),
+            ("Season 1", 6, "0.0%"),
+            ("Season 2", 1, "0.0%"),
+            ("Season 10", 1, "0.0%"),
+            ("Season 11", 1, "0.0%"),
+            ("Season 20", 1, "0.0%"),
+            ("Season 21", 1, "0.0%")
+        ]
 
         self._check_displayed_data(0, Qt.AscendingOrder, result,
                                    "Sort season after loading from data base",
@@ -166,13 +177,15 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
     def test_05_sort_series_by_episodes(self):
         target = self.header_center(self.tree_view.header(), 1)
 
-        result_asc = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+        result_asc = [
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
                       ("Defiance", "  1 / 3  ", "33.3%"),
                       ("Doctor Who", "  1 / 12 ", "8.3%"),
                       ("Mad Love", "  1 / 2  ", "50.0%"),
                       ("The Wonder Years", "  1 / 1  ", "100.0%"),
                       ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                      ("How I Met Your Mother", "  6 / 7  ", "85.7%"), ]
+                      ("How I Met Your Mother", "  6 / 7  ", "85.7%")
+        ]
         result_dsc = list(reversed(result_asc[-2:])) + result_asc[0:-2]
 
         self.click(self.tree_view.header().viewport(), target)
@@ -190,13 +203,15 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         """
         target = self.header_center(self.tree_view.header(), 2)
 
-        result_asc = [("Doctor Who", "  1 / 12 ", "8.3%"),
+        result_asc = [
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
                       ("Defiance", "  1 / 3  ", "33.3%"),
                       ("Mad Love", "  1 / 2  ", "50.0%"),
                       ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
                       ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
                       ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                      ("The Wonder Years", "  1 / 1  ", "100.0%")]
+                      ("The Wonder Years", "  1 / 1  ", "100.0%")
+        ]
 
         result_dsc = list(reversed(result_asc[0:5])) + result_asc[5:]
 
@@ -212,21 +227,25 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         being sorted by series name."""
         target = self.header_center(self.tree_view.header(), 2)
 
-        result_pre = [("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+        result_pre = [
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
                       ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
                       ("Mad Love", "  1 / 2  ", "50.0%"),
                       ("Defiance", "  1 / 3  ", "33.3%"),
                       ("Doctor Who", "  1 / 12 ", "8.3%"),
                       ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                      ("The Wonder Years", "  1 / 1  ", "100.0%")]
+                      ("The Wonder Years", "  1 / 1  ", "100.0%")
+        ]
 
-        result = [("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+        result = [
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
                   ("Defiance", "  1 / 3  ", "33.3%"),
                   ("Doctor Who", "  1 / 12 ", "8.3%"),
                   ("Mad Love", "  1 / 2  ", "50.0%"),
                   ("The Wonder Years", "  1 / 1  ", "100.0%"),
                   ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"), ]
+                  ("How I Met Your Mother", "  6 / 7  ", "85.7%")
+        ]
 
         self.click(self.tree_view.header().viewport(), target)
         self.click(self.tree_view.header().viewport(), target)

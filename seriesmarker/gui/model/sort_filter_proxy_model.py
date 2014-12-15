@@ -86,10 +86,7 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         index = self.sourceModel().index(source_row, 0, source_parent)
         item = self.sourceModel().node_at(index)
 
-        if isinstance(item, EpisodeNode):
-            return False
-        else:
-            return True
+        return not isinstance(item, EpisodeNode)
 
     def lessThan(self, left, right):
         """Defines the sort order of elements, displayed in the proxy's view.

@@ -33,6 +33,7 @@ from seriesmarker.persistence.model.episode import Episode
 from seriesmarker.persistence.model.season import Season
 from seriesmarker.persistence.model.series import Series
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -214,7 +215,7 @@ class TreeSeriesModel(QAbstractItemModel):
                 self.dataChanged.emit(episode_index, progress_index)
 
             def traverse_down(item, index):
-                if isinstance(item, list) and item:
+                if isinstance(item, tuple) and item:
                     for pos, value in enumerate(item):
                         traverse_down(value, index.child(pos, 0))
                     notify_change(index)

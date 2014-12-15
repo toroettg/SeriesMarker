@@ -46,7 +46,7 @@ class EpisodeNode(TreeNode):
         """
         return self.data.episode_name
 
-    def _check(self, state, origin):
+    def check(self, state, origin=None):
         """Sets the checked state of the node.
 
         The checked state indicates whether or not an episode has been
@@ -60,26 +60,35 @@ class EpisodeNode(TreeNode):
             determine when to traverse the tree upward.
         :type: :class:`.TreeNode`
 
+        :returns: The node itself, wrapped in a tuple, if only an episode has
+            been checked. If a series or season has been checked, a tuple of a number and
+            a reference is returned. The number indicates whether the episode
+            has been checked (=1), unchecked (-1), or hasn't been altered (0).
+            The reference points either to the episode itself, or is None, to
+            indicate that no change has happened.
+
         .. seealso::
 
             :py:meth:`.TreeNode.check`
 
-        :emphasis:`Overrides` :py:meth:`.TreeNode._check`
+        :emphasis:`Overrides` :py:meth:`.TreeNode.check`
 
         """
         changed = None
         total_changed = 0
+
         if state != self.data.extra.watched:
             self.data.extra.watched = state
             changed = self
             total_changed = 1 if state else -1
-        if changed and origin is self:
+
+        if changed and origin is None:
             parent = self.parent
             while parent and parent._checked_cache is not None:
                 parent._checked_cache += total_changed
                 parent = parent.parent
-            return [self]
-        elif changed and origin is not self:
+            return (self,)
+        elif changed and origin is not None:
             return total_changed, self
         else:
             return 0, None
@@ -93,7 +102,7 @@ class EpisodeNode(TreeNode):
         :emphasis:`Overrides` :py:meth:`.TreeNode.checked`
 
         """
-        return True if self.data.extra.watched else False
+        return self.data.extra.watched
 
     def decoration(self, index):
         """Retuns a snapshot image of the episode the node is related to.
