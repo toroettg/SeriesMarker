@@ -19,16 +19,22 @@
 #==============================================================================
 
 from bisect import bisect
+import logging
 
 from PySide.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PySide.QtGui import QFont
+
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.season_node import SeasonNode
 from seriesmarker.gui.model.series_node import SeriesNode
 from seriesmarker.gui.model.tree_node import TreeNode
+from seriesmarker.persistence.database import db_commit
 from seriesmarker.persistence.model.episode import Episode
 from seriesmarker.persistence.model.season import Season
 from seriesmarker.persistence.model.series import Series
+
+
+logger = logging.getLogger(__name__)
 
 
 class TreeSeriesModel(QAbstractItemModel):
@@ -40,23 +46,16 @@ class TreeSeriesModel(QAbstractItemModel):
     seasons and episodes), which contain the actual data to display.
 
     """
-    def __init__(self, series_list=None, parent=None):
-        """Initializes the model and adds given series to it.
 
-        :param series_list: A list of :class:`.Series` to add.
-        :type series_list: list
+    def __init__(self, parent=None):
+        """Initializes the model with a given parent.
+
         :param parent: The parent of the model.
         :type parent: :class:`.PySide.QtCore.QObject`
 
         """
         super().__init__(parent)
-
         self.root = TreeNode("Series")
-
-        if series_list != None:
-            for series in series_list:
-                self.root.append(SeriesNode(series, self.root))
-
 
     def headerData(self, section, orientation, role):
         """Defines the header data displayed in the GUI.
@@ -104,8 +103,9 @@ class TreeSeriesModel(QAbstractItemModel):
         :returns: The node at the given index itself for :class:`.Qt.UserRole`.
         :returns: The :py:meth:`~.DecoratedNode.decoration` of the node
             at the given index for :class:`.Qt.DecorationRole`.
-        :returns: The :py:meth:`~.TreeNode.checked` state of the node
-            at the given index for :class:`.Qt.CheckedStateRole`.
+        :returns: The :class:`.Qt.CheckState` representing the
+            :py:meth:`~.TreeNode.checked` state of the node at the given index
+            for :class:`.Qt.CheckedStateRole`.
         :returns: The text alignment to use for the string representation of
             the node at the given index for :class:`.Qt.TextAlignmentRole`.
         :returns: A monospace-family :class:`.PySide.QtGui.QFont` for column 1
@@ -120,8 +120,8 @@ class TreeSeriesModel(QAbstractItemModel):
             column = index.column()
 
             if role == Qt.DisplayRole:
-                episodes = node.leaf_count()
-                watched = node.checked_count()
+                episodes = node.leaf_count
+                watched = node.checked_count
 
                 if column == 0:
                     return node.name()
@@ -137,7 +137,13 @@ class TreeSeriesModel(QAbstractItemModel):
             elif role == Qt.DecorationRole:
                 return node.decoration(index)
             elif role == Qt.CheckStateRole:
-                return node.checked()
+                state = node.checked()
+                if state == True:
+                    return Qt.Checked
+                elif state == False:
+                    return Qt.Unchecked
+                else:
+                    return None
             elif role == Qt.FontRole:
                 if column == 1:
                     return QFont("Monospace")
@@ -147,6 +153,89 @@ class TreeSeriesModel(QAbstractItemModel):
                 else:
                     return Qt.AlignCenter
         return None
+
+    def setData(self, index, value, role=Qt.EditRole):
+        """Sets the given value of the given role at the given index.
+
+        This method is called whenever an episode is marked
+        as (un)watched in the GUI. It then toggles the watched state
+        of the corresponding :class:`.Episode`.
+
+        This method is also called whenever a banner was loaded to set
+        a :class:`.PySide.QtGui.Pixmap` as the node's decoration and
+        refresh the views afterwards.
+
+        :param index: The position to set the value at.
+        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :param value: Value to be set at given index: :class:`Qt.CheckState` for
+            :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
+            for :class:`Qt.DecorationRole`.
+        :type value: object
+        :param role: Determines the kind of data to set for the item.
+        :type role: integer
+
+        :returns: True if successful, otherwise False.
+
+        :emphasis:`Overrides` :py:meth:`.QAbstractItemModel.setData`
+
+        .. todo::
+            Update of CheckState / progress kinda ugly, may be done in
+            check(value), but needs reference to index and model - add
+            reference to each node? Example:
+                for change in changes:
+                    self.dataChanged.emit(change.get_index())
+
+        .. todo::
+            After upgrade to QT5, use SignalSpy in test case to check if only
+             changes are emitted if there was really a change after checking.
+        """
+        node = self.node_at(index)
+        if role == Qt.CheckStateRole:
+            if value == Qt.Checked:
+                value = True
+            elif value == Qt.Unchecked:
+                value = False
+            else:
+                value = None
+
+            changes = node.check(value)
+
+            try:
+                next(item for item in changes if item)
+            except StopIteration:
+                #Filter seasons without changes ([] in changes) for early exit
+                return False
+
+            db_commit()
+
+            def notify_change(index):
+                node = index.internalPointer()
+                episode_index = self.createIndex(index.row(), 1, node)
+                progress_index = self.createIndex(index.row(), 2, node)
+                self.dataChanged.emit(episode_index, progress_index)
+
+            def traverse_down(item, index):
+                if isinstance(item, tuple) and item:
+                    for pos, value in enumerate(item):
+                        traverse_down(value, index.child(pos, 0))
+                    notify_change(index)
+
+            def traverse_up(node, index):
+                if node is not self.root:
+                    notify_change(index)
+                    traverse_up(node.parent, index.parent())
+
+            traverse_down(changes, index)
+            traverse_up(node.parent, index.parent())
+            return True
+
+        elif role == Qt.DecorationRole:
+            node.banner_loaded(value)
+            self.dataChanged.emit(index, index)
+            return True
+
+        else:
+            return False
 
     def index(self, row, column, parent=QModelIndex()):
         """Returns the index of the item at the given row
@@ -175,7 +264,7 @@ class TreeSeriesModel(QAbstractItemModel):
         else:
             return self.createIndex(row, column, child_node)
 
-    def index_of(self, item, parent_index=QModelIndex()):
+    def index_of(self, item, parent=QModelIndex()):
         """Looks up the index of the item's node in the model.
 
         The method checks the children of the parent, referred by the given
@@ -184,24 +273,25 @@ class TreeSeriesModel(QAbstractItemModel):
 
         :param item: Data contained in a :class:`.TreeNode` to look for.
         :type item: object
-        :param parent_index: The index referring to the parent
+        :param parent: The index referring to the parent
             node of the given item's node.
-        :type parent_index: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`.PySide.QtCore.QModelIndex`
 
         :returns: A :class:`.PySide.QtCore.QModelIndex`, referring to
             the node which contains the given item if the search was
             successful, otherwise an invalid index.
 
         """
-        parent_node = self.node_at(parent_index)
+        parent_node = self.node_at(parent)
 
         try:
-            row = next(index for index, child_node in
-                enumerate(parent_node.children) if child_node.data is item)
+            row = next(
+                index for index, child_node in enumerate(parent_node.children)
+                if child_node.data is item)
         except StopIteration:
             return QModelIndex()
         else:
-            return self.index(row, 0, parent_index)
+            return self.index(row, 0, parent)
 
     def parent(self, child_index):
         """Returns the index referring to the parent of the node referred by
@@ -249,8 +339,8 @@ class TreeSeriesModel(QAbstractItemModel):
 
         :param item: The item to add to the model.
         :type item: object
-        :param parent_node: The node to add the item as child to.
-        :type parent_node: :class:`.TreeNode`
+        :param parent_index: The index of the node to add the item to.
+        :type parent_index: :class:`.PySide.QtCore.QModelIndex`
 
         """
         parent_node = self.node_at(parent_index)
@@ -261,12 +351,14 @@ class TreeSeriesModel(QAbstractItemModel):
                               item.series_name)
         elif isinstance(item, Season):
             cls = SeasonNode
-            position = bisect([node.data.season_number for node
-                               in parent_node.children], item.season_number)
+            position = bisect(
+                [node.data.season_number for node in parent_node.children],
+                item.season_number)
         elif isinstance(item, Episode):
             cls = EpisodeNode
-            position = bisect([node.data.episode_number for node
-                               in parent_node.children], item.episode_number)
+            position = bisect(
+                [node.data.episode_number for node in parent_node.children],
+                item.episode_number)
 
         self.beginInsertRows(parent_index, position, position)
         parent_node.insert(position, cls(item, parent_node))
@@ -316,55 +408,6 @@ class TreeSeriesModel(QAbstractItemModel):
         self.removeRow(node.child_index())
         return node.data
 
-    def setData(self, index, value, role=Qt.CheckStateRole):
-        """Sets the given value of the given role at the given index.
-
-        This method is called whenever an episode is marked
-        as (un)watched in the GUI. It then toggles the watched state
-        of the corresponding :class:`.Episode`.
-
-        This method is also called whenever a banner was loaded to set
-        a :class:`.PySide.QtGui.Pixmap` as the node's decoration and
-        refresh the views afterwards.
-
-        :param index: The position to set the value at.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
-        :param value: Value to be set at given index: boolean for
-            :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
-            for :class:`Qt.DecorationRole`.
-        :type value: object
-        :param role: Determines the kind of data to set for the item.
-        :type role: integer
-
-        :returns: True if successful, otherwise False.
-
-        :emphasis:`Overrides` :py:meth:`.QAbstractItemModel.setData`
-
-        .. todo::
-            Update of parent's progress kinda ugly (also being updated if
-            not necessary - i.e. cache had not been set, yet.
-            Updating may be done in toggle_check(), but needs reference
-            to index and model - add reference to each node?
-
-        """
-        node = self.node_at(index)
-        if role == Qt.CheckStateRole:
-            node.toggle_check()
-            # Need to update display of progress for all parents in branch
-            parent_node = node.parent
-            while parent_node is not self.root:
-                child_index = parent_node.child_index()
-                episode_index = self.createIndex(child_index, 1, parent_node)
-                progress_index = self.createIndex(child_index, 2, parent_node)
-                self.dataChanged.emit(episode_index, progress_index)
-                parent_node = parent_node.parent
-        elif role == Qt.DecorationRole:
-            node.banner_loaded(value)
-        else:
-            return False
-        self.dataChanged.emit(index, index)
-        return True
-
     def flags(self, index):
         """Describes the item flags for a given index.
 
@@ -376,7 +419,7 @@ class TreeSeriesModel(QAbstractItemModel):
         :type index: :class:`.PySide.QtCore.QModelIndex`
 
         :returns: The flags :class:`.Qt.ItemIsUserCheckable` and
-            :class:`.Qt.ItemIsUserCheckable` for :class:`.TreeNode`
+            :class:`.Qt.ItemIsUserEnabled` for :class:`.TreeNode`
             types that implement :py:meth:`~.TreeNode.checked`.
         :returns: The flag :class:`.Qt.ItemIsEnabled` otherwise.
 

@@ -30,6 +30,7 @@ as well as in the distribution process.
 """
 
 import logging
+
 from appdirs import AppDirs
 
 application_name = "SeriesMarker"  #: The application's name.

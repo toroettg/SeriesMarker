@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file '../resources/main_window.ui'
 #
-# Created: Thu Sep 12 03:57:07 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.2.0
+# Created: Wed Feb 26 21:15:57 2014
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -103,6 +103,16 @@ class Ui_MainWindow(object):
         icon5.addPixmap(QtGui.QPixmap(":/icons/system-log-out.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.action_exit.setIcon(icon5)
         self.action_exit.setObjectName("action_exit")
+        self.action_mark_watched = QtGui.QAction(MainWindow)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/Koloria/icons/Checkmark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.action_mark_watched.setIcon(icon6)
+        self.action_mark_watched.setObjectName("action_mark_watched")
+        self.action_mark_unwatched = QtGui.QAction(MainWindow)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/Koloria/icons/Error_Symbol.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.action_mark_unwatched.setIcon(icon7)
+        self.action_mark_unwatched.setObjectName("action_mark_unwatched")
         self.menuAbout.addAction(self.action_about_qt)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuAbout.menuAction())
@@ -142,5 +152,9 @@ class Ui_MainWindow(object):
         self.action_exit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
         self.action_exit.setToolTip(QtGui.QApplication.translate("MainWindow", "Exit SeriesMarker", None, QtGui.QApplication.UnicodeUTF8))
         self.action_exit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+X", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_watched.setText(QtGui.QApplication.translate("MainWindow", "Mark watched", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_watched.setToolTip(QtGui.QApplication.translate("MainWindow", "Mark all Episodes as watched", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_unwatched.setText(QtGui.QApplication.translate("MainWindow", "Mark unwatched", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_unwatched.setToolTip(QtGui.QApplication.translate("MainWindow", "Mark all Episodes as unwatched", None, QtGui.QApplication.UnicodeUTF8))
 
 from . import serieswatcher_rc

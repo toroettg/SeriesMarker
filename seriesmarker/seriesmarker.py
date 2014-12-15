@@ -78,6 +78,8 @@ def _init_logging(loglevel=config.loglevel):
     logging.getLogger("pytvdbapi").setLevel(logging.INFO)
     logging.getLogger().addHandler(file_handler)
 
+    logging.getLogger("sqlalchemy").addHandler(file_handler)
+
     def log_uncaught_exception(*exception_info):
         logging.critical("Unhandled exception:\n\n", exc_info=exception_info)
 

@@ -18,22 +18,27 @@
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 
-from seriesmarker.test.gui import search_dialog_test, main_window_test, \
-    sorting_test
 import unittest
+
+from seriesmarker.test.gui import search_dialog_test, story_test, \
+    sorting_test, context_menu_test
+
 
 def get_suit():
     gui_suites = unittest.TestSuite()
 
     gui_suites.addTest(search_dialog_test.get_suit())
-    gui_suites.addTest(main_window_test.get_suit())
+    gui_suites.addTest(story_test.get_suit())
     gui_suites.addTest(sorting_test.get_suit())
+    gui_suites.addTest(context_menu_test.get_suit())
 
     return gui_suites
+
 
 def load_tests(loader, tests, pattern):
     """Enables (graphical) unit testing in PyDev."""
     return get_suit()
+
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(get_suit())

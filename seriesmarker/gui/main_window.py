@@ -22,7 +22,8 @@ import logging
 
 from PySide.QtCore import Slot, QModelIndex, Qt, QCoreApplication
 from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, \
-    QHeaderView, QApplication
+    QHeaderView, QApplication, QMenu
+
 from seriesmarker.gui.about_dialog import AboutDialog
 from seriesmarker.gui.model.episode_node import EpisodeNode
 from seriesmarker.gui.model.season_node import SeasonNode
@@ -37,26 +38,26 @@ from seriesmarker.persistence.database import db_get_series, db_add_series, \
 from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
 
-
 logger = logging.getLogger(__name__)
+
 
 class MainWindow(QMainWindow):
     """Displays the main application window."""
 
     def __init__(self, parent=None):
         """Creates a new window instance.
-        
+
         Initializes the different views and loads series information
         from the database into the view's models for displaying them.
-        
+
         :param parent: The parent widget of the window.
         :class parent: :class:`PySide.QtGui.QWidget`
-        
+
         .. todo::
             Instead of adding each series sequentially, the model could be
             expanded with a method to add multiple series, which
             could speed up the application's start.
-        
+
         """
         super(MainWindow, self).__init__(parent)
 
@@ -64,8 +65,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.ui.action_about_qt.setIcon(
-            QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png")
-        )
+            QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"))
         self.ui.action_about.setMenu(self.ui.menuAbout)
         self.ui.menubar.setVisible(False)
 
@@ -77,6 +77,9 @@ class MainWindow(QMainWindow):
         self.ui.tree_view.setModel(self.tree_proxy_model)
         self.ui.tree_view.sortByColumn(0, Qt.AscendingOrder)
         self.ui.tree_view.header().setResizeMode(QHeaderView.ResizeToContents)
+        self.ui.tree_view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ui.tree_view.customContextMenuRequested.connect(
+            self._handle_context_menu)
 
         self.ui.list_view.setModel(self.model)
         self.ui.list_view.setMouseTracking(True)
@@ -99,25 +102,27 @@ class MainWindow(QMainWindow):
                 self.model.add_item(series)
             except EntityExistsException:
                 logger.warning("Series '{name}' already exists, "
-                    "ignoring add request".format(name=series.series_name))
+                               "ignoring add request".format(
+                    name=series.series_name))
 
     @Slot()
     def on_action_remove_triggered(self):
         """Removes a series from the database and the views."""
-        index = self.tree_proxy_model.mapToSource(self.ui.tree_view.currentIndex())
+        index = self.tree_proxy_model.mapToSource(
+            self.ui.tree_view.currentIndex())
 
         series = self.model.pop_related_series(index)
 
-        if series != None:
+        if series is not None:
             db_remove_series(series)
 
     @Slot()
     def on_action_update_triggered(self):
         """Sequentially updates all series in the database.
-        
+
         .. todo::
             Update should also recognize/announce updated episodes.
-        
+
         """
         series_factory = SeriesFactory()
 
@@ -136,23 +141,29 @@ class MainWindow(QMainWindow):
                 season_index = self.model.index_of(removed_season, series_index)
                 season_row = self.model.node_at(season_index).child_index()
                 self.model.removeRow(season_row, series_index)
-                logger.info("  Removed season {} from series '{}'".format(removed_season.season_number, series.series_name))
+                logger.info("  Removed season {} from series '{}'".format(
+                    removed_season.season_number, series.series_name))
 
             for added_season in series_factory.added:
                 self.model.add_item(added_season, series_index)
-                logger.info("  Added season {}".format(added_season.season_number))
+                logger.info(
+                    "  Added season {}".format(added_season.season_number))
 
             for updated_season in series_factory.updated:
                 season, added_episodes, removed_episodes = updated_season
 
-                logger.info("  Updated season {} (Episodes added: {}, removed: {})".format(
-                    season.season_number, len(added_episodes), len(removed_episodes)))
+                logger.info(
+                    "  Updated season {} (Episodes added: {}, removed: {})".format(
+                        season.season_number, len(added_episodes),
+                        len(removed_episodes)))
 
                 season_index = self.model.index_of(season, series_index)
 
                 for removed_episode in removed_episodes:
-                    episode_index = self.model.index_of(removed_episode, season_index)
-                    episode_row = self.model.node_at(episode_index).child_index()
+                    episode_index = self.model.index_of(removed_episode,
+                                                        season_index)
+                    episode_row = self.model.node_at(
+                        episode_index).child_index()
                     self.model.removeRow(episode_row, season_index)
                 for added_episode in added_episodes:
                     self.model.add_item(added_episode, season_index)
@@ -163,16 +174,16 @@ class MainWindow(QMainWindow):
     @Slot(QModelIndex)
     def on_tree_view_clicked(self, index):
         """Changes the style of the list view according to context.
-        
+
         The list view shows icons in portrait mode if a series or season
         is selected in the tree view. It changes to list mode if an
         episode has been selected.
-        
+
         .. todo::
-        
+
             Should change view only if next style differs from current one -
             needs to compare with previous selection.
-        
+
         """
         if index.column() is not 0:
             index = self.tree_proxy_model.index(index.row(), 0, index.parent())
@@ -202,28 +213,54 @@ class MainWindow(QMainWindow):
         self.ui.list_view.setWordWrap(True)
         self.ui.list_view.setViewMode(QListView.IconMode)
 
+    def _handle_context_menu(self, pos):
+        index = self.ui.tree_view.indexAt(pos)
+        if index.isValid():
+            pos = self.ui.tree_view.viewport().mapToGlobal(pos)
+            menu = QMenu()
+            menu.addAction(self.ui.action_mark_watched)
+            menu.addAction(self.ui.action_mark_unwatched)
+            menu.addSeparator()
+            menu.addAction(self.ui.action_remove)
+            menu.exec_(pos)
+
+    @Slot()
+    def on_action_mark_watched_triggered(self):
+        """Marks all episodes of the currently selected series as watched."""
+        self.tree_proxy_model.setData(self.ui.tree_view.currentIndex(),
+                                      Qt.Checked, role=Qt.CheckStateRole)
+
+    @Slot()
+    def on_action_mark_unwatched_triggered(self):
+        """Marks all episodes of the currently selected series as unwatched."""
+        self.tree_proxy_model.setData(self.ui.tree_view.currentIndex(),
+                                      Qt.Unchecked, role=Qt.CheckStateRole)
+
     @Slot(QModelIndex)
     def on_list_view_entered(self, index):
         """Sets the tooltip of the list view.
-        
+
         A tooltip is set, when the mouse hovers above an episode in
         the list view.
-        
+
+        :param index: The index of the item whose view has been entered.
+        :type index: :class:`.QtCore.QModelIndex`
         """
         node = self.model.node_at(index)
 
         if isinstance(node, EpisodeNode):
             # HTML-style fonts makes tooltips 'rich text',
             # which enables automatic word wrapping for them.
-            self.ui.list_view.setToolTip("<FONT COLOR=black>{}</FONT>".format(node.data.overview))
+            self.ui.list_view.setToolTip(
+                "<FONT COLOR=black>{}</FONT>".format(node.data.overview))
 
     @Slot()
     def on_list_view_viewportEntered(self):
         """Removes the tooltip from the list view.
-        
+
         A tooltip is removed, when the mouse leaves the area of an
         episode in the list view.
-        
+
         """
         self.ui.list_view.setToolTip("")
 
@@ -247,9 +284,3 @@ class MainWindow(QMainWindow):
     def on_action_exit_triggered(self):
         """Terminates the application normally."""
         QApplication.exit()
-
-
-
-
-
-
