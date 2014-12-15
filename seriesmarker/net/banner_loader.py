@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -37,11 +37,11 @@ class BannerLoader(QObject):
 
     def fetch_banner(self, url, index, cache=True):
         """Creates a request to load a banner from the given URL.
-        
-        A request is defined by its URL and carried out asynchronously. 
+
+        A request is defined by its URL and carried out asynchronously.
         The result is stored on disk if caching is enabled. When a request
         has been completed, :py:meth:`.finished_request` will be invoked.
-        
+
         :param url: The location of the banner to load.
         :type url: string
         :param index: The index referring to a :class:`.DecoratedNode`
@@ -50,7 +50,7 @@ class BannerLoader(QObject):
         :type index: :class:`.PySide.QtCore.QModelIndex`
         :param cache: Determines if the loaded banner should be cached on disk.
         :type cache: bool
-        
+
         """
         request = QNetworkRequest(QUrl(url))
         request.setAttribute(QNetworkRequest.CacheLoadControlAttribute, QNetworkRequest.PreferCache)
@@ -66,14 +66,14 @@ class BannerLoader(QObject):
     @Slot(QNetworkReply)
     def finished_request(self, reply):
         """Processes replies and dispatches results to requesters.
-        
+
         This method will be invoked on each finished request, submitted by
         :py:meth:`.fetch_banner`. It then converts the loaded data into a
         banner and passes the result on to the model of the request's origin.
-        
+
         :param reply: The network reply from a banner load request.
         :type reply: :class:`.QNetworkReply`
-        
+
         """
         pixmap = QPixmap()
         if reply.error() == QNetworkReply.NoError:

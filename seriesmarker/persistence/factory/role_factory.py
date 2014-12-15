@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -28,17 +28,17 @@ class RoleFactory(BaseFactory):
     @staticmethod
     def new_role(pytvdb_actor, update=None):
         """Creates a persistable role object from TheTVDB data.
-        
+
         This method will create a new :class:`.Role` instance from a pytvdbapi
         actor object. If a role object is given, the existing one will be
         updated with the data instead.
-        
+
         :param pytvdb_actor: The data to create the role from.
         :type pytvdb_actor: :class:`pytvdbapi.actor.Actor`
         :param update: A role to update with new data.
         :type update: :class:`.Role`
         :returns: The newly created or updated :class:`.Role` instance.
-        
+
         """
         if update == None:
             role = Role()

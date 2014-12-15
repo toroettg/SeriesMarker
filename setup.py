@@ -1,7 +1,7 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
@@ -264,7 +264,7 @@ _classifier = [
 def _import_setuptools():
     """Imports distribute_setup from the tools directory without
     the need of converting it to a python package.
-    
+
     """
     global setup
     import inspect

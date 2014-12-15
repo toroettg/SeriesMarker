@@ -1,7 +1,7 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
@@ -242,24 +242,24 @@ class MadLoveExample(BaseExample):
     def seasons_update(cls, show):
         """
         Season: Adds 0, Updates Season 1, Removes Season 2
-        
+
         Episode: Adds 0.1, Updates Episode 1.1, Adds Episode 1.2, Removes Episode 2.1
-        
+
         Episode0.1:
           Guest: Add Brittany Snow
           Writer: Add Corey Nickerson
           Director: Add Beth McCarthy-Miller
-        
+
         Episode1.1:
           Guest: Keep Rachel Boston, Remove DUMMYGUEST, Add GUESTDUMMY
           Writer: Keep DUMMYWRITER2, Remove DUMMYWRITER1, Add WRITERDUMMY
           Director: Keep Pamela Fryman, Remove DUMMYDIRECTOR, Add DIRECTORDUMMY
-          
+
         Episode1.2:
           Guest: Add Martin Starr
           Writer: Add Rob DesHotel
           Director: Add Scott Ellis
-          
+
         Episode2.1:
           Writer: Remove Adrian Wenner
 
@@ -370,13 +370,13 @@ class MadLoveExample(BaseExample):
     @classmethod
     def attributes_update(cls, show):
         """Used to check correct handling of update behavior
-            
+
         Genre: add Action; remove DUMMYGENRE; keep Comedy
-        
+
         Actor: add DUMMY ACTOR2; remove Jason Biggs; keep Sarah Chalke, Tyler Labine, Judy Greer, Sarah Wright
-            
+
            Changed attributes are: Actors, Rating, Status
-        
+
         """
         attributes = {
             'Actors': ['Sarah Chalke', 'Tyler Labine', 'DUMMY ACTOR 1', 'Judy Greer', 'Sarah Wright', 'DUMMY ACTOR 2'],
@@ -419,7 +419,7 @@ class MadLoveExample(BaseExample):
             Season1 and Series banner
         Add
             Season0 banner
-        
+
         """
         mirror = "http://thetvdb.com"
 

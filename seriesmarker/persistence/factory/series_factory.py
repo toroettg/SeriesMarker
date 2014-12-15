@@ -1,7 +1,7 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
@@ -36,19 +36,19 @@ class SeriesFactory(BaseFactory):
 
     def new_series(self, pytvdb_show, update=None):
         """Creates a persistable series object from TheTVDB data.
-        
+
         This method will create a new :class:`.Series` instance from pytvdbapi
         data. If a series object is given, the existing one will be updated
         with the data instead. In both cases, it also traverses the seasons
         and episodes of a series, using :class:`.SeasonFactory`, to populate it
         with data.
-        
+
         :param pytvdb_show: The data to create the series instance from.
         :type pytvdb_show: :class:`.pytvdbapi.api.Show`
         :param update: A series to update with new data.
         :type update: :class:`.Series`
         :returns: The newly created or updated :class:`.Series` instance.
-        
+
         """
         if update == None:
             series = Series()
@@ -93,17 +93,17 @@ class SeriesFactory(BaseFactory):
 
     def _handle_roles(self, series, pytvdb_actors):
         """Updates or adds the roles of a series.
-        
+
         By using the :class:`.RoleFactory`, each role of the series data
         is compared to existing roles in the database, to update the series.
         New roles are added, existing roles are updated and missing roles
-        will be deleted. 
-        
+        will be deleted.
+
         :param series: The series to update role data for.
         :type series: :class:`.Series`
-        :param pytvdb_actors: The new role data from TheTVDB. 
+        :param pytvdb_actors: The new role data from TheTVDB.
         :type pytvdb_actors: list
-        
+
         """
         roles = series.extra.roles
 
@@ -126,17 +126,17 @@ class SeriesFactory(BaseFactory):
 
     def _handle_seasons(self, series, pytvdb_seasons):
         """Updates or adds the seasons of a series.
-        
+
         By using the :class:`.SeasonFactory`, each season of the series data
         is compared to existing seasons in the database, to update the series.
         New seasons are added, existing seasons are updated and missing seasons
-        will be deleted. 
-        
+        will be deleted.
+
         :param series: The series to update season data for.
         :type series: :class:`.Series`
-        :param pytvdb_seasons: The new season data from TheTVDB. 
+        :param pytvdb_seasons: The new season data from TheTVDB.
         :type pytvdb_seasons: list
-        
+
         """
         season_factory = SeasonFactory()
 

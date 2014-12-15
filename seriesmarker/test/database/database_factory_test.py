@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -254,18 +254,18 @@ class DatabaseFactoryTest(MemoryDBTestCase):
 
     def test_multiple_role_of_actor(self):
         """Tests the :class:`.RoleFactory` for handling of roles where an actor has multiple roles.
-        
+
         It is assumed that an actor usually plays a single role only. Therefore,
         in cases where multiple roles exist within an Role-object anyhow, they
         are joined to a single string in the database.
-        
+
         .. note::
-        
+
             This database schema differs from the approach of having a separate
             object for each information to be stored. As long as lists of
             strings need to be modeled via relations (sqlalchemy restriction),
             creating objects for role names is considered to be overkill.
-        
+
         """
         pytvdb_show = ExampleDataFactory.new_pytvdb_show("WONDERYEARS")
         series = SeriesFactory().new_series(pytvdb_show)

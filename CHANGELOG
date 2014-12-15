@@ -6,7 +6,9 @@ Changelog
 Version x.x.x (xxxx-xx-xx)
 ==========================
 
-* Batch-marking of Series / Seasons via context menu.
+* Added batch-marking of series / seasons via context menu.
+* Added intelligent sorting by progress.
+* Fixed season sorting (by number instead of alphanumerical sort).
 
 ==========================
 Version 0.0.3 (2013-08-18)

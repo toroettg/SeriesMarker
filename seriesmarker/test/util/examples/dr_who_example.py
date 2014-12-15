@@ -1,7 +1,7 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
@@ -28,9 +28,9 @@ from seriesmarker.test.util.examples.base_example import BaseExample
 
 class DrWhoExample(BaseExample):
     """Standard example for various test cases.
-    
-    .. seealso:: 
-        :py:func:`.test_04_update` 
+
+    .. seealso::
+        :py:func:`.test_04_update`
     """
     @classmethod
     def series_attributes(cls):

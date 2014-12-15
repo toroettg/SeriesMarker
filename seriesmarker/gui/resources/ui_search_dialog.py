@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file '../resources/search_dialog.ui'
 #
-# Created: Wed Feb 26 21:15:57 2014
-#      by: pyside-uic 0.2.15 running on PySide 1.2.1
+# Created: Mon Dec 15 16:24:54 2014
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 

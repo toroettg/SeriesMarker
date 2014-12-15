@@ -1,7 +1,7 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
@@ -31,10 +31,10 @@ class AboutDialog(QDialog):
 
         Also sets the displayed application version information, according
         to the settings in the :mod:`.config` file.
-        
+
         :param parent: The parent widget of the dialog.
         :class parent: :class:`PySide.QtGui.QWidget`
-        
+
         """
         super(AboutDialog, self).__init__(parent)
 

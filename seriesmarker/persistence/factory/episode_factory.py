@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -34,24 +34,24 @@ class EpisodeFactory(BaseFactory):
 
     def new_episode(self, pytvdb_episode, update=None):
         """Creates a persistable episode object from TheTVDB data.
-        
+
         This method will create a new :class:`.Episode` instance from a
         pytvdbapi episode. If a episode object is given, the existing one
         will be updated with the data instead.
-        
+
         :param pytvdb_episode: The data to create the episode from.
         :type pytvdb_episode: :class:`pytvdbapi.api.Episode`
         :param update: A episode to update with new data.
         :type update: :class:`.Episode`
         :returns: The newly created or updated :class:`.Episode` instance.
-        
+
         .. todo::
-        
+
             Episode specials have additional attributes where regular ones do
             not. The pytvdbapi logs an exception if it is tried to access them
             on a regular episode. Either check existence beforehand, or see if
             pytvdbapi changes output.
-        
+
         """
         if update == None:
             episode = Episode()
