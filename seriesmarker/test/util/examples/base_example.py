@@ -18,14 +18,23 @@
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 
-from pytvdbapi.api import Show
+from pytvdbapi.api import Show, Episode, Actor
+
+
+class TVDBMock(object):
+    def __init__(self):
+        self.config = {'ignore_case': False}
 
 
 class BaseExample(object):
     """Base class of example files that contain series information for tests."""
+
+    API = TVDBMock()
+
     @classmethod
     def show(cls):
-        show = Show(api=None, language=None, data=cls.series_attributes())
+        show = Show(api=cls.API, language=None, config=cls.API.config,
+                    data=cls.series_attributes())
         show.seasons = cls.seasons(show)
         show.banner_objects = cls.banners(show)
         show.actor_objects = cls.roles(show)
@@ -59,13 +68,24 @@ class BaseExample(object):
     @classmethod
     def seasons_update(cls, show):
         return show.seasons
+
     @classmethod
     def attributes_update(cls, show):
-        return show.attributes
+        return show.data
+
     @classmethod
     def banners_update(cls, show):
         return show.banner_objects
+
     @classmethod
     def roles_update(cls, show):
         return show.actor_objects
+
+    @classmethod
+    def create_episode(cls, attributes, season):
+        return Episode(attributes, season, cls.API.config)
+
+    @classmethod
+    def create_actor(cls, attributes, show):
+        return Actor("http://thetvdb.com", attributes, show)
 

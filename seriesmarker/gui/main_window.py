@@ -129,9 +129,9 @@ class MainWindow(QMainWindow):
         for series in db_get_series():
             logger.info("Updating series '{}'".format(series.series_name))
 
-            tvdb_show = tvdb.get(series.id, "en", cache=False)
+            tvdb_show = tvdb.get_series(series.id, "en", cache=False)
             tvdb_show.update()
-            tvdb_show._load_banners()
+            tvdb_show.load_banners()
             series_factory.new_series(tvdb_show, update=series)
             db_commit()
 

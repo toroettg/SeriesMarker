@@ -471,7 +471,7 @@ class DrWhoExample(BaseExample):
             else:
                 range_limit = 2
             for episode_number in range(1, range_limit):
-                season.episodes[episode_number] = Episode(lcl["attributes{}{}".format(season_number, episode_number)], season)
+                season.episodes[episode_number] = cls.create_episode(lcl["attributes{}{}".format(season_number, episode_number)], season)
             seasons[season_number] = season
 
         return seasons

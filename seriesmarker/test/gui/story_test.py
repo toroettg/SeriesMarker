@@ -159,7 +159,7 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         tvdb.get = MagicMock(
             return_value=ExampleDataFactory.new_pytvdb_show("HIMYM-UPDATE"))
         Show.update = MagicMock()
-        Show._load_banners = MagicMock()
+        Show.load_banners = MagicMock()
 
         tree_view = self.window.findChild(QTreeView, "tree_view")
         viewport = tree_view.viewport()

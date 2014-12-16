@@ -100,7 +100,7 @@ class MadLoveExample(BaseExample):
             'seriesid': 186551,
         }
 
-        episode11 = Episode(attributes, season1)
+        episode11 = cls.create_episode(attributes, season1)
 
         season1.episodes = {1: episode11}
 
@@ -135,7 +135,7 @@ class MadLoveExample(BaseExample):
             'seriesid': 186551,
         }
 
-        episode21 = Episode(attributes, season2)
+        episode21 = cls.create_episode(attributes, season2)
 
         season2.episodes = {1: episode21}
 
@@ -190,8 +190,6 @@ class MadLoveExample(BaseExample):
 
     @classmethod
     def roles(cls, show):
-        mirror = "http://thetvdb.com"
-
         attributes = {
                       'Image': 'actors/226641.jpg',
                       'Name': 'Jason Biggs',
@@ -201,7 +199,7 @@ class MadLoveExample(BaseExample):
                       'image_url': 'http://thetvdb.com/banners/actors/226641.jpg',
         }
 
-        role1 = Actor(mirror, attributes, None)
+        role1 = cls.create_actor(attributes, show)
 
         attributes = {
                       'Image': 'actors/226661.jpg',
@@ -212,7 +210,7 @@ class MadLoveExample(BaseExample):
                       'image_url': 'http://thetvdb.com/banners/actors/226661.jpg',
         }
 
-        role2 = Actor(mirror, attributes, None)
+        role2 = cls.create_actor(attributes, show)
 
         attributes = {
                       'Image': 'actors/226651.jpg',
@@ -223,7 +221,7 @@ class MadLoveExample(BaseExample):
                       'image_url': 'http://thetvdb.com/banners/actors/226651.jpg',
         }
 
-        role4 = Actor(mirror, attributes, None)
+        role4 = cls.create_actor(attributes, show)
 
         attributes = {
                       'Image': 'actors/226681.jpg',
@@ -234,7 +232,7 @@ class MadLoveExample(BaseExample):
                       'image_url': 'http://thetvdb.com/banners/actors/226681.jpg',
         }
 
-        role5 = Actor(mirror, attributes, None)
+        role5 = cls.create_actor(attributes, show)
 
         return [role1, role2, role4, role5]
 
@@ -295,7 +293,7 @@ class MadLoveExample(BaseExample):
             'seriesid': 186551,
         }
 
-        episode01 = Episode(attributes, season0)
+        episode01 = cls.create_episode(attributes, season0)
 
         season0.episodes = {1: episode01}
 
@@ -330,7 +328,7 @@ class MadLoveExample(BaseExample):
             'seriesid': 186551,
         }
 
-        episode11 = Episode(attributes, season1)
+        episode11 = cls.create_episode(attributes, season1)
 
         attributes = {
             'Combined_episodenumber': 2,
@@ -361,7 +359,7 @@ class MadLoveExample(BaseExample):
             'seriesid': 186551,
         }
 
-        episode12 = Episode(attributes, season1)
+        episode12 = cls.create_episode(attributes, season1)
 
         season1.episodes = {1: episode11, 2: episode12}
 
@@ -468,8 +466,6 @@ class MadLoveExample(BaseExample):
 
     @classmethod
     def roles_update(cls, show):
-        mirror = "http://thetvdb.com"
-
         attributes = {
                       'Image': 'actors/22664101.jpg',
                       'Name': 'Jason Bigs',
@@ -479,7 +475,7 @@ class MadLoveExample(BaseExample):
                       'image_url': 'http://thetvdb.com/banners/actors/22664101.jpg',
         }
 
-        role1 = Actor(mirror, attributes, None)
+        role1 = cls.create_actor(attributes, show)
 
         attributes = {
                       'Image': 'actors/226661.jpg',
@@ -490,7 +486,7 @@ class MadLoveExample(BaseExample):
                       'image_url': 'http://thetvdb.com/banners/actors/226661.jpg',
         }
 
-        role2 = Actor(mirror, attributes, None)
+        role2 = cls.create_actor(attributes, show)
 
         attributes = {
                       'Image': 'actors/226671.jpg',
@@ -501,7 +497,7 @@ class MadLoveExample(BaseExample):
                       'image_url': 'http://thetvdb.com/banners/actors/226671.jpg',
         }
 
-        role3 = Actor(mirror, attributes, None)
+        role3 = cls.create_actor(attributes, show)
 
         return [role1, role2, role3]
 

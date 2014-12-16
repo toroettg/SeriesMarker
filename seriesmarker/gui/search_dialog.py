@@ -20,11 +20,13 @@
 
 from PySide.QtCore import Slot, Qt
 from PySide.QtGui import QDialog, QHeaderView
+from PySide.QtCore import QCoreApplication
+
 from seriesmarker.gui.model.search.search_model import SearchModel
 from seriesmarker.gui.model.search.search_node import SearchNode
 from seriesmarker.gui.resources.ui_search_dialog import Ui_Dialog
 from seriesmarker.net.tvdb import tvdb
-from PySide.QtCore import QCoreApplication
+
 
 class SearchDialog(QDialog):
     """Displays a dialog to search for series."""
@@ -65,7 +67,7 @@ class SearchDialog(QDialog):
         self.model.clear()
 
         for show in search:
-            show._load_banners()
+            show.load_banners()
             self.model.add_node(SearchNode(show))
             QCoreApplication.processEvents()
 

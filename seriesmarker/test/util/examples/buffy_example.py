@@ -20,7 +20,7 @@
 
 from datetime import date
 
-from pytvdbapi.api import Season, Episode
+from pytvdbapi.api import Season
 
 from seriesmarker.test.util.examples.base_example import BaseExample
 
@@ -29,7 +29,9 @@ class BuffyExample(BaseExample):
     @classmethod
     def series_attributes(cls):
         attributes = {
-            'Actors': ['Sarah Michelle Gellar', 'Alyson Hannigan', 'Emma Caulfield', 'Michelle Trachtenberg', 'Anthony Head', 'James Marsters'],
+            'Actors': ['Sarah Michelle Gellar', 'Alyson Hannigan',
+                       'Emma Caulfield', 'Michelle Trachtenberg',
+                       'Anthony Head', 'James Marsters'],
             'Airs_DayOfWeek': '',
             'Airs_Time': '',
             'ContentRating': 'TV-PG',
@@ -53,7 +55,7 @@ class BuffyExample(BaseExample):
             'id': 70327,
             'lastupdated': 1338772285,
             'poster': 'posters/70327-10.jpg',
-           # 'seasons': TODO
+            # 'seasons': TODO
             'zap2it_id': 'EP00213110'
         }
         return attributes
@@ -74,7 +76,12 @@ class BuffyExample(BaseExample):
             'EpisodeName': 'Welcome to the Hellmouth (1)',
             'EpisodeNumber': 1,
             'FirstAired': date(1997, 3, 10),
-            'GuestStars': ['Persia White', 'Tupelo Jereme', 'Natalie Strauss', 'Brian Thompson', 'Ken Lerner', 'J. Patrick Lawlor', 'Eric Balfour', 'Deborah Brown', 'Carmine Giovinazzo', 'Amy Faith Chance', 'Julie Benz', 'Marc Metcalf', 'Kristine Sutherland', 'David Boreanaz'],
+            'GuestStars': ['Persia White', 'Tupelo Jereme', 'Natalie Strauss',
+                           'Brian Thompson', 'Ken Lerner', 'J. Patrick Lawlor',
+                           'Eric Balfour', 'Deborah Brown',
+                           'Carmine Giovinazzo', 'Amy Faith Chance',
+                           'Julie Benz', 'Marc Metcalf', 'Kristine Sutherland',
+                           'David Boreanaz'],
             'IMDB_ID': 'tt0452716',
             'Language': 'en',
             'Overview': 'Determined to have a fresh start, Buffy Summers moves to Sunnydale only to find out that it\'s located on a Hellmouth and that her slaying duties have just begun.',
@@ -87,11 +94,11 @@ class BuffyExample(BaseExample):
             'filename': 'episodes/70327/2.jpg',
             'id': 2,
             'lastupdated': 1364127226,
-           #'season' : ignored
+            #'season' : ignored
             'seasonid': 10,
             'seriesid': 70327,
         }
-        episode11 = Episode(attributes, season1)
+        episode11 = cls.create_episode(attributes, season1)
 
         season1.episodes = {1: episode11}
 

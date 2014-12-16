@@ -95,7 +95,7 @@ class WonderYearsExample(BaseExample):
             'seasonid': 4959,
             'seriesid': 72888,
         }
-        episode11 = Episode(attributes, season1)
+        episode11 = cls.create_episode(attributes, season1)
 
         season1.episodes = {1: episode11}
 
@@ -103,8 +103,6 @@ class WonderYearsExample(BaseExample):
 
     @classmethod
     def roles(cls, show):
-        mirror = "http://thetvdb.com"
-
         attributes = {
             'Image': '',
             'Name': 'Daniel Stern',
@@ -114,6 +112,6 @@ class WonderYearsExample(BaseExample):
             'image_url': 'http://thetvdb.com/banners/',
         }
 
-        actor1 = Actor(mirror=mirror, data=attributes, show=show)
+        actor1 = cls.create_actor(attributes, show)
 
         return [actor1]

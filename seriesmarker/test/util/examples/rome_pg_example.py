@@ -96,7 +96,7 @@ class RomePGExample(BaseExample):
             'seriesid': 81623,
         }
 
-        episode11 = Episode(attributes, season1)
+        episode11 = cls.create_episode(attributes, season1)
 
         attributes = {
             'Combined_episodenumber': 2.0,
@@ -128,7 +128,7 @@ class RomePGExample(BaseExample):
             'seriesid': 81623,
         }
 
-        episode12 = Episode(attributes, season1)
+        episode12 = cls.create_episode(attributes, season1)
 
         attributes = {
             'Combined_episodenumber': 3.0,
@@ -160,7 +160,7 @@ class RomePGExample(BaseExample):
             'seriesid': 81623,
         }
 
-        episode13 = Episode(attributes, season1)
+        episode13 = cls.create_episode(attributes, season1)
 
         attributes = {
             'Combined_episodenumber': 8,
@@ -192,7 +192,7 @@ class RomePGExample(BaseExample):
             'seriesid': 73508,
         }
 
-        episode18 = Episode(attributes, season1)
+        episode18 = cls.create_episode(attributes, season1)
 
         season1.episodes = {1: episode11, 2: episode12, 3: episode13, 8: episode18}
 
