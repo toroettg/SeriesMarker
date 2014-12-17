@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 import logging
 
@@ -53,11 +53,6 @@ class MainWindow(QMainWindow):
         :param parent: The parent widget of the window.
         :type parent: :class:`PySide.QtGui.QWidget`
 
-        .. todo::
-            Instead of adding each series sequentially, the model could be
-            expanded with a method to add multiple series, which
-            could speed up the application's start.
-
         """
         super(MainWindow, self).__init__(parent)
 
@@ -83,9 +78,6 @@ class MainWindow(QMainWindow):
 
         self.ui.list_view.setModel(self.model)
         self.ui.list_view.setMouseTracking(True)
-
-        for series in db_get_series():
-            self.model.add_item(series)
 
     @Slot()
     def on_action_add_triggered(self):
