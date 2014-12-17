@@ -11,8 +11,8 @@ with the main window, from which you can begin your exciting journey.
 .. note::
 
     Depending on the size of your series collection, starting SeriesMarker may
-    take a while. Unfortunately, there is no visual feedback regarding the
-    startup progress at the moment. Please be patient.
+    take a while. A splash screen displays the loading progress during the
+    start-up. Please be patient.
 
 .. figure:: images/application/MainWindowEmpty.png
     :scale: 50 %
@@ -42,9 +42,9 @@ Removing a Series
 *****************
 
 If you would like to remove a series from your collection, either click on the
-series itself in the main window, or click on one of it's seasons to select it.
+series itself in the main window, or click on one of its seasons to select it.
 Then, click the *Remove* button in the toolbar. The selected series will then be
-removed from your system with all it's data.
+removed from your system with all its data.
 
 You can also right-click on a series (or season) to open up a context menu,
 which allows you to remove the selected series.

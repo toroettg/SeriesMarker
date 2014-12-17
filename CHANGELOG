@@ -8,6 +8,7 @@ Version x.x.x (xxxx-xx-xx)
 
 * Added batch-marking of series / seasons via context menu.
 * Added intelligent sorting by progress.
+* Added a splash screen to display progress during start-up.
 * Fixed season sorting (by number instead of alphanumerical sort).
 
 ==========================
