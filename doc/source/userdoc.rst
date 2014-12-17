@@ -14,7 +14,7 @@ with the main window, from which you can begin your exciting journey.
     take a while. Unfortunately, there is no visual feedback regarding the
     startup progress at the moment. Please be patient.
 
-.. figure:: images/guide/MainWindow.png
+.. figure:: images/application/MainWindowEmpty.png
     :scale: 50 %
 
     SeriesMarker's main window, first application start.

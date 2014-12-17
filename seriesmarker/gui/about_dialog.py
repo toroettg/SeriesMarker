@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -20,12 +20,14 @@
 
 from PySide.QtCore import Slot, QUrl
 from PySide.QtGui import QDialog, QDesktopServices
+
 from seriesmarker.gui.resources.ui_about_dialog import Ui_AboutDialog
 from seriesmarker.util.config import application_version
 
 
 class AboutDialog(QDialog):
     """Displays a dialog with additional information about the application."""
+
     def __init__(self, parent=None):
         """Creates a new dialog instance.
 
@@ -33,7 +35,7 @@ class AboutDialog(QDialog):
         to the settings in the :mod:`.config` file.
 
         :param parent: The parent widget of the dialog.
-        :class parent: :class:`PySide.QtGui.QWidget`
+        :type parent: :class:`PySide.QtGui.QWidget`
 
         """
         super(AboutDialog, self).__init__(parent)
@@ -41,7 +43,8 @@ class AboutDialog(QDialog):
         self.ui = Ui_AboutDialog()
         self.ui.setupUi(self)
 
-        concat_version = "{} {}".format(self.ui.version.text(), application_version)
+        concat_version = "{} {}".format(self.ui.version.text(),
+                                        application_version)
 
         self.ui.version.setText(concat_version)
 

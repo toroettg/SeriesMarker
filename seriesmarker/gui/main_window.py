@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         from the database into the view's models for displaying them.
 
         :param parent: The parent widget of the window.
-        :class parent: :class:`PySide.QtGui.QWidget`
+        :type parent: :class:`PySide.QtGui.QWidget`
 
         .. todo::
             Instead of adding each series sequentially, the model could be
@@ -266,7 +266,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_action_about_triggered(self):
-        """Displays a :class:`.AboutDialog` for additional information."""
+        """Displays an :class:`.AboutDialog` for additional information."""
         AboutDialog(self).exec_()
 
     @Slot()

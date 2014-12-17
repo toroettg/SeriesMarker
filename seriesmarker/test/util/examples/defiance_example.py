@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -16,13 +16,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 from datetime import date
 
 from pytvdbapi.api import Season
 
-from test.util.examples.base_example import BaseExample
+from seriesmarker.test.util.examples.base_example import BaseExample
 
 
 class DefianceExample(BaseExample):

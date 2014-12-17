@@ -9,3 +9,11 @@ base Package
     :undoc-members:
     :show-inheritance:
 
+
+:mod:`main_window_test` Module
+------------------------------
+
+.. automodule:: seriesmarker.test.gui.base.main_window_test
+    :members:
+    :undoc-members:
+    :show-inheritance:

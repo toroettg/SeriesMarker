@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -20,11 +20,10 @@
 
 from datetime import date
 
-from pytvdbapi.actor import Actor
-from pytvdbapi.api import Season, Episode
+from pytvdbapi.api import Season
 from pytvdbapi.banner import Banner
 
-from test.util.examples.base_example import BaseExample
+from seriesmarker.test.util.examples.base_example import BaseExample
 
 
 class HowIMetYourMotherExample(BaseExample):
