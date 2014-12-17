@@ -156,7 +156,7 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         progress display in the GUI when removing or adding episodes/seasons.
 
         """
-        tvdb.get = MagicMock(
+        tvdb.get_series = MagicMock(
             return_value=ExampleDataFactory.new_pytvdb_show("HIMYM-UPDATE"))
         Show.update = MagicMock()
         Show.load_banners = MagicMock()
@@ -256,7 +256,7 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
             tree_view.model().index(0, 2, series_node_index)), "100.0%",
                          "Season 2 progress not correctly updated after toggle.")
 
-        tvdb.get = MagicMock(
+        tvdb.get_series = MagicMock(
             return_value=ExampleDataFactory.new_pytvdb_show("HIMYM"))
 
         # Adding episodes and seasons
