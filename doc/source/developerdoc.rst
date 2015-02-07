@@ -17,13 +17,13 @@ Adding a new Source Code File
 
 2.
 	Add the copyright note.
-		
+
 3.
 	Document the file by using docstrings (sphinx).
-	
+
 4.
 	Add the file to the documentation:
-	
+
 	1.
 		Add the module to the proper .rst file. You may need to create
 		a new one. In that case, ensure that the new .rst is also added
@@ -32,14 +32,21 @@ Adding a new Source Code File
 		Create a new build of the documentation and check if your
 		references are set correctly and see if new errors/warnings
 		have occurred.
-		
+
 5.
 	If the file contains new features, ensure you have written a test case.
 	Add it to the test package. Repeat steps 2-4 for the test file.
-	
+
 ****************************
 Generating the Documentation
 ****************************
+
+`Sphinx`_ is used to document SeriesMarker. You may need to
+install it on your system beforehand:
+
+.. code-block:: bash
+
+	$pip install sphinx
 
 To generate the documentation for SeriesMarker, perform the following steps:
 
@@ -54,68 +61,34 @@ To generate the documentation for SeriesMarker, perform the following steps:
 	The resulting documentation can be found at the ``doc/build/html``
 	sub directory. It contains an ``index.html`` file, which can be
 	opened with a browser to display the generated documentation.
-	
+
 *******
 Testing
 *******
 
 To run all existing test cases, after checking out SeriesMarker,
 execute the following command at SeriesMarkers' root directory:
-	
+
 .. code-block:: bash
-		
+
 	$python -m unittest seriesmarker/test/test_runner.py
-	
+
 To only run topic specific test cases, similar runners can be found
 in the sub packages of the test directory:
 
 .. code-block:: bash
-		
+
 	$python -m unittest seriesmarker/test/database/database_test_runner.py
 	$python -m unittest seriesmarker/test/gui/gui_test_runner.py
-	
 
-		
+
+
 *************************
 Distributing SeriesMarker
 *************************
 
 This section describes how a binary of SeriesMarker can be built for
 various operating systems.
-
-Prepare Packages
-================
-
-.. note::
-
-	This section applies to every platform on which a binary shall
-	be created on. Perform the operations described after the related
-	packages have been installed in the process. 
-	
-
-The `pytvdbapi`_ package currently relies on methods, which are not compatible
-to be used in a binary [#f1]_. Microsoft Windows and OS X also have some
-problems with the encoding of the shipped UTF-8 files. Thus, these glitches
-need to be fixed before building a binary:
-
-#.
-	Open the `pytvdbapi`_ main file, located in your python package directory,
-	e.g., ``/opt/local/Library/Frameworks/Python.framework/Version/3.3/lib/python/site-packages/pytvdbapi/api.py``.
-#.
-	In line 46, change the import of ``resource_filename`` to ``resource_string``
-#.
-	In line 557, change ``resource_filename`` to ``resource_string``
-#.
-	In line 567, change ``generate_tree(language_file)`` to
-	``generate_tree(str(language_file, encoding="UTF-8"))``.
-
-.. [#f1] http://mail.python.org/pipermail/distutils-sig/2005-October/005236.html
-
-.. note::
-
-	This section is referring to pytvdbapi's master branch, not the latest
-	released version (0.3.0). A new release is assumed to be brought soon. 
-
 
 Microsoft Windows
 =================
@@ -136,7 +109,7 @@ Install SeriesMarkers :ref:`dependencies <dependencies>` via pip. In addition,
 `cx_Freeze`_ needs to be installed:
 
 .. code-block:: none
-	
+
 	pip install cx_Freeze
 
 Creating a Binary Distribution
@@ -146,13 +119,13 @@ This section describes, how to create a installer for SeriesMarker from source.
 
 1.
 	Check out SeriesMarker.
-2. 
+2.
 	Open the `Command Prompt` (cmd.exe) and change to the root directory
 	of SeriesMarker.
 3.
-	Execute ``python setup.py bdist_msi`` to create a msi-installer, 
+	Execute ``python setup.py bdist_msi`` to create a msi-installer,
 	which can be found at the *dist* directory.
-	
+
 The installer can then be used as described in the :ref:`install procedure
 <install_procedure_win>` for Microsoft Windows.
 
@@ -187,15 +160,15 @@ with default settings. Find and change the line defining the build behavior:
 |     #buildfromsource        ifneeded |     buildfromsource        always   |
 |                                      |                                     |
 +--------------------------------------+-------------------------------------+
-	
+
 This will ensure the adherence of the mentioned linker flag
-, ``-headerpad_max_install_names``, when building packages. To ensure that 
+, ``-headerpad_max_install_names``, when building packages. To ensure that
 the flag is set, see ``/opt/local/share/macports/Tcl/port1.0/portconfigure.tcl``
 and check if it has been added to the ``ldflags``, e.g., by setting the
 relevant line to:
 
 .. code-block:: none
-	
+
 	default configure.ldflags   {"-L${prefix}/lib -Wl,-headerpad_max_install_names"}
 
 Install Dependencies
@@ -205,9 +178,9 @@ Proceed as described in :ref:`building_osx_install_deps`. In addition,
 `py2app`_ needs to be installed:
 
 .. code-block:: bash
-	
+
 	$sudo port install py33-py2app
-	
+
 
 Prepare Packages
 ----------------
@@ -217,14 +190,14 @@ py2app
 
 There is an `py2app bug`_, which prevents `Qt`_ plugins from being
 copied to the binary correctly. To resolve it, open the `PySide`_
-recipe file of `py2app`_, probably located at 
+recipe file of `py2app`_, probably located at
 
 .. code-block:: bash
 
 	/opt/local/Library/Frameworks/Python.framework.Versions/3.3/lib/python3.3/site-packages/py2app/recipes/pyside.py
-	
+
 and change the indentation of the else-part of the for-loop to match the
-if-statement as shown in the bug report. 
+if-statement as shown in the bug report.
 
 httplib2
 ^^^^^^^^
@@ -254,7 +227,7 @@ following steps:
 	Execute ``python3.3 setup.py py2app`` to create an application and
 	a disk image, containing a copy of the application. Both can be found
 	at the *dist* directory.
-	
+
 The resulting .app can then be used as usual. The disk image is
 the preferred way to distribute the application, providing a simple installer
 as shown in the :ref:`install procedure <install_procedure_mac>` for OS X.
@@ -267,7 +240,7 @@ Notes
 TheTVDB API
 ===========
 
-Links to the TheTVDB API for checking raw data. 
+Links to the TheTVDB API for checking raw data.
 
 Languages:
 	http://thetvdb.com/api/APIKEY/languages.xml
@@ -304,3 +277,4 @@ Todo List
 .. _pytvdbapi: https://github.com/fuzzycode/pytvdbapi/
 .. _PySide: https://qt-project.org/wiki/PySide/
 .. _Qt: https://qt-project.org/
+.. _Sphinx: http://sphinx-doc.org/

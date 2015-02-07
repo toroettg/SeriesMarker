@@ -28,7 +28,7 @@ A simple way to install the package is by using the `AUR Helper`_ `Yaourt`_:
 
 .. code-block:: bash
 
-	$yaourt -S seriesmarker
+    $yaourt -S seriesmarker
 
 The abovementioned command will resolve all necessary
 :ref:`dependencies <dependencies>` and install them with SeriesMarker for
@@ -37,19 +37,19 @@ execute the application from a shell:
 
 .. code-block:: bash
 
-	$seriesmarker
+    $seriesmarker
 
 You may now continue with the :ref:`User Guide` or explore the
 software on your own.
 
 .. note::
-	The described method to install SeriesMarker will not fetch a binary of
-	SeriesMarker, but compile it from source, along with any dependency not
-	in the official Arch Linux repository, which may take some time. However,
-	this method is more comfortable	than the
-	:ref:`manual build process <building_on_linux>` and comes with the
-	advantage of using the distribution's package management. It is
-	therefore the recommended way to install SeriesMarker on Arch Linux.
+    The described method to install SeriesMarker will not fetch a binary of
+    SeriesMarker, but compile it from source, along with any dependency not
+    in the official Arch Linux repository, which may take some time. However,
+    this method is more comfortable	than the
+    :ref:`manual build process <building_on_linux>` and comes with the
+    advantage of using the distribution's package management. It is
+    therefore the recommended way to install SeriesMarker on Arch Linux.
 
 
 Installer for Microsoft Windows
@@ -64,7 +64,7 @@ installed on your system and no further action is required. Otherwise, you
 will encounter the error shown below, when trying to execute SeriesMarker
 after its installation has been finished.
 
-	.. image:: images/install_win/MSVCRError.png
+    .. image:: images/install_win/MSVCRError.png
 
 To prevent this error, or to resolve it, the runtime components can be
 obtained at the following locations:
@@ -87,29 +87,29 @@ Install Procedure
 Once the download has been finished, double click the installer to begin
 with the setup.
 
-	.. figure:: images/install_win/TargetLocation.png
-		:scale: 50 %
+    .. figure:: images/install_win/TargetLocation.png
+        :scale: 50 %
 
-		The installer will ask you for the location, to which SeriesMarker
-		shall be installed to. After selecting the desired target directory,
-		click ``Next`` to proceed.
+        The installer will ask you for the location, to which SeriesMarker
+        shall be installed to. After selecting the desired target directory,
+        click ``Next`` to proceed.
 
-	.. figure:: images/install_win/UserAccountControl.png
-		:scale: 50 %
+    .. figure:: images/install_win/UserAccountControl.png
+        :scale: 50 %
 
-		The installer might ask for your administration permissions
-		in order to be able to complete the installation; click ``Yes``
-		to accept.
+        The installer might ask for your administration permissions
+        in order to be able to complete the installation; click ``Yes``
+        to accept.
 
-	.. figure:: images/install_win/CopyingFiles.png
-		:scale: 50 %
+    .. figure:: images/install_win/CopyingFiles.png
+        :scale: 50 %
 
-		The necessary files are then copied into the selected target directory.
+        The necessary files are then copied into the selected target directory.
 
-	.. figure:: images/install_win/InstallComplete.png
-		:scale: 50 %
+    .. figure:: images/install_win/InstallComplete.png
+        :scale: 50 %
 
-		When the setup is finished, click ``Finish`` to exit the installer.
+        When the setup is finished, click ``Finish`` to exit the installer.
 
 The installer creates a shortcut on your desktop as well as an entry
 in your start menu during the process (there is currently no way to opt out
@@ -131,14 +131,14 @@ The names of the latest disk images for supported OS X versions are listed
 in the following:
 
 ``OS X Mountain Lion (10.8)``
-	SeriesMarker-|version|-MountainLion.dmg
+    SeriesMarker-|version|-MountainLion.dmg
 ``OS X Lion (10.7)``
-	SeriesMarker-|version|-Lion.dmg
+    SeriesMarker-|version|-Lion.dmg
 
 .. warning::
 
-	Trying to execute SeriesMarker, installed from a disk image that was
-	intended for a different OS X version, will likely fail.
+    Trying to execute SeriesMarker, installed from a disk image that was
+    intended for a different OS X version, will likely fail.
 
 .. _install_procedure_mac:
 
@@ -148,24 +148,24 @@ Install Procedure
 Once the download has been finished, double click the installer to begin
 with the setup.
 
-	.. figure:: images/install_osx/DiskImageOpen.png
-	   :scale: 10 %
+    .. figure:: images/install_osx/DiskImageOpen.png
+        :scale: 10 %
 
-	   A new finder window will open and show you the contents of the
-	   loaded disk image.
+        A new finder window will open and show you the contents of the
+        loaded disk image.
 
-	.. figure:: images/install_osx/DiskImageDragnDrop.png
-	   :scale: 50 %
+    .. figure:: images/install_osx/DiskImageDragnDrop.png
+        :scale: 50 %
 
-	   To install `SeriesMarker`, click-and-hold on the application,
-	   drag it above the shortcut to your `Applications` and release
-	   the mouse button.
+        To install `SeriesMarker`, click-and-hold on the application,
+        drag it above the shortcut to your `Applications` and release
+        the mouse button.
 
-	.. figure:: images/install_osx/DiskImageCopy.png
-	   :scale: 50 %
+    .. figure:: images/install_osx/DiskImageCopy.png
+        :scale: 50 %
 
-	   The application will now be copied to your applications directory,
-	   from where you can start SeriesMarker afterwards.
+        The application will now be copied to your applications directory,
+        from where you can start SeriesMarker afterwards.
 
 You may now continue with the :ref:`User Guide` or explore the
 software on your own.
@@ -191,8 +191,8 @@ Source files for SeriesMarker are available at the following locations:
 
 .. note::
 
-	It may not be necessary to download the source manually. Please refer to
-	the section, matching your operating system, for instructions.
+    It may not be necessary to download the source manually. Please refer to
+    the section, matching your operating system, for instructions.
 
 
 .. _dependencies:
@@ -235,8 +235,8 @@ accomplished with the following software installed:
 
 .. warning::
 
-	*Qt5* is not yet compatible with `PySide`_; use *Qt4* instead
-	(also check that your ``qmake`` binary is pointing to the *Qt4* version).
+    *Qt5* is not yet compatible with `PySide`_; use *Qt4* instead
+    (also check that your ``qmake`` binary is pointing to the *Qt4* version).
 
 
 Install SeriesMarker
@@ -248,7 +248,7 @@ the usage of `pip`_ is recommended:
 
 .. code-block:: bash
 
-	#pip install SeriesMarker
+    #pip install SeriesMarker
 
 This will also fetch, build, and install SeriesMarker's
 :ref:`dependencies <dependencies>` from source. Afterwards, SeriesMarker
@@ -256,7 +256,7 @@ can be executed from a shell:
 
 .. code-block:: bash
 
-	$seriesmarker
+    $seriesmarker
 
 You may now continue with the :ref:`User Guide` or explore the software
 on your own.
@@ -303,23 +303,23 @@ following software installed:
 
 .. warning::
 
-	*Qt5* is not yet compatible with `PySide`_; use *Qt4* instead.
+    *Qt5* is not yet compatible with `PySide`_; use *Qt4* instead.
 
 .. note::
 
-	While PySide´s `Building on Windows <PySide_Building_on_Windows>`_ lists
-	the	`Microsoft Windows SDK`_ as an prerequisite only, skipping the
-	installation of	`Microsoft Visual Studio`_ causes an error while
-	building `PySide`_ due to the missing tool `nmake`. It is therefore
-	necessary to install `Microsoft Visual Studio` instead (it includes the SDK).
-	Also make sure to install the version on which your `Qt`_ libraries
-	depend on, which currently is edition 2010,
-	called `Visual 2010 C++ Express` on the site.
+    While PySide´s `Building on Windows <PySide_Building_on_Windows>`_ lists
+    the	`Microsoft Windows SDK`_ as an prerequisite only, skipping the
+    installation of	`Microsoft Visual Studio`_ causes an error while
+    building `PySide`_ due to the missing tool `nmake`. It is therefore
+    necessary to install `Microsoft Visual Studio` instead (it includes the SDK).
+    Also make sure to install the version on which your `Qt`_ libraries
+    depend on, which currently is edition 2010,
+    called `Visual 2010 C++ Express` on the site.
 
 It is also necessary to add `CMake`_ and `qmake`_ to your `Path`:
 
 *
-	`CMake`_ will ask you if it shall be added to your path while installing,
+    `CMake`_ will ask you if it shall be added to your path while installing,
     otherwise it can be found in its install directory, e.g.,
     ``C:\Program Files\CMake 2.8\bin``.
 *
@@ -487,10 +487,10 @@ You may now continue with the :ref:`User Guide` or explore the software on your 
 .. _pytvdbapi: https://github.com/fuzzycode/pytvdbapi/
 .. _PySide: https://qt-project.org/wiki/PySide/
 .. _PySide_Binaries_Linux: https://qt-project.org/wiki/PySide_Binaries_Linux
-	.. _Binaries
+    .. _Binaries
 .. _PySide_Binaries_Windows: http://qt-project.org/wiki/PySide_Binaries_Windows
 .. _PySide_Building_on_Linux: https://qt-project.org/wiki/Building_PySide_on_Linux/
-	.. _Building on Linux: PySide_Building_on_Linux_
+    .. _Building on Linux: PySide_Building_on_Linux_
 .. _PySide_Building_on_Windows: http://qt-project.org/wiki/Building_PySide_on_Windows/
 .. _PySide bug: https://bugreports.qt-project.org/browse/PYSIDE-178
 .. _Python: http://www.python.org

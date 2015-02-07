@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '../resources/about_dialog.ui'
 #
-# Created: Sat Feb  7 14:47:31 2015
+# Created: Sat Feb  7 14:54:07 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -114,7 +114,7 @@ class Ui_AboutDialog(object):
         self.verticalLayout_2.addWidget(self.buttonBox)
 
         self.retranslateUi(AboutDialog)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), AboutDialog.accept)
         QtCore.QMetaObject.connectSlotsByName(AboutDialog)
 
