@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '../resources/about_dialog.ui'
 #
-# Created: Wed Dec 17 21:14:02 2014
+# Created: Sat Feb  7 14:47:31 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -114,7 +114,7 @@ class Ui_AboutDialog(object):
         self.verticalLayout_2.addWidget(self.buttonBox)
 
         self.retranslateUi(AboutDialog)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), AboutDialog.accept)
         QtCore.QMetaObject.connectSlotsByName(AboutDialog)
 
@@ -135,7 +135,7 @@ class Ui_AboutDialog(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'DejaVu Sans\';\">Copyright (C) 2013 - 2014 Tobias Röttger &lt;toroettg@gmail.com&gt;</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'DejaVu Sans\';\">Copyright (C) 2013 - 2015 Tobias Röttger &lt;toroettg@gmail.com&gt;</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.author_tab), QtGui.QApplication.translate("AboutDialog", "Author", None, QtGui.QApplication.UnicodeUTF8))
         self.license_browser.setHtml(QtGui.QApplication.translate("AboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
