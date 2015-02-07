@@ -18,6 +18,7 @@ class MainWindowTest(GUITestCase):
 
     def setUp(self):
         self.window = MainWindow()
+
         self.window.show()
         QTest.qWaitForWindowShown(self.window)
 
