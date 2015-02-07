@@ -25,6 +25,14 @@ gui Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`splash_screen` Module
+---------------------------
+
+.. automodule:: seriesmarker.gui.splash_screen
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 

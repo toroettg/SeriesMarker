@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -16,15 +16,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 from unittest.mock import MagicMock
 import unittest
 
-from PySide.QtCore import Qt, QPoint
+from PySide.QtCore import Qt, QPoint, QCoreApplication
 from PySide.QtGui import QTreeView, QListView
 from pytvdbapi.api import Show
 
+from seriesmarker.persistence.database import db_get_series
 from seriesmarker.net.tvdb import tvdb
 from seriesmarker.test.database.base.persitent_db_test_case import \
     PersistentDBTestCase
@@ -49,6 +50,13 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         from seriesmarker.persistence.database import db_init
 
         db_init()
+
+    def setUp(self):
+        super().setUp()
+
+        for series in db_get_series():
+            self.window.model.add_item(series)
+        QCoreApplication.processEvents();
 
     def test_01_add(self):
         """Checks if a series can be added via the add-button."""

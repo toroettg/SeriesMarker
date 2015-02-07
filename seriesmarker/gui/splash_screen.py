@@ -17,27 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 # ==============================================================================
+from PySide.QtCore import Qt
+from PySide.QtGui import QSplashScreen, QPixmap
 
 
-import unittest
+class SplashScreen(QSplashScreen):
+    """Creates a splash screen to display at application start."""
 
-from seriesmarker.test.database import database_test_runner
-from seriesmarker.test.gui import gui_test_runner
+    def __init__(self):
+        super().__init__(
+            QPixmap(":/misc/icons/SplashScreen.png"),
+            Qt.WindowStaysOnTopHint
+        )
 
+        self.setCursor(Qt.BusyCursor)
+        self.show()
 
-def get_suit():
-    all_suites = unittest.TestSuite()
+    def showMessage(self, message):
+        """Displays a given message on the splash screen.
 
-    all_suites.addTests(database_test_runner.get_suit())
-    all_suites.addTests(gui_test_runner.get_suit())
+        :param message: The message to display on the splash screen.
+        :type message: string
 
-    return all_suites
-
-
-def load_tests(loader, tests, pattern):
-    """Enables (graphical) unit testing in PyDev."""
-    return get_suit()
-
-
-if __name__ == "__main__":
-    unittest.TextTestRunner(verbosity=2).run(get_suit())
+        """
+        super().showMessage(message, Qt.AlignBottom | Qt.AlignRight)

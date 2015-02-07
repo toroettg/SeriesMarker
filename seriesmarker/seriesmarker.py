@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 from logging.handlers import RotatingFileHandler
 import logging
@@ -26,8 +26,8 @@ import sys
 from PySide.QtGui import QApplication
 
 from seriesmarker.gui.main_window import MainWindow
-from seriesmarker.persistence.database import db_init
-
+from seriesmarker.gui.splash_screen import SplashScreen
+from seriesmarker.persistence.database import db_init, db_get_series
 from seriesmarker.util import config
 
 
@@ -37,16 +37,30 @@ def main():
     Initializes logging, database access, the Qt framework,
     and displays the main window to the user.
 
+    .. todo::
+        Instead of adding each series sequentially, the model could be
+        expanded with a method to add multiple series, which
+        could speed up the application's start.
+
     """
     _init_logging()
 
-    db_init()
-
     app = QApplication(sys.argv)
 
+    splash_screen = SplashScreen()
+
+    splash_screen.showMessage("Initializing database")
+    db_init()
+
+    splash_screen.showMessage("Loading Series")
     window = MainWindow()
 
+    for series in db_get_series():
+        splash_screen.showMessage("Loading {}".format(series.series_name))
+        window.model.add_item(series)
+
     window.show()
+    splash_screen.finish(window)
 
     sys.exit(app.exec_())
 

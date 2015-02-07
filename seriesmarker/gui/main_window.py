@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 import logging
 
@@ -51,12 +51,7 @@ class MainWindow(QMainWindow):
         from the database into the view's models for displaying them.
 
         :param parent: The parent widget of the window.
-        :class parent: :class:`PySide.QtGui.QWidget`
-
-        .. todo::
-            Instead of adding each series sequentially, the model could be
-            expanded with a method to add multiple series, which
-            could speed up the application's start.
+        :type parent: :class:`PySide.QtGui.QWidget`
 
         """
         super(MainWindow, self).__init__(parent)
@@ -83,9 +78,6 @@ class MainWindow(QMainWindow):
 
         self.ui.list_view.setModel(self.model)
         self.ui.list_view.setMouseTracking(True)
-
-        for series in db_get_series():
-            self.model.add_item(series)
 
     @Slot()
     def on_action_add_triggered(self):
@@ -266,7 +258,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_action_about_triggered(self):
-        """Displays a :class:`.AboutDialog` for additional information."""
+        """Displays an :class:`.AboutDialog` for additional information."""
         AboutDialog(self).exec_()
 
     @Slot()

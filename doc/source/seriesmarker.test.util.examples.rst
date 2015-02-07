@@ -8,7 +8,8 @@ examples Package
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
+
 :mod:`buffy_example` Module
 -----------------------------------------------------------
 
@@ -17,30 +18,54 @@ examples Package
     :undoc-members:
     :show-inheritance:
 
+
+:mod:`defiance_example` Module
+-----------------------------------------------------------
+
 .. automodule:: seriesmarker.test.util.examples.defiance_example
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
+
+:mod:`dr_who_example` Module
+-----------------------------------------------------------
+
 .. automodule:: seriesmarker.test.util.examples.dr_who_example
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
+
+:mod:`how_i_met_your_mother_example` Module
+-----------------------------------------------------------
+
 .. automodule:: seriesmarker.test.util.examples.how_i_met_your_mother_example
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+:mod:`mad_love_example` Module
+-----------------------------------------------------------
+
 .. automodule:: seriesmarker.test.util.examples.mad_love_example
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
+
+:mod:`rome_pg_example` Module
+-----------------------------------------------------------
+
 .. automodule:: seriesmarker.test.util.examples.rome_pg_example
     :members:
     :undoc-members:
     :show-inheritance:
+
+
+:mod:`wonder_years_example` Module
+-----------------------------------------------------------
 
 .. automodule:: seriesmarker.test.util.examples.wonder_years_example
     :members:

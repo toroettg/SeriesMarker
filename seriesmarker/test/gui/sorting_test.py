@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -16,15 +16,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 import random
 import unittest
 from unittest.mock import MagicMock
 
-from PySide.QtCore import Qt, QModelIndex
+from PySide.QtCore import Qt, QModelIndex, QCoreApplication
 from pytvdbapi.api import Show
 
+from seriesmarker.persistence.database import db_get_series
 from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.test.database.base.persitent_db_test_case import \
     PersistentDBTestCase
@@ -40,6 +41,10 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         Cases in this test depend on a specific execution order.
         Therefore, case names are numbered.
 
+    .. todo::
+        Might be merged with :class:`.StoryTest` in separate test-class to
+        reduce boilerplate code (setUpClass, setUp).
+
     """
 
     @classmethod
@@ -48,7 +53,15 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         PersistentDBTestCase.setUpClass()
 
         from seriesmarker.persistence.database import db_init
+
         db_init()
+
+    def setUp(self):
+        super().setUp()
+
+        for series in db_get_series():
+            self.window.model.add_item(series)
+        QCoreApplication.processEvents();
 
     def test_01_sort_on_add(self):
         Show.update = MagicMock()
@@ -98,12 +111,12 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
 
             result = [
                 ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                      ("Defiance", "  1 / 3  ", "33.3%"),
-                      ("Doctor Who", "  1 / 12 ", "8.3%"),
-                      ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-                      ("Mad Love", "  1 / 2  ", "50.0%"),
-                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                      ("The Wonder Years", "  1 / 1  ", "100.0%")
+                ("Defiance", "  1 / 3  ", "33.3%"),
+                ("Doctor Who", "  1 / 12 ", "8.3%"),
+                ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+                ("Mad Love", "  1 / 2  ", "50.0%"),
+                ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+                ("The Wonder Years", "  1 / 1  ", "100.0%")
             ]
             self._check_displayed_data(0, Qt.AscendingOrder, result,
                                        "Sort view after adding a series")
@@ -113,12 +126,12 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
     def test_02_sort_on_load(self):
         result = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                  ("Defiance", "  1 / 3  ", "33.3%"),
-                  ("Doctor Who", "  1 / 12 ", "8.3%"),
-                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-                  ("Mad Love", "  1 / 2  ", "50.0%"),
-                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                  ("The Wonder Years", "  1 / 1  ", "100.0%")
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%")
         ]
         self._check_displayed_data(0, Qt.AscendingOrder, result,
                                    "Sort view after loading from data base")
@@ -128,12 +141,12 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
 
         result = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                  ("Defiance", "  1 / 3  ", "33.3%"),
-                  ("Doctor Who", "  1 / 12 ", "8.3%"),
-                  ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-                  ("Mad Love", "  1 / 2  ", "50.0%"),
-                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                  ("The Wonder Years", "  1 / 1  ", "100.0%")
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%")
         ]
         self._check_displayed_data(0, Qt.AscendingOrder, result,
                                    "Sort view after loading from data base")
@@ -179,12 +192,12 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
 
         result_asc = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                      ("Defiance", "  1 / 3  ", "33.3%"),
-                      ("Doctor Who", "  1 / 12 ", "8.3%"),
-                      ("Mad Love", "  1 / 2  ", "50.0%"),
-                      ("The Wonder Years", "  1 / 1  ", "100.0%"),
-                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                      ("How I Met Your Mother", "  6 / 7  ", "85.7%")
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%")
         ]
         result_dsc = list(reversed(result_asc[-2:])) + result_asc[0:-2]
 
@@ -205,12 +218,12 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
 
         result_asc = [
             ("Doctor Who", "  1 / 12 ", "8.3%"),
-                      ("Defiance", "  1 / 3  ", "33.3%"),
-                      ("Mad Love", "  1 / 2  ", "50.0%"),
-                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                      ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-                      ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                      ("The Wonder Years", "  1 / 1  ", "100.0%")
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%")
         ]
 
         result_dsc = list(reversed(result_asc[0:5])) + result_asc[5:]
@@ -229,22 +242,22 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
 
         result_pre = [
             ("How I Met Your Mother", "  6 / 7  ", "85.7%"),
-                      ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                      ("Mad Love", "  1 / 2  ", "50.0%"),
-                      ("Defiance", "  1 / 3  ", "33.3%"),
-                      ("Doctor Who", "  1 / 12 ", "8.3%"),
-                      ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                      ("The Wonder Years", "  1 / 1  ", "100.0%")
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
+            ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%")
         ]
 
         result = [
             ("Buffy the Vampire Slayer", "  1 / 1  ", "100.0%"),
-                  ("Defiance", "  1 / 3  ", "33.3%"),
-                  ("Doctor Who", "  1 / 12 ", "8.3%"),
-                  ("Mad Love", "  1 / 2  ", "50.0%"),
-                  ("The Wonder Years", "  1 / 1  ", "100.0%"),
-                  ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
-                  ("How I Met Your Mother", "  6 / 7  ", "85.7%")
+            ("Defiance", "  1 / 3  ", "33.3%"),
+            ("Doctor Who", "  1 / 12 ", "8.3%"),
+            ("Mad Love", "  1 / 2  ", "50.0%"),
+            ("The Wonder Years", "  1 / 1  ", "100.0%"),
+            ("Rome: Power & Glory", "  2 / 4  ", "50.0%"),
+            ("How I Met Your Mother", "  6 / 7  ", "85.7%")
         ]
 
         self.click(self.tree_view.header().viewport(), target)
@@ -268,7 +281,7 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         self.assertEqual(header.sortIndicatorOrder(), expected_order,
                          "Not sorted by correct order.")
 
-        #@formatter:off
+        # @formatter:off
         model = self.tree_view.model()
         for column in range(0, 3):
             self.assertEqual(

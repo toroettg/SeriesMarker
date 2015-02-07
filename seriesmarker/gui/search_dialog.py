@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2014 Tobias Röttger <toroettg@gmail.com>
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 from PySide.QtCore import Slot, Qt
 from PySide.QtGui import QDialog, QHeaderView
@@ -36,7 +36,7 @@ class SearchDialog(QDialog):
         Creates a new dialog instance.
 
         :param parent: The parent widget of the dialog.
-        :class parent: :class:`PySide.QtGui.QWidget`
+        :type parent: :class:`PySide.QtGui.QWidget`
 
         """
         super(SearchDialog, self).__init__(parent)
