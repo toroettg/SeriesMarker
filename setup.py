@@ -74,15 +74,10 @@ def _setup_win():
             " before trying to build a binary distribution.".format(e.name))
 
     qt_plugins_path = os.path.relpath(os.path.join(os.path.dirname(PySide.__file__), "plugins"))
-    pytvdb_path = os.path.relpath(os.path.join(os.path.dirname(pytvdbapi.__file__)))
 
     include_files = [
         (os.path.join(qt_plugins_path, "imageformats"), os.path.join("plugins", "imageformats")),
         (os.path.join("resources", "qt.conf"), "qt.conf")
-    ]
-
-    zip_files = [
-        (os.path.join(pytvdb_path, "data", "languages.xml"), "pytvdbapi/data/languages.xml"),
     ]
 
     exe = Executable(
@@ -133,7 +128,6 @@ def _setup_win():
 
     options = {
         "include_files": include_files,
-        "zip_includes": zip_files,
         "packages": _packages,
     }
 
