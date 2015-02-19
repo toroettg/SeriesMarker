@@ -73,13 +73,6 @@ def _setup_win():
         raise SystemExit("Missing module '{}'. Please install required modules"
             " before trying to build a binary distribution.".format(e.name))
 
-    qt_plugins_path = os.path.relpath(os.path.join(os.path.dirname(PySide.__file__), "plugins"))
-
-    include_files = [
-        (os.path.join(qt_plugins_path, "imageformats"), os.path.join("plugins", "imageformats")),
-        (os.path.join("resources", "qt.conf"), "qt.conf")
-    ]
-
     exe = Executable(
         script=_scripts[0],
         base='Win32GUI'
@@ -127,7 +120,6 @@ def _setup_win():
     }
 
     options = {
-        "include_files": include_files,
         "packages": _packages,
     }
 
@@ -278,7 +270,7 @@ def _import_setuptools():
 
 # Sets variables starting with 'application'; avoids the import of
 # config.py in case dependencies are not available on system.
-with open("seriesmarker/util/config.py") as f:
+with open("seriesmarker/util/config.py", encoding="UTF-8") as f:
     content = [line.strip() for line in f.readlines()
         if line.startswith("application")]
     for assignment in content:

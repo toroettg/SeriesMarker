@@ -30,7 +30,7 @@ A simple way to install the package is by using the `AUR Helper`_ `Yaourt`_:
 
     $yaourt -S seriesmarker
 
-The abovementioned command will resolve all necessary
+The above mentioned command will resolve all necessary
 :ref:`dependencies <dependencies>` and install them with SeriesMarker for
 you (`Yaourt`_ will guide you through the process). Afterwards, you can
 execute the application from a shell:
@@ -77,7 +77,15 @@ Obtaining the Installer
 -----------------------
 
 The installer is available for download at the `SeriesMarker Download Site`_.
-The name of the latest executable is SeriesMarker-|version|-win32.msi.
+The names of the latest executables are listed in the following:
+
+``64-bit Windows Operating System``
+    SeriesMarker-|version|-amd64.msi
+``32-bit Windows Operating System``
+    SeriesMarker-|version|-win32.msi
+
+.. note::
+    If in doubt, use the 32-bit version.
 
 .. _install_procedure_win:
 
@@ -284,7 +292,7 @@ it from a binary, or completely building it from source.
 Binary Install
 """"""""""""""
 
-Visit `PySide Binaries for Microsoft Windows <PySide_Binaries_Windows>`_,
+Visit `PySide Binaries for Microsoft Windows`_,
 download, and execute the matching installer for your system.
 
 Building from Source
@@ -487,10 +495,10 @@ You may now continue with the :ref:`User Guide` or explore the software on your 
 .. _pytvdbapi: https://github.com/fuzzycode/pytvdbapi/
 .. _PySide: https://qt-project.org/wiki/PySide/
 .. _PySide_Binaries_Linux: https://qt-project.org/wiki/PySide_Binaries_Linux
-    .. _Binaries
 .. _PySide_Binaries_Windows: http://qt-project.org/wiki/PySide_Binaries_Windows
+.. _PySide Binaries for Microsoft Windows: PySide_Binaries_Windows_
 .. _PySide_Building_on_Linux: https://qt-project.org/wiki/Building_PySide_on_Linux/
-    .. _Building on Linux: PySide_Building_on_Linux_
+.. _Building on Linux: PySide_Building_on_Linux_
 .. _PySide_Building_on_Windows: http://qt-project.org/wiki/Building_PySide_on_Windows/
 .. _PySide bug: https://bugreports.qt-project.org/browse/PYSIDE-178
 .. _Python: http://www.python.org
