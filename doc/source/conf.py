@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = application_name  # @UndefinedVariable
-copyright = "2013, " + application_author_name
+copyright = "2013 - 2015, " + application_author_name
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

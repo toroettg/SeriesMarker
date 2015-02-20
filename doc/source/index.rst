@@ -7,20 +7,28 @@
 Welcome to SeriesMarker's documentation!
 ========================================
 
-Contents:
+Contents
+========
 
 .. toctree::
-	:maxdepth: 2
+    :maxdepth: 2
 
-	installdoc
-	userdoc
-	developerdoc
+    installdoc
+    userdoc
+    developerdoc
 
-==================
+
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. Hidden elements to suppress build warnings.
+.. toctree::
+    :hidden:
+
+    target_links
+    modules
 

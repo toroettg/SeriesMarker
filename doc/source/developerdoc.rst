@@ -161,9 +161,10 @@ with default settings. Find and change the line defining the build behavior:
 |                                      |                                     |
 +--------------------------------------+-------------------------------------+
 
-This will ensure the adherence of the mentioned linker flag
-, ``-headerpad_max_install_names``, when building packages. To ensure that
-the flag is set, see ``/opt/local/share/macports/Tcl/port1.0/portconfigure.tcl``
+This will ensure the adherence of the mentioned linker flag,
+``-headerpad_max_install_names``, when building packages. Recent versions of
+`MacPorts`_ have the flag enabled by default. However, to ensure that
+the flag is set, see ``/opt/local/libexec/macports/lib/port1.0/portconfigure.tcl``
 and check if it has been added to the ``ldflags``, e.g., by setting the
 relevant line to:
 
@@ -179,7 +180,7 @@ Proceed as described in :ref:`building_osx_install_deps`. In addition,
 
 .. code-block:: bash
 
-	$sudo port install py33-py2app
+	$sudo port install py34-py2app
 
 
 Prepare Packages
@@ -188,28 +189,16 @@ Prepare Packages
 py2app
 ^^^^^^
 
-There is an `py2app bug`_, which prevents `Qt`_ plugins from being
-copied to the binary correctly. To resolve it, open the `PySide`_
+There is an `py2app bug`_, which prevents the app to function properly with
+recent versions of one of its dependencies. To resolve it, open the virtualenv
 recipe file of `py2app`_, probably located at
 
 .. code-block:: bash
 
-	/opt/local/Library/Frameworks/Python.framework.Versions/3.3/lib/python3.3/site-packages/py2app/recipes/pyside.py
+	/opt/local/Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/site-packages/py2app/recipes/virtualenv.py
 
-and change the indentation of the else-part of the for-loop to match the
-if-statement as shown in the bug report.
-
-httplib2
-^^^^^^^^
-
-The `httplib2`_ library stores some certificates, which cannot be read
-from `py2app`_ due to restricted permissions. To change those permissions,
-issue the following command:
-
-.. code-block:: bash
-
-	sudo chmod o=r /opt/local/Library/Frameworks/Python.framework.Versions/3.3/lib/python3.3/site-packages/httplib2-0.8-py3.3.egg/httplib2/cacerts.txt
-
+and modify the `load_module` and `scan_code` method calls as shown in the bug
+report.
 
 Creating a Binary distribution
 ------------------------------
@@ -224,11 +213,11 @@ following steps:
 	Open the a shell (`Terminal`) and change to the root directory
 	of SeriesMarker.
 #.
-	Execute ``python3.3 setup.py py2app`` to create an application and
+	Execute ``python3.4 setup.py py2app`` to create an application and
 	a disk image, containing a copy of the application. Both can be found
 	at the *dist* directory.
 
-The resulting .app can then be used as usual. The disk image is
+The resulting `.app` can then be used as usual. The disk image is
 the preferred way to distribute the application, providing a simple installer
 as shown in the :ref:`install procedure <install_procedure_mac>` for OS X.
 
@@ -268,13 +257,4 @@ Todo List
 .. todolist::
 
 
-.. _cx_Freeze: http://cx-freeze.sourceforge.net/
-.. _httplib2: https://code.google.com/p/httplib2/
-.. _MacPorts: https://www.macports.org/
-.. _py2app: https://bitbucket.org/ronaldoussoren/py2app
-.. _py2app FAQ: https://bitbucket.org/ronaldoussoren/py2app/src/3e50b18722c57735988e13cfaacd59b163fda654/doc/faq.rst?at=default
-.. _py2app bug: https://bitbucket.org/ronaldoussoren/py2app/issue/97/copying-file-dbfseventsd-when-set
-.. _pytvdbapi: https://github.com/fuzzycode/pytvdbapi/
-.. _PySide: https://qt-project.org/wiki/PySide/
-.. _Qt: https://qt-project.org/
-.. _Sphinx: http://sphinx-doc.org/
+.. include:: target_links.rst
