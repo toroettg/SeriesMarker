@@ -196,13 +196,7 @@ Prerequisites
 To build SeriesMarker, and its :ref:`dependencies <dependencies>`,
 `MacPorts`_ requires an installed copy of `Xcode`_, which can be found
 in the `Mac App Store`_ on your system for free. It also requires the
-`Command Line Tools`, which can be installed from within `Xcode`_:
-
-#. Start Xcode and open the ``Preferences`` via the `Xcode` menu.
-#. Click on the ``Downloads`` tab.
-#. Click the ``Install`` button next to the `Command Line Tools` entry.
-
-More information can be found at `Installing MacPorts`_.
+`Command Line Tools`. More information can be found at `Installing MacPorts`_.
 
 .. note::
     It is not sufficient to install the `Command Line Tools` only,
@@ -219,7 +213,7 @@ Install Dependencies
 --------------------
 
 With `MacPorts`_ installed, open a shell and enter the following command
-to update your ports database (see the `MacPorts Guide <MacPorts_Guide>`_
+to update your ports database (see the `MacPorts Guide`_
 for more information):
 
 .. code-block:: bash

@@ -86,7 +86,7 @@ class MainWindowTest(GUITestCase):
 
         :param series_number: The number of the series to find the coordinates for.
         :type series_number: integer
-        The number of the series to find the coordinates for.
+            The number of the series to find the coordinates for.
         :type season_number:
 
         :returns: The viewport of the tree view and the coordinates of the item's center.

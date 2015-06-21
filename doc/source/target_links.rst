@@ -16,7 +16,7 @@
 
 .. _MacPorts: https://www.macports.org/
 .. _Installing MacPorts: https://www.macports.org/install.php
-.. _MacPorts_Guide: https://www.macports.org/guide/#using/
+.. _MacPorts Guide: https://www.macports.org/guide/#using/
 
 .. _Microsoft .NET Framework: https://www.microsoft.com/en-us/download/details.aspx?id=17718
 .. _Microsoft Visual Studio: https://www.microsoft.com/visualstudio/
