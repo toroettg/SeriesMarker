@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2015 Tobias Röttger <toroettg@gmail.com>
@@ -16,12 +16,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 from bisect import bisect
 import logging
+from enum import IntEnum
 
 from PySide.QtCore import QAbstractItemModel, QModelIndex, Qt
+
 from PySide.QtGui import QFont
 
 from seriesmarker.gui.model.episode_node import EpisodeNode
@@ -33,8 +35,14 @@ from seriesmarker.persistence.model.episode import Episode
 from seriesmarker.persistence.model.season import Season
 from seriesmarker.persistence.model.series import Series
 
-
 logger = logging.getLogger(__name__)
+
+
+class Column(IntEnum):
+    """Convenience enumeration of columns used by :class:`.TreeSeriesModel`"""
+    SERIES = 0
+    EPISODE = 1
+    PROGRESS = 3
 
 
 class TreeSeriesModel(QAbstractItemModel):
@@ -79,11 +87,11 @@ class TreeSeriesModel(QAbstractItemModel):
         """
         if orientation == Qt.Horizontal:
             if role == Qt.DisplayRole:
-                if section == 0:
+                if section == Column.SERIES:
                     return self.root.name()
-                elif section == 1:
+                elif section == Column.EPISODE:
                     return "Episodes"
-                elif section == 2:
+                elif section == Column.PROGRESS:
                     return "Progress"
             elif role == Qt.TextAlignmentRole:
                 return Qt.AlignCenter
@@ -123,14 +131,14 @@ class TreeSeriesModel(QAbstractItemModel):
                 episodes = node.leaf_count
                 watched = node.checked_count
 
-                if column == 0:
+                if column == Column.SERIES:
                     return node.name()
-                elif column == 1:
+                elif column == Column.EPISODE:
                     if isinstance(node, SeriesNode):
                         return "{:3} / {: <3}".format(watched, episodes)
                     else:
                         return episodes
-                elif column == 2:
+                elif column == Column.PROGRESS:
                     return "{:.1%}".format(watched / episodes)
             elif role == Qt.UserRole:
                 return node
@@ -145,7 +153,7 @@ class TreeSeriesModel(QAbstractItemModel):
                 else:
                     return None
             elif role == Qt.FontRole:
-                if column == 1:
+                if column == Column.EPISODE:
                     return QFont("Monospace")
             elif role == Qt.TextAlignmentRole:
                 if isinstance(node, EpisodeNode):
@@ -167,8 +175,8 @@ class TreeSeriesModel(QAbstractItemModel):
 
         :param index: The position to set the value at.
         :type index: :class:`.PySide.QtCore.QModelIndex`
-        :param value: Value to be set at given index: :class:`Qt.CheckState` for
-            :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
+        :param value: Value to be set at given index: :class:`Qt.CheckState`
+            for :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
             for :class:`Qt.DecorationRole`.
         :type value: object
         :param role: Determines the kind of data to set for the item.
@@ -187,7 +195,7 @@ class TreeSeriesModel(QAbstractItemModel):
 
         .. todo::
             After upgrade to QT5, use SignalSpy in test case to check if only
-             changes are emitted if there was really a change after checking.
+            changes are emitted if there was really a change after checking.
         """
         node = self.node_at(index)
         if role == Qt.CheckStateRole:
@@ -203,15 +211,17 @@ class TreeSeriesModel(QAbstractItemModel):
             try:
                 next(item for item in changes if item)
             except StopIteration:
-                #Filter seasons without changes ([] in changes) for early exit
+                # Filter seasons without changes ([] in changes) for early exit
                 return False
 
             db_commit()
 
             def notify_change(index):
                 node = index.internalPointer()
-                episode_index = self.createIndex(index.row(), 1, node)
-                progress_index = self.createIndex(index.row(), 2, node)
+                episode_index = self.createIndex(index.row(), Column.EPISODE,
+                                                 node)
+                progress_index = self.createIndex(index.row(), Column.PROGRESS,
+                                                  node)
                 self.dataChanged.emit(episode_index, progress_index)
 
             def traverse_down(item, index):
@@ -291,7 +301,7 @@ class TreeSeriesModel(QAbstractItemModel):
         except StopIteration:
             return QModelIndex()
         else:
-            return self.index(row, 0, parent)
+            return self.index(row, Column.SERIES, parent)
 
     def parent(self, child_index):
         """Returns the index referring to the parent of the node referred by
@@ -311,7 +321,8 @@ class TreeSeriesModel(QAbstractItemModel):
         if parent_node is None or parent_node is self.root:
             return QModelIndex()
         else:
-            return self.createIndex(parent_node.child_index(), 0, parent_node)
+            return self.createIndex(parent_node.child_index(), Column.SERIES,
+                                    parent_node)
 
     def node_at(self, index):
         """Returns the node at the given index of the model.
@@ -359,6 +370,8 @@ class TreeSeriesModel(QAbstractItemModel):
             position = bisect(
                 [node.data.episode_number for node in parent_node.children],
                 item.episode_number)
+        else:
+            return
 
         self.beginInsertRows(parent_index, position, position)
         parent_node.insert(position, cls(item, parent_node))
