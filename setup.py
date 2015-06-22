@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2015 Tobias Röttger <toroettg@gmail.com>
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 import sys
 import os
@@ -42,20 +42,22 @@ def main():
         return readme + changelog
 
     common_arguments = {
-        "name": application_name,  # @UndefinedVariable
-        "version": application_version,  # @UndefinedVariable
+        "name": application_name,
+        "version": application_version,
 
-        "author": application_author_name,  # @UndefinedVariable
-        "author_email": application_author_email,  # @UndefinedVariable
-        "url": application_url,  # @UndefinedVariable
+        "author": application_author_name,
+        "author_email": application_author_email,
+        "url": application_url,
 
-        "description": application_description,  # @UndefinedVariable
+        "description": application_description,
         "long_description": read_description(),
 
-        "license": application_license,  # @UndefinedVariable
-        "install_requires": application_dependencies,  # @UndefinedVariable
+        "license": application_license,
+        "install_requires": application_dependencies,
         "platforms": ["any"],
-        "classifiers": _classifier
+        "classifiers": _classifier,
+
+        "test_suite": "seriesmarker.test.test_runner"
     }
 
     arguments = dict(common_arguments)

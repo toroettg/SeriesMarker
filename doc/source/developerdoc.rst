@@ -13,29 +13,29 @@ Adding a new Source Code File
 =============================
 
 1.
-	Add the file to the packages section of setup.py.
+    Add the file to the packages section of setup.py.
 
 2.
-	Add the copyright note.
+    Add the copyright note.
 
 3.
-	Document the file by using docstrings (sphinx).
+    Document the file by using docstrings (sphinx).
 
 4.
-	Add the file to the documentation:
+    Add the file to the documentation:
 
-	1.
-		Add the module to the proper .rst file. You may need to create
-		a new one. In that case, ensure that the new .rst is also added
-		to the proper file in the documentation tree.
-	2.
-		Create a new build of the documentation and check if your
-		references are set correctly and see if new errors/warnings
-		have occurred.
+    1.
+        Add the module to the proper .rst file. You may need to create
+        a new one. In that case, ensure that the new .rst is also added
+        to the proper file in the documentation tree.
+    2.
+        Create a new build of the documentation and check if your
+        references are set correctly and see if new errors/warnings
+        have occurred.
 
 5.
-	If the file contains new features, ensure you have written a test case.
-	Add it to the test package. Repeat steps 2-4 for the test file.
+    If the file contains new features, ensure you have written a test case.
+    Add it to the test package. Repeat steps 2-4 for the test file.
 
 ****************************
 Generating the Documentation
@@ -46,21 +46,21 @@ install it on your system beforehand:
 
 .. code-block:: bash
 
-	$pip install sphinx
+    $pip install sphinx
 
 To generate the documentation for SeriesMarker, perform the following steps:
 
 1.
-	Check out SeriesMarker.
+    Check out SeriesMarker.
 2.
-	Change to the ``doc`` sub directory.
+    Change to the ``doc`` sub directory.
 3.
-	on Linux:
-		execute ``make html``.
+    on Linux:
+        execute ``make html``.
 4.
-	The resulting documentation can be found at the ``doc/build/html``
-	sub directory. It contains an ``index.html`` file, which can be
-	opened with a browser to display the generated documentation.
+    The resulting documentation can be found at the ``doc/build/html``
+    sub directory. It contains an ``index.html`` file, which can be
+    opened with a browser to display the generated documentation.
 
 *******
 Testing
@@ -71,16 +71,29 @@ execute the following command at SeriesMarkers' root directory:
 
 .. code-block:: bash
 
-	$python -m unittest seriesmarker/test/test_runner.py
+    $python setup test
 
-To only run topic specific test cases, similar runners can be found
+This will build SeriesMarker and run all tests against it. To skip the
+package creation, run the test suite directly via:
+
+.. code-block:: bash
+
+    $python -m unittest seriesmarker/test/test_runner.py
+
+To only run topic specific test cases, similar suits can be found
 in the sub packages of the test directory:
 
 .. code-block:: bash
 
-	$python -m unittest seriesmarker/test/database/database_test_runner.py
-	$python -m unittest seriesmarker/test/gui/gui_test_runner.py
+    $python setup.py test --test-suite="seriesmarker.test.database.database_test_runner"
+    $python setup.py test --test-suite="seriesmarker.test.gui.gui_test_runner.py"
 
+respectively
+
+.. code-block:: bash
+
+    $python -m unittest seriesmarker/test/database/database_test_runner.py
+    $python -m unittest seriesmarker/test/gui/gui_test_runner.py
 
 
 *************************
@@ -110,7 +123,7 @@ Install SeriesMarkers :ref:`dependencies <dependencies>` via pip. In addition,
 
 .. code-block:: none
 
-	pip install cx_Freeze
+    pip install cx_Freeze
 
 Creating a Binary Distribution
 ------------------------------
@@ -118,13 +131,13 @@ Creating a Binary Distribution
 This section describes, how to create a installer for SeriesMarker from source.
 
 1.
-	Check out SeriesMarker.
+    Check out SeriesMarker.
 2.
-	Open the `Command Prompt` (cmd.exe) and change to the root directory
-	of SeriesMarker.
+    Open the `Command Prompt` (cmd.exe) and change to the root directory
+    of SeriesMarker.
 3.
-	Execute ``python setup.py bdist_msi`` to create a msi-installer,
-	which can be found at the *dist* directory.
+    Execute ``python setup.py bdist_msi`` to create a msi-installer,
+    which can be found at the *dist* directory.
 
 The installer can then be used as described in the :ref:`install procedure
 <install_procedure_win>` for Microsoft Windows.
@@ -170,7 +183,7 @@ relevant line to:
 
 .. code-block:: none
 
-	default configure.ldflags   {"-L${prefix}/lib -Wl,-headerpad_max_install_names"}
+    default configure.ldflags   {"-L${prefix}/lib -Wl,-headerpad_max_install_names"}
 
 Install Dependencies
 --------------------
@@ -180,7 +193,7 @@ Proceed as described in :ref:`building_osx_install_deps`. In addition,
 
 .. code-block:: bash
 
-	$sudo port install py34-py2app
+    $sudo port install py34-py2app
 
 
 Prepare Packages
@@ -195,7 +208,7 @@ recipe file of `py2app`_, probably located at
 
 .. code-block:: bash
 
-	/opt/local/Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/site-packages/py2app/recipes/virtualenv.py
+    /opt/local/Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/site-packages/py2app/recipes/virtualenv.py
 
 and modify the `load_module` and `scan_code` method calls as shown in the bug
 report.
@@ -208,14 +221,14 @@ the previous sections, you can now create a distributable binary with the
 following steps:
 
 #.
-	Check out SeriesMarker.
+    Check out SeriesMarker.
 #.
-	Open the a shell (`Terminal`) and change to the root directory
-	of SeriesMarker.
+    Open the a shell (`Terminal`) and change to the root directory
+    of SeriesMarker.
 #.
-	Execute ``python3.4 setup.py py2app`` to create an application and
-	a disk image, containing a copy of the application. Both can be found
-	at the *dist* directory.
+    Execute ``python3.4 setup.py py2app`` to create an application and
+    a disk image, containing a copy of the application. Both can be found
+    at the *dist* directory.
 
 The resulting `.app` can then be used as usual. The disk image is
 the preferred way to distribute the application, providing a simple installer
@@ -239,23 +252,23 @@ TheTVDB API
 Links to the TheTVDB API for checking raw data.
 
 Languages:
-	http://thetvdb.com/api/APIKEY/languages.xml
+    http://thetvdb.com/api/APIKEY/languages.xml
 Mirrors:
-	http://thetvdb.com/api/APIKEY/mirrors.xml
+    http://thetvdb.com/api/APIKEY/mirrors.xml
 Server Time:
-	http://www.thetvdb.com/api/Updates.php?type=none
+    http://www.thetvdb.com/api/Updates.php?type=none
 Search:
-	http://www.thetvdb.com/api/GetSeries.php?seriesname=how%20i%20met%20your%20mother
+    http://www.thetvdb.com/api/GetSeries.php?seriesname=how%20i%20met%20your%20mother
 Series (basic):
-	http://thetvdb.com/api/APIKEY/series/75760/en.xml
+    http://thetvdb.com/api/APIKEY/series/75760/en.xml
 Series (full):
-	http://thetvdb.com/api/APIKEY/series/75760/all/en.xml
+    http://thetvdb.com/api/APIKEY/series/75760/all/en.xml
 Banners:
-	http://thetvdb.com/api/APIKEY/series/75760/banners.xml
+    http://thetvdb.com/api/APIKEY/series/75760/banners.xml
 Episode:
-	http://thetvdb.com/api/APIKEY/episodes/1159571/en.xml
+    http://thetvdb.com/api/APIKEY/episodes/1159571/en.xml
 Updates:
-	http://thetvdb.com/api/APIKEY/updates/updates_all.xml
+    http://thetvdb.com/api/APIKEY/updates/updates_all.xml
 
 *********
 Todo List
