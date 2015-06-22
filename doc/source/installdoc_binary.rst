@@ -168,3 +168,5 @@ with the setup.
 
 You may now continue with the :ref:`User Guide` or explore the
 software on your own.
+
+.. include:: target_links.rst

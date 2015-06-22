@@ -47,7 +47,7 @@ class BannerLoader(QObject):
         :param index: The index referring to a :class:`.DecoratedNode`
             to fetch a banner for (origin of the request). Used to inform
             the node's model when the request was finished.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
         :param cache: Determines if the loaded banner should be cached on disk.
         :type cache: bool
 

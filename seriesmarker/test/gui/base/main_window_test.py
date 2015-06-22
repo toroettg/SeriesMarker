@@ -43,7 +43,7 @@ class MainWindowTest(GUITestCase):
 
         :param series_number: The index of the series to expand, from top to
             bottom as displayed in the main window, starting at zero.
-        :type series_number: integer
+        :type series_number: :class:`int`
 
         """
         viewport, target = self.find_click_target(series_number)
@@ -85,7 +85,7 @@ class MainWindowTest(GUITestCase):
         """Finds the coordinates of an item in the tree view.
 
         :param series_number: The number of the series to find the coordinates for.
-        :type series_number: integer
+        :type series_number: :class:`int`
             The number of the series to find the coordinates for.
         :type season_number:
 

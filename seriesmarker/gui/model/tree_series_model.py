@@ -42,7 +42,7 @@ class Column(IntEnum):
     """Convenience enumeration of columns used by :class:`.TreeSeriesModel`"""
     SERIES = 0
     EPISODE = 1
-    PROGRESS = 3
+    PROGRESS = 2
 
 
 class TreeSeriesModel(QAbstractItemModel):
@@ -69,12 +69,12 @@ class TreeSeriesModel(QAbstractItemModel):
         """Defines the header data displayed in the GUI.
 
         :param section: Describes the column to get the header data for.
-        :type section: integer
+        :type section: :class:`int`
         :param orientation: Determines for which orientation of the header
             data should be get.
         :type orientation: :class:`PySide.QtCore.Qt.Orientation`
         :param role: Determines the kind of data to get from the model.
-        :type role: integer
+        :type role: :class:`int`
 
         :returns: The header caption for the given section as string for
             :class:`.Qt.DisplayRole`.
@@ -102,9 +102,9 @@ class TreeSeriesModel(QAbstractItemModel):
         """Returns the data stored under the given role at a given index.
 
         :param index: Describes the node of the model to get data from.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
         :param role: Determines the kind of data to get from the node.
-        :type role: integer
+        :type role: :class:`int`
 
         :returns: The string representation of the :class:`.TreeNode`
             at the given index for :class:`.Qt.DisplayRole`.
@@ -174,13 +174,13 @@ class TreeSeriesModel(QAbstractItemModel):
         refresh the views afterwards.
 
         :param index: The position to set the value at.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
         :param value: Value to be set at given index: :class:`Qt.CheckState`
             for :class:`Qt.CheckStateRole`, :class:`.PySide.QtGui.Pixmap`
             for :class:`Qt.DecorationRole`.
-        :type value: object
+        :type value: :class:`object`
         :param role: Determines the kind of data to set for the item.
-        :type role: integer
+        :type role: :const:`.PySide.QtCore.Qt.ItemDataRole`
 
         :returns: True if successful, otherwise False.
 
@@ -189,9 +189,8 @@ class TreeSeriesModel(QAbstractItemModel):
         .. todo::
             Update of CheckState / progress kinda ugly, may be done in
             check(value), but needs reference to index and model - add
-            reference to each node? Example:
-                for change in changes:
-                    self.dataChanged.emit(change.get_index())
+            reference to each node? Example: ``for change in changes:
+            self.dataChanged.emit(change.get_index())``
 
         .. todo::
             After upgrade to QT5, use SignalSpy in test case to check if only
@@ -252,13 +251,13 @@ class TreeSeriesModel(QAbstractItemModel):
         and column of the given parent.
 
         :param row: The row of the item to get an index for.
-        :type row: integer
+        :type row: :class:`int`
         :param column: The column of the item to get an index for.
-        :type column: integer
+        :type column: :class:`int`
         :param parent: The parent index of the item to get an index for.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
-        :returns: The :class:`.PySide.QtCore.QModelIndex` of the item
+        :returns: The :class:`~.PySide.QtCore.QModelIndex` of the item
             or an invalid index if no item exists at the given row or
             colum under the given parent.
 
@@ -282,12 +281,12 @@ class TreeSeriesModel(QAbstractItemModel):
         is successful, an index referring to the containing node is returned.
 
         :param item: Data contained in a :class:`.TreeNode` to look for.
-        :type item: object
+        :type item: :class:`object`
         :param parent: The index referring to the parent
             node of the given item's node.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
-        :returns: A :class:`.PySide.QtCore.QModelIndex`, referring to
+        :returns: A :class:`~.PySide.QtCore.QModelIndex`, referring to
             the node which contains the given item if the search was
             successful, otherwise an invalid index.
 
@@ -308,9 +307,9 @@ class TreeSeriesModel(QAbstractItemModel):
         the given index.
 
         :param child_index: The index of the item to get the parent index for.
-        :type child_index: :class:`.PySide.QtCore.QModelIndex`
+        :type child_index: :class:`~.PySide.QtCore.QModelIndex`
 
-        :returns: The :class:`.PySide.QtCore.QModelIndex`, referring to the
+        :returns: The :class:`~.PySide.QtCore.QModelIndex`, referring to the
             parent of the given index, or an invalid index if no parent exists.
 
         :emphasis:`Overrides` :meth:`.QAbstractItemModel.parent`
@@ -328,7 +327,7 @@ class TreeSeriesModel(QAbstractItemModel):
         """Returns the node at the given index of the model.
 
         :param index: The index to get the associated node from.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The :class:`.TreeNode` if a node is associated with the
             given index, otherwise the model's root node.
@@ -349,9 +348,9 @@ class TreeSeriesModel(QAbstractItemModel):
         them in correct order (sorted by season respectively episode number).
 
         :param item: The item to add to the model.
-        :type item: object
+        :type item: :class:`object`
         :param parent_index: The index of the node to add the item to.
-        :type parent_index: :class:`.PySide.QtCore.QModelIndex`
+        :type parent_index: :class:`~.PySide.QtCore.QModelIndex`
 
         """
         parent_node = self.node_at(parent_index)
@@ -382,11 +381,11 @@ class TreeSeriesModel(QAbstractItemModel):
         at a given position.
 
         :param position: The index to start removing nodes from.
-        :type position: integer
+        :type position: :class:`int`
         :param rows: The number of nodes to remove from the parent.
-        :type rows: integer
+        :type rows: :class:`int`
         :param parent: The parent to remove the rows from.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: True if the nodes were successfully removed,
             otherwise False.
@@ -408,7 +407,7 @@ class TreeSeriesModel(QAbstractItemModel):
         describes (i.e. which part was selected in the GUI).
 
         :param index: The index which describes the series to remove.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The removed :class:`.Series` if successful, otherwise None.
 
@@ -429,7 +428,7 @@ class TreeSeriesModel(QAbstractItemModel):
         can be changed.
 
         :param index: The index referring to the item to get flags for.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The flags :class:`.Qt.ItemIsUserCheckable` and
             :class:`.Qt.ItemIsUserEnabled` for :class:`.TreeNode`
@@ -450,7 +449,7 @@ class TreeSeriesModel(QAbstractItemModel):
         """Returns the number of rows (nodes) under the given parent.
 
         :param parent: The parent to return the number of rows for.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The number of :class:`.TreeNode` added to the model as
             children of the given parent.
@@ -464,7 +463,7 @@ class TreeSeriesModel(QAbstractItemModel):
         """Describes the number of columns the model is using.
 
         :param parent: The parent to return the number of columns for.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The number of columns.
 

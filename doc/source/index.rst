@@ -25,10 +25,3 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. Hidden elements to suppress build warnings.
-.. toctree::
-    :hidden:
-
-    target_links
-    modules
-

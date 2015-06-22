@@ -48,9 +48,9 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         and aligns the names of series and seasons to the left.
 
         :param index: The item's position in the model to get data for.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
         :param role: Determines the kind of data to get from the model.
-        :type role: integer
+        :type role: :class:`int`
 
         :returns: None for :class:`PySide.QtCore.Qt.DecorationRole`
         :returns: :class:`.PySide.QtCore.Qt.AlignLeft` for
@@ -74,9 +74,9 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         This method hides episodes in the tree of the main view.
 
         :param source_row: The row-index to test for acceptance.
-        :type source_row: integer
+        :type source_row: :class:`int`
         :param source_parent: The parent of the row to test.
-        :type source_parent: :class:`.PySide.QtCore.QModelIndex`
+        :type source_parent: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: True if a described row should be displayed, otherwise False.
 
@@ -106,9 +106,9 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         sort and added at the end of the list in alphanumerical order.
 
         :param left: The index of the left item to be sorted.
-        :type left: :class:`.PySide.QtCore.QModelIndex`
+        :type left: :class:`~.PySide.QtCore.QModelIndex`
         :param right: The index of the right item to be sorted.
-        :type right: :class:`.PySide.QtCore.QModelIndex`
+        :type right: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: True if the value of the item referred to by the given
             index left is less than the value of the item referred to by
@@ -172,7 +172,7 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         of a original Qt model. Does not alter the result.
 
         :param index: The proxy index to pass onto the source method.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The return value of the method call on the source model.
 
@@ -186,7 +186,7 @@ class SortFilterProxyModel(QSortFilterProxyModel):
         of a original Qt model. Does not alter the result.
 
         :param index: The proxy index to pass onto the source method.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The return value of the method call on the source model.
 

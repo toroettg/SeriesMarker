@@ -32,7 +32,7 @@ class TreeNode(DecoratedNode):
         :param model: The model the node has been added to.
         :type index: :class:`.QtCore.QAbstractItemModel`
         :param data: The data the node contains.
-        :type data: object
+        :type data: :class:`object`
         :param parent: The node's parent in the tree.
         :type parent: :class:`.TreeNode`
 
@@ -113,7 +113,7 @@ class TreeNode(DecoratedNode):
         Also sets the cache of checked nodes to the given value.
 
         :param value: The value to set the checked count to.
-        :type value: integer
+        :type value: :class:`int`
 
         """
         if self._checked_cache is not None:
@@ -123,7 +123,7 @@ class TreeNode(DecoratedNode):
         """Returns the node's child at the given index.
 
         :param index: The index of the child to return.
-        :type index: integer
+        :type index: :class:`int`
 
         :returns: The child :class:`.TreeNode` with the given index.
 
@@ -155,7 +155,7 @@ class TreeNode(DecoratedNode):
         """Inserts a node to the current one's children at a given position.
 
         :param index: The index where to insert the node.
-        :type index: integer
+        :type index: :class:`int`
         :param node: The node to insert.
         :type node: :class:`.TreeNode`
 
@@ -167,7 +167,7 @@ class TreeNode(DecoratedNode):
         """Removes a child at a given index from the node's children.
 
         :param index: The position of the child to remove.
-        :type index: integer
+        :type index: :class:`int`
 
         """
         node = self._children.pop(index)
@@ -181,9 +181,9 @@ class TreeNode(DecoratedNode):
             (including parent's parents) are also being adjusted.
 
         :param delta_leaves: Amount to adjust cached leaf counts by.
-        :type delta_leaves: integer
+        :type delta_leaves: :class:`int`
         :param delta_checks: Amount to adjust cached check counts by.
-        :type delta_checks: integer
+        :type delta_checks: :class:`int`
 
         .. seealso ::
             :py:meth:`.leaf_count`
@@ -239,7 +239,7 @@ class TreeNode(DecoratedNode):
         episodes in its branch is updated accordingly.
 
         :param state: The checked state to set.
-        :type state: boolean
+        :type state: :class:`bool`
         :param origin: The node which initiated the check call. Used to
             determine when to traverse the tree upward.
         :type: :class:`.TreeNode`

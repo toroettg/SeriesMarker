@@ -55,7 +55,7 @@ class EpisodeNode(TreeNode):
         episodes in its branch is updated accordingly.
 
         :param state: The checked state to set.
-        :type state: boolean
+        :type state: :class:`bool`
         :param origin: The node which initiated the check call. Used to
             determine when to traverse the tree upward.
         :type: :class:`.TreeNode`
@@ -108,7 +108,7 @@ class EpisodeNode(TreeNode):
         """Retuns a snapshot image of the episode the node is related to.
 
         :param index: The index of the node, whose decoration was requested.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         .. todo::
 

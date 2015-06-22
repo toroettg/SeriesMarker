@@ -63,7 +63,7 @@ class DecoratedNode(object):
         given URL, the cached image will be used instead.
 
         :param index: The index referring to the node to get decoration for.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The :class:`PySide.QtGui.Pixmap` to use as the node's decoration.
 

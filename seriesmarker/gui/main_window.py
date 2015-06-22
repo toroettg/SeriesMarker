@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
         the list view.
 
         :param index: The index of the item whose view has been entered.
-        :type index: :class:`.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
         """
         node = self.model.node_at(index)
 

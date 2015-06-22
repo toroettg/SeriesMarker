@@ -226,6 +226,13 @@ as shown in the :ref:`install procedure <install_procedure_mac>` for OS X.
 Notes
 *****
 
+API Generation
+==============
+
+.. code-block:: bash
+
+    $sphinx-apidoc --module-first --separate --force --maxdepth=5 --output-dir=./doc/source/apidoc/ ./seriesmarker
+
 TheTVDB API
 ===========
 

@@ -65,7 +65,7 @@ class GUITestCase(unittest.TestCase):
         :param header: The header to calculate a position for.
         :type header: :class:`.PySide.QtGui.QHeaderView`
         :param section: The section (column) to calculate a position for.
-        :type section: integer
+        :type section: :class:`int`
 
         :returns: The :class:`.PySide.QtCore.QPoint` referring
             to the section's center.

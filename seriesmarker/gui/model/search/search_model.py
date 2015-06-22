@@ -41,7 +41,7 @@ class SearchModel(QAbstractTableModel):
         """Returns the node at the given index of the model.
 
         :param index: The index to get the associated node from.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
 
         .. todo::
             The banner_loader may cause an access to an invalid index
@@ -82,11 +82,11 @@ class SearchModel(QAbstractTableModel):
         """Removes a number of nodes from a given parent, beginning at a given position.
 
         :param position: The index to start removing nodes from.
-        :type position: integer
+        :type position: :class:`int`
         :param rows: The number of nodes to remove from the parent.
-        :type rows: integer
+        :type rows: :class:`int`
         :param parent: The parent to remove the nodes from.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: True if the nodes were successfully removed, otherwise False.
 
@@ -102,9 +102,9 @@ class SearchModel(QAbstractTableModel):
         """Returns the data under the given role from the model at a given index.
 
         :param index: The position of the model to get data from.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
         :param role: Determines the kind of data to get from the model.
-        :type role: integer
+        :type role: :class:`int`
 
         :returns: The series name, at the given index,
             for :class:`PySide.QtCore.Qt.DisplayRole`.
@@ -143,11 +143,11 @@ class SearchModel(QAbstractTableModel):
         and refresh the views afterwards.
 
         :param index: The position to set the value at.
-        :type index: :class:`.PySide.QtCore.QModelIndex`
+        :type index: :class:`~.PySide.QtCore.QModelIndex`
         :param value: Value to be set at given index.
         :type value: :class:`.PySide.QtGui.Pixmap`
         :param role: Determines the kind of data to set for the item.
-        :type role: integer
+        :type role: :class:`int`
 
         :returns: True if successful, otherwise False.
 
@@ -167,7 +167,7 @@ class SearchModel(QAbstractTableModel):
         """Returns the number of rows (nodes), currently added to the model.
 
         :param parent: The parent to return the number of rows for.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The number of :class:`.SearchNode` added to the model.
 
@@ -183,7 +183,7 @@ class SearchModel(QAbstractTableModel):
         """Describes the number of columns the model is using.
 
         :param parent: The parent to return the number of columns for.
-        :type parent: :class:`.PySide.QtCore.QModelIndex`
+        :type parent: :class:`~.PySide.QtCore.QModelIndex`
 
         :returns: The number of columns.
 

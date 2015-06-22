@@ -37,7 +37,7 @@ class BannerFactory(BaseFactory):
         :param update: The banner object to replace with a new banner.
         :type update: :class:`.Banner`
         :param season: Parameter can be omitted unless 'season' is given as banner type. Describes the number of the season to pick a banner for.
-        :type season: integer
+        :type season: :class:`int`
         :returns: The picked :class:`.Banner`, or None if no one matched.
 
         .. todo::
