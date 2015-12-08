@@ -18,8 +18,9 @@
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 # ==============================================================================
 
-import sys
 import os
+import sys
+
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "py2app":
@@ -65,6 +66,7 @@ def main():
 
     setup(**arguments)
 
+
 def _setup_win():
     try:
         global setup
@@ -73,7 +75,7 @@ def _setup_win():
         from PySide.QtCore import QLibraryInfo
     except ImportError as e:
         raise SystemExit("Missing module '{}'. Please install required modules"
-            " before trying to build a binary distribution.".format(e.name))
+                         " before trying to build a binary distribution.".format(e.name))
 
     exe = Executable(
         script=_scripts[0],
@@ -132,6 +134,7 @@ def _setup_win():
 
     return specific_arguments
 
+
 def _setup_mac():
     _import_setuptools()
     from subprocess import call, check_output
@@ -162,6 +165,7 @@ def _setup_mac():
         call(["mv", "dist/{}.app".format(in_file), "dist/{}.app".format(out_file)])
 
         print("Determining codename of the operating system.")
+
         def determine_codename():
             osx_version = str(check_output(["sw_vers", "-productVersion"]), encoding="UTF-8")
             osx_version = osx_version[:osx_version.rfind('.')]
@@ -177,6 +181,7 @@ def _setup_mac():
                 return "SnowLeopard"
             else:
                 return "osx{}".format(osx_version)
+
         codename = determine_codename()
 
         in_file = out_file
@@ -191,11 +196,13 @@ def _setup_mac():
         except IOError:
             pass
         print("Creating disk image.")
-        call(["hdiutil", "create", out_path, "-srcfolder" , "dist", "-volname", out_file, "-format", "UDZO"])
+        call(["hdiutil", "create", out_path, "-srcfolder", "dist", "-volname", out_file, "-format", "UDZO"])
         print("Cleaning up symbolic link.")
         call(["rm", "dist/Applications"])
         print("[finished]")
+
     post_build()
+
 
 def _setup_src():
     _import_setuptools()
@@ -206,6 +213,7 @@ def _setup_src():
     }
 
     return specific_arguments
+
 
 _scripts = [
     'bin/seriesmarker'
@@ -251,32 +259,36 @@ _classifier = [
     'Topic :: Utilities '
 ]
 
+
 def _import_setuptools():
-    """Imports distribute_setup from the tools directory without
-    the need of converting it to a python package.
+    """Imports setuptools, either from the system or from bootstrap.
+
+    If the system's setuptools is not found, imports ez_setup from the tools
+    directory without the need of converting it to a python package.
 
     """
     global setup
     import inspect
 
-    cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
-        os.path.split(inspect.getfile(inspect.currentframe()))[0], "tools")))
-    if cmd_subfolder not in sys.path:
-        sys.path.insert(0, cmd_subfolder)
-
     try:
         from setuptools import setup
     except ImportError:
-        from distribute_setup import use_setuptools
+        cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
+            os.path.split(inspect.getfile(inspect.currentframe()))[0], "tools")))
+        if cmd_subfolder not in sys.path:
+            sys.path.insert(0, cmd_subfolder)
+
+        # noinspection PyUnresolvedReferences,PyPackageRequirements
+        from ez_setup import use_setuptools
         use_setuptools()
-        from setuptools import setup  # @UnusedImport
+        from setuptools import setup
 
 
 # Sets variables starting with 'application'; avoids the import of
 # config.py in case dependencies are not available on system.
 with open("seriesmarker/util/config.py", encoding="UTF-8") as f:
     content = [line.strip() for line in f.readlines()
-        if line.startswith("application")]
+               if line.startswith("application")]
     for assignment in content:
         exec(assignment)
 
