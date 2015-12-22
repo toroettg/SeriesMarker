@@ -1,5 +1,3 @@
-:orphan:
-
 .. _Arch User Repository (AUR): https://wiki.archlinux.org/index.php/AUR_User_Guidelines/
 .. _AUR Helper: https://wiki.archlinux.org/index.php/AUR_helper/
 
