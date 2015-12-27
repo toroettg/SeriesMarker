@@ -1,9 +1,11 @@
-.. _Arch User Repository (AUR): https://wiki.archlinux.org/index.php/AUR_User_Guidelines/
-.. _AUR Helper: https://wiki.archlinux.org/index.php/AUR_helper/
+.. _Arch User Repository (AUR): https://wiki.archlinux.org/index.php/AUR
+.. _AUR Helper: https://wiki.archlinux.org/index.php/AUR_helper
+
+.. _Alabaster: https://github.com/bitprophet/alabaster
 
 .. _appdirs: https://github.com/ActiveState/appdirs/
 
-.. _CMake: http://www.cmake.org/
+.. _CMake: https://www.cmake.org/
 
 .. _cx_Freeze: http://cx-freeze.sourceforge.net/
 
@@ -16,47 +18,39 @@
 
 .. _MacPorts: https://www.macports.org/
 .. _Installing MacPorts: https://www.macports.org/install.php
-.. _MacPorts Guide: https://www.macports.org/guide/#using/
+.. _MacPorts Guide: https://www.macports.org/guide/#using
 
-.. _Microsoft .NET Framework: https://www.microsoft.com/en-us/download/details.aspx?id=17718
-.. _Microsoft Visual Studio: https://www.microsoft.com/visualstudio/
-.. _Microsoft Windows SDK: https://www.microsoft.com/en-us/download/details.aspx?id=8279
 .. _Microsoft Visual C++ Redistributable Package (x86): https://www.microsoft.com/en-us/download/details.aspx?id=8328
 .. _Microsoft Visual C++ Redistributable Package (x64): https://www.microsoft.com/en-us/download/details.aspx?id=13523
 
-.. _NMAKE: https://msdn.microsoft.com/en-us/library/dd9y37ha.aspx/
+.. _pip: https://pip.pypa.io
 
-.. _pip: https://pip.pypa.io/
+.. _Python: https://www.python.org
 
-.. _Python: https://www.python.org/
+.. _pytvdbapi: https://github.com/fuzzycode/pytvdbapi
 
-.. _pytvdbapi: https://github.com/fuzzycode/pytvdbapi/
-
-.. _PySide: https://qt-project.org/wiki/PySide/
-.. _PySide_Binaries_Linux: https://qt-project.org/wiki/PySide_Binaries_Linux/
-.. _PySide_Binaries_Windows: http://qt-project.org/wiki/PySide_Binaries_Windows/
-.. _PySide Binaries for Microsoft Windows: PySide_Binaries_Windows_
-.. _Building PySide on Linux: https://qt-project.org/wiki/Building_PySide_on_Linux/
-.. _PySide_Building_on_Windows: http://qt-project.org/wiki/Building_PySide_on_Windows/
+.. _PySide: https://wiki.qt.io/PySide
+.. _PySide_Binaries_Linux: https://wiki.qt.io/PySide_Binaries_Linux
+.. _Building PySide on Linux: https://pyside.readthedocs.org/en/latest/building/linux.html
+.. _Building PySide on Windows: https://pyside.readthedocs.org/en/latest/building/windows.html
 
 .. _py2app: https://bitbucket.org/ronaldoussoren/py2app
-.. _py2app FAQ: https://bitbucket.org/ronaldoussoren/py2app/src/3e50b18722c57735988e13cfaacd59b163fda654/doc/faq.rst?at=default
-.. _py2app bug: https://bitbucket.org/ronaldoussoren/py2app/issue/156/
+.. _py2app bug: https://bitbucket.org/ronaldoussoren/py2app/issue/156
 
-.. _Qt: https://qt-project.org/
-.. _qmake: https://en.wikipedia.org/wiki/Qmake/
+.. _Qt: https://www.qt.io
+.. _qmake: https://doc.qt.io/qt-4.8/qmake-manual.html
 
-.. _setuptools: https://pypi.python.org/pypi/setuptools/
+.. _setuptools: https://pypi.python.org/pypi/setuptools
 
-.. _SeriesMarker Download Site: https://sourceforge.net/projects/seriesmarker/files/
-.. _SeriesMarker Package: https://aur.archlinux.org/packages/seriesmarker/
-.. _SeriesMarker Package Site: https://pypi.python.org/pypi/SeriesMarker/
-.. _SeriesMarker Project Site: https://toroettg.github.io/SeriesMarker/
+.. _SeriesMarker Download Site: https://sourceforge.net/projects/seriesmarker/files
+.. _SeriesMarker Package: https://aur.archlinux.org/packages/seriesmarker
+.. _SeriesMarker Package Site: https://pypi.python.org/pypi/SeriesMarker
+.. _SeriesMarker Project Site: https://toroettg.github.io/SeriesMarker
 
-.. _Sphinx: http://sphinx-doc.org/
+.. _Sphinx: http://sphinx-doc.org
 
-.. _SQLAlchemy: http://www.sqlalchemy.org/
+.. _SQLAlchemy: http://www.sqlalchemy.org
 
-.. _Xcode: https://developer.apple.com/xcode/
+.. _Xcode: https://developer.apple.com/xcode
 
-.. _Yaourt: https://wiki.archlinux.org/index.php/Yaourt/
+.. _Yaourt: https://wiki.archlinux.org/index.php/Yaourt

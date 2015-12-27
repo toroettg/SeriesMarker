@@ -3,7 +3,7 @@ Developer Guide
 ###############
 
 This part of the documentation currently acts as a note pad. Information
-contained may be incomplete and incoherent. It will be improved over time.
+contained may be incomplete and incoherent. It will improve over time.
 
 ******************
 Coding Conventions
@@ -19,7 +19,7 @@ Adding a new Source Code File
     Add the copyright note.
 
 3.
-    Document the file by using docstrings (sphinx).
+    Document the file by using docstrings (`Sphinx`_).
 
 4.
     Add the file to the documentation:
@@ -41,12 +41,13 @@ Adding a new Source Code File
 Generating the Documentation
 ****************************
 
-`Sphinx`_ is used to document SeriesMarker. You may need to
-install it on your system beforehand:
+`Sphinx`_ is used to document SeriesMarker. The documentation is rendered per
+default with the `Alabaster`_ theme. You may need to install both on your system
+beforehand:
 
 .. code-block:: bash
 
-    $pip install sphinx
+    $pip install sphinx alabaster
 
 To generate the documentation for SeriesMarker, perform the following steps:
 
@@ -55,8 +56,10 @@ To generate the documentation for SeriesMarker, perform the following steps:
 2.
     Change to the ``doc`` sub directory.
 3.
-    on Linux:
+    * on Linux / OS X:
         execute ``make html``.
+    * on Windows:
+        execute ``make.bat html``.
 4.
     The resulting documentation can be found at the ``doc/build/html``
     sub directory. It contains an ``index.html`` file, which can be
@@ -67,7 +70,7 @@ Testing
 *******
 
 To run all existing test cases, after checking out SeriesMarker,
-execute the following command at SeriesMarkers' root directory:
+execute the following command at SeriesMarker's root directory:
 
 .. code-block:: bash
 
@@ -100,25 +103,26 @@ respectively
 Distributing SeriesMarker
 *************************
 
-This section describes how a binary of SeriesMarker can be built for
+This section describes how a binary package of SeriesMarker can be built for
 various operating systems.
 
 Microsoft Windows
 =================
 
 On Microsoft Windows, `cx_Freeze`_ is the recommended tool to create a binary
-of SeriesMarker.
+package of SeriesMarker.
 
 Prerequisites
 -------------
-The prerequisites to build a binary on Microsoft Windows
-are the same as for :ref:`building from source <building_on_win_pre>`.
-Please fulfill those first before continuing.
+
+The prerequisites to build a binary package of SeriesMarker on Microsoft Windows
+are the same as for :ref:`building from source <building_on_win_pre>`. Please
+fulfill those first before continuing.
 
 Install Dependencies
 --------------------
 
-Install SeriesMarkers :ref:`dependencies <dependencies>` via pip. In addition,
+Install SeriesMarker's :ref:`dependencies <dependencies>` via pip. In addition,
 `cx_Freeze`_ needs to be installed:
 
 .. code-block:: none
@@ -145,45 +149,17 @@ The installer can then be used as described in the :ref:`install procedure
 OS X
 ====
 
-On OS X, `py2app`_ is the recommended tool to create a binary of SeriesMarker.
+On OS X, `py2app`_ is the recommended tool to create a binary package of
+SeriesMarker.
 
-
-Basic Prerequisites
--------------------
-The basic prerequisites to build a binary for SeriesMarker on OS X are the
-same as for :ref:`building from source <building_on_osx_pre>`.
-Please fulfill those first before continuing.
-
+Prerequisites
+-------------
+The prerequisites to build a binary package for SeriesMarker on OS X are the
+same as for :ref:`building from source <building_on_osx_pre>`. Please fulfill
+those first before continuing.
 
 .. _distribute_osx_pre_plus:
 
-Additional Prerequisites
-------------------------
-
-To prevent a build error, described at the `py2app FAQ`_, while creating
-a binary, the `MacPorts`_ configuration should be changed to always build
-ports from source instead of fetching a binary.
-The configuration file should be located at
-``/opt/local/etc/macports/macports.conf`` if you have installed `MacPorts`_
-with default settings. Find and change the line defining the build behavior:
-
-+--------------------------------------+-------------------------------------+
-| .. code-block:: none                 | .. code-block:: none                |
-|                                      |                                     |
-|     #buildfromsource        ifneeded |     buildfromsource        always   |
-|                                      |                                     |
-+--------------------------------------+-------------------------------------+
-
-This will ensure the adherence of the mentioned linker flag,
-``-headerpad_max_install_names``, when building packages. Recent versions of
-`MacPorts`_ have the flag enabled by default. However, to ensure that
-the flag is set, see ``/opt/local/libexec/macports/lib/port1.0/portconfigure.tcl``
-and check if it has been added to the ``ldflags``, e.g., by setting the
-relevant line to:
-
-.. code-block:: none
-
-    default configure.ldflags   {"-L${prefix}/lib -Wl,-headerpad_max_install_names"}
 
 Install Dependencies
 --------------------
@@ -203,8 +179,8 @@ py2app
 ^^^^^^
 
 There is an `py2app bug`_, which prevents the app to function properly with
-recent versions of one of its dependencies. To resolve it, open the virtualenv
-recipe file of `py2app`_, probably located at
+recent versions of one of its dependencies inside virtual environments. To
+resolve it, open the virtualenv recipe file of `py2app`_, probably located at
 
 .. code-block:: bash
 

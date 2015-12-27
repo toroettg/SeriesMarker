@@ -129,10 +129,10 @@ The installer are available for download at the `SeriesMarker Download Site`_.
 The names of the latest disk images for supported OS X versions are listed
 in the following:
 
+``OS X El Capitan (10.11)``
+    SeriesMarker-|version|-ElCapitan.dmg
 ``OS X Mountain Lion (10.10)``
     SeriesMarker-|version|-Yosemite.dmg
-``OS X Lion (10.9)``
-    SeriesMarker-|version|-Mavericks.dmg
 
 .. warning::
 

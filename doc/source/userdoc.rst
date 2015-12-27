@@ -100,3 +100,20 @@ would like to mark, to change its watched state.
 
 You can also right-click on a series or season to open up a context menu,
 which allows you to batch mark all related episodes of your selection.
+
+***************
+Updating Series
+***************
+
+To let SeriesMarker check if new episodes are available for your added series,
+click on the *Update* button in the toolbar of the main window.
+
+.. note::
+
+    There is currently no visual feedback regarding the update progress.
+    Depending on the size of your series collection, it may take a while.
+
+.. warning::
+
+    This feature is currently in an experimental state and bad things may happen.
+    Please create a backup of your SeriesMarker database beforehand.
