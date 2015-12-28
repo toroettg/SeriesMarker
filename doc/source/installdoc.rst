@@ -9,7 +9,7 @@ is not available for your operating system, see
 how to build SeriesMarker for your system.
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     installdoc_binary
     installdoc_source

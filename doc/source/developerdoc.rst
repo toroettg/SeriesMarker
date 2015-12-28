@@ -132,7 +132,7 @@ Install SeriesMarker's :ref:`dependencies <dependencies>` via pip. In addition,
 Creating a Binary Distribution
 ------------------------------
 
-This section describes, how to create a installer for SeriesMarker from source.
+This section describes, how to create an installer for SeriesMarker from source.
 
 1.
     Check out SeriesMarker.
@@ -178,7 +178,7 @@ Prepare Packages
 py2app
 ^^^^^^
 
-There is an `py2app bug`_, which prevents the app to function properly with
+There is a `py2app bug`_, which prevents the app to function properly with
 recent versions of one of its dependencies inside virtual environments. To
 resolve it, open the virtualenv recipe file of `py2app`_, probably located at
 
@@ -199,7 +199,7 @@ following steps:
 #.
     Check out SeriesMarker.
 #.
-    Open the a shell (`Terminal`) and change to the root directory
+    Open a shell (`Terminal`) and change to the root directory
     of SeriesMarker.
 #.
     Execute ``python3.4 setup.py py2app`` to create an application and
