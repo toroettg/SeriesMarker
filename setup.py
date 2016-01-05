@@ -33,10 +33,10 @@ def main():
         specific_arguments = _setup_src()
 
     def read_description():
-        readme = open('README').read()
+        readme = open('README.rst').read()
 
         try:
-            changelog = open('CHANGELOG').read()
+            changelog = open('CHANGELOG.rst').read()
         except FileNotFoundError:
             changelog = ""
 

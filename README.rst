@@ -3,7 +3,7 @@ About
 #####
 
 SeriesMarker is a tool that lets you keep track of watched episodes of your
-favorite TV|nbsp|series. It is inspired by `Series Watcher`_, which has been 
+favorite TV|nbsp|series. It is inspired by `Series Watcher`_, which has been
 discontinued by its original author, Corentin Chary (`iksaif`_). SeriesMarker
 is a complete re-implementation in Python.
 
@@ -13,16 +13,13 @@ SeriesMarker is licensed under the GNU GPL version 3.
 Screenshots
 ###########
 
-.. image:: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/MainWindow.png
-   :width: 300
+.. image:: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/MainWindow.png/276/240
    :alt: Main Window
    :target: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/MainWindow.png
-.. image:: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/SearchDialog.png
-   :width: 300
+.. image:: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/SearchDialog.png/276/240
    :alt: Search Dialog
    :target: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/SearchDialog.png
-.. image:: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/EpisodeList.png
-   :width: 300
+.. image:: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/EpisodeList.png/276/240
    :alt: Episode List
    :target: https://a.fsdn.com/con/app/proj/seriesmarker/screenshots/EpisodeList.png
 
