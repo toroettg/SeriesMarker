@@ -169,9 +169,11 @@ def _setup_mac():
         def determine_codename():
             osx_version = str(check_output(["sw_vers", "-productVersion"]), encoding="UTF-8")
             osx_version = osx_version[:osx_version.rfind('.')]
-            if osx_version == "10.10":
+            if osx_version == "10.11":
+                return "ElCapitan"
+            elif osx_version == "10.10":
                 return "Yosemite"
-            if osx_version == "10.9":
+            elif osx_version == "10.9":
                 return "Mavericks"
             elif osx_version == "10.8":
                 return "MountainLion"
