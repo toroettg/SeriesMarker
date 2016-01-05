@@ -1,7 +1,7 @@
 # ==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 - 2015 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
