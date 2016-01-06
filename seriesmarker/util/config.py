@@ -42,7 +42,7 @@ application_version = "0.0.3"  #: The current version of the application.
 
 application_description = "A TV series browser and tracker application."  #: A short description of the application.
 
-application_url = "http://toroettg.github.io/SeriesMarker"  #: The project-website of the application.
+application_url = "https://toroettg.github.io/SeriesMarker"  #: The project-website of the application.
 
 application_license = "GNU GPLv3"  #: The license, under which the application is distributed.
 

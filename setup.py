@@ -78,8 +78,8 @@ def _setup_win():
                          " before trying to build a binary distribution.".format(e.name))
 
     exe = Executable(
-        script=_scripts[0],
-        base='Win32GUI'
+            script=_scripts[0],
+            base='Win32GUI'
     )
 
     # http://msdn.microsoft.com/en-us/library/windows/desktop/aa371847(v=vs.85).aspx
@@ -91,7 +91,7 @@ def _setup_win():
             "TARGETDIR",  # Component_
             "[TARGETDIR]seriesmarker.exe",  # Target
             None,  # Arguments
-            application_description,  # Description @UndefinedVariable
+            application_description,  # Description
             None,  # Hotkey
             None,  # Icon
             None,  # IconIndex
@@ -146,23 +146,29 @@ def _setup_mac():
         'optimize': '01',
         'includes': _modules,
         'packages': ['sqlalchemy'],
-        'qt_plugins': ['imageformats']
+        'qt_plugins': ['imageformats'],
+        'plist': {
+            'CFBundleName': application_name,
+            'CFBundleIdentifier': ".".join([application_author, application_name]),
+            'CFBundleShortVersionString': application_version,
+            'CFBundleVersion': application_version,
+            'NSHumanReadableCopyright': (
+                "Copyright \u00A9 2013 - 2016 Tobias Röttger."
+                "\n"
+                "Licensed under the {}.".format(application_license)
+            )
+        }
     }
 
     setup(
-        app=APP,
-        data_files=DATA_FILES,
-        options={'py2app': OPTIONS},
-        setup_requires=['py2app'],
+            app=APP,
+            data_files=DATA_FILES,
+            options={'py2app': OPTIONS},
+            setup_requires=['py2app'],
     )
 
     def post_build():
         print("Created distribution, applying additional scripts...")
-
-        in_file = "seriesmarker"
-        out_file = application_name  # @UndefinedVariable
-        print("Renaming distribution file '{}.app' to '{}.app'.".format(in_file, out_file))
-        call(["mv", "dist/{}.app".format(in_file), "dist/{}.app".format(out_file)])
 
         print("Determining codename of the operating system.")
 
@@ -186,13 +192,12 @@ def _setup_mac():
 
         codename = determine_codename()
 
-        in_file = out_file
-        out_file = "SeriesMarker-{}-{}".format(application_version, codename)  # @UndefinedVariable
+        out_file = "SeriesMarker-{}-{}".format(application_version, codename)
         out_path = "dist/{}.dmg".format(out_file)
         print("Creating symbolic link to '/Applications'.")
         call(["ln", "-s", "/Applications", "dist/Applications"])
         try:
-            with open(out_path) as file:
+            with open(out_path):
                 print("Detected old disk image, removing '{}'.".format(out_path))
                 os.remove(out_path)
         except IOError:
@@ -276,7 +281,7 @@ def _import_setuptools():
         from setuptools import setup
     except ImportError:
         cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
-            os.path.split(inspect.getfile(inspect.currentframe()))[0], "tools")))
+                os.path.split(inspect.getfile(inspect.currentframe()))[0], "tools")))
         if cmd_subfolder not in sys.path:
             sys.path.insert(0, cmd_subfolder)
 
