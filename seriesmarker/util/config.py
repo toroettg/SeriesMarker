@@ -38,7 +38,7 @@ application_author = "toroettg"  #: The application's author.
 application_author_name = "Tobias Roettger"  #: The author's name.
 application_author_email = "toroettg@gmail.com"  #: The author's contact information.
 
-application_version = "0.0.3"  #: The current version of the application.
+application_version = "0.1.0"  #: The current version of the application.
 
 application_description = "A TV series browser and tracker application."  #: A short description of the application.
 
