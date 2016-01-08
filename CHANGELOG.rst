@@ -3,7 +3,7 @@ Changelog
 #########
 
 ==========================
-Version x.x.x (xxxx-xx-xx)
+Version 0.1.0 (2016-01-08)
 ==========================
 
 * Added batch-marking of series / seasons via context menu.
