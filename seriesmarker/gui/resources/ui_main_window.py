@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file '../resources/main_window.ui'
 #
-# Created: Fri Aug 16 23:38:34 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.2.0
+# Created: Tue Jan  5 13:48:25 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -31,7 +31,10 @@ class Ui_MainWindow(object):
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
         self.tree_view = QtGui.QTreeView(self.splitter)
+        self.tree_view.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
+        self.tree_view.setAlternatingRowColors(False)
         self.tree_view.setSortingEnabled(True)
+        self.tree_view.setAllColumnsShowFocus(True)
         self.tree_view.setObjectName("tree_view")
         self.list_view = QtGui.QListView(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -49,7 +52,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.splitter, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 761, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 761, 20))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -100,6 +103,16 @@ class Ui_MainWindow(object):
         icon5.addPixmap(QtGui.QPixmap(":/icons/system-log-out.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.action_exit.setIcon(icon5)
         self.action_exit.setObjectName("action_exit")
+        self.action_mark_watched = QtGui.QAction(MainWindow)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/Koloria/icons/Checkmark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.action_mark_watched.setIcon(icon6)
+        self.action_mark_watched.setObjectName("action_mark_watched")
+        self.action_mark_unwatched = QtGui.QAction(MainWindow)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/Koloria/icons/Error_Symbol.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.action_mark_unwatched.setIcon(icon7)
+        self.action_mark_unwatched.setObjectName("action_mark_unwatched")
         self.menuAbout.addAction(self.action_about_qt)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuAbout.menuAction())
@@ -139,5 +152,9 @@ class Ui_MainWindow(object):
         self.action_exit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
         self.action_exit.setToolTip(QtGui.QApplication.translate("MainWindow", "Exit SeriesMarker", None, QtGui.QApplication.UnicodeUTF8))
         self.action_exit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+X", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_watched.setText(QtGui.QApplication.translate("MainWindow", "Mark watched", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_watched.setToolTip(QtGui.QApplication.translate("MainWindow", "Mark all Episodes as watched", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_unwatched.setText(QtGui.QApplication.translate("MainWindow", "Mark unwatched", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_mark_unwatched.setToolTip(QtGui.QApplication.translate("MainWindow", "Mark all Episodes as unwatched", None, QtGui.QApplication.UnicodeUTF8))
 
 from . import serieswatcher_rc

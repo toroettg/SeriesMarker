@@ -1,19 +1,19 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
@@ -37,13 +37,13 @@ class SeasonFactory(BaseFactory):
 
     def new_season(self, series, pytvdb_season, update=None):
         """Creates a persistable season object from TheTVDB data.
-        
+
         This method will create a new :class:`.Season` instance from pytvdbapi
         episode objects. If a season object is given, the existing one will be
-        updated with the data instead. In both cases, it also traverses the 
+        updated with the data instead. In both cases, it also traverses the
         episodes of a season, using :class:`.EpisodeFactory`, to populate it
-        with data.  
-        
+        with data.
+
         :param series: The series, the season to create belongs to.
         :type series: :class:`.Series`
         :param pytvdb_season: The data to create the season instance from.
@@ -51,7 +51,7 @@ class SeasonFactory(BaseFactory):
         :param update: A season to update with new data.
         :type update: :class:`.Season`
         :returns: The newly created or updated :class:`.Season` instance.
-        
+
         """
         if update == None:
             season = Season()

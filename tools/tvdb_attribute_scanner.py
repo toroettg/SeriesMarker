@@ -1,24 +1,24 @@
+#!/usr/bin/python
+
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
-
-#!/usr/bin/python
 
 from pytvdbapi import api
 import datetime
@@ -62,10 +62,9 @@ def fetch_episode_data(series):
         if key == "season":
             print("   #'season' : ignored")
             continue
-# Problems with encoded string - turned into byte, either skip this or decode in exampledatafactory
-#        elif key == "Overview":
-#           value = value.replace("\n", "")
-#          value = value.encode("unicode_escape")
+        elif key == "Overview":
+            value = value.replace("\n", "")
+            value = value.replace("'", "\\'")
 
         if type(value) is str:
             value = "'{}'".format(value)

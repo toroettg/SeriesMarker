@@ -1,53 +1,46 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 from datetime import date
-from pytvdbapi.api import Season, Episode, Show
 
-class DefianceExample(object):
+from pytvdbapi.api import Season
+
+from seriesmarker.test.util.examples.base_example import BaseExample
+
+
+class DefianceExample(BaseExample):
     """Testdata covers update where episode IDs are changed.
-    
+
     Original season data is ordered as [A, B, C].
-    Update inserts D, which causes a shift to [A, D, B', C']. 
+    Update inserts D, which causes a shift to [A, D, B', C'].
     D = B but has a new id, B' has id of B but contains data of C (B' = C).
     Furthermore, C' is added and has id of C but contains a new episode
-    
+
     """
-    @staticmethod
-    def show():
-        show = Show(api=None, language=None, data=DefianceExample.series_attributes())
-        show.seasons = DefianceExample.seasons(show)
-        show.banner_objects = []
-        show.actor_objects = []
-        return show
 
-    @staticmethod
-    def show_update():
-        show = DefianceExample.show()
-        show.seasons = DefianceExample.seasons_update(show)
-        return show
-
-    @staticmethod
-    def series_attributes():
+    @classmethod
+    def series_attributes(cls):
         attributes = {
-            'Actors': ['Mia Kirshner', 'Stephanie Leonidas', 'Grant Bowler', 'Tony Curran', 'Jaime Murray', 'Graham Greene', 'Julie Benz'],
+            'Actors': ['Mia Kirshner', 'Stephanie Leonidas', 'Grant Bowler',
+                       'Tony Curran', 'Jaime Murray', 'Graham Greene',
+                       'Julie Benz'],
             'Airs_DayOfWeek': 'Monday',
             'Airs_Time': '9:00 PM',
             'ContentRating': 'TV-14',
@@ -71,14 +64,13 @@ class DefianceExample(object):
             'id': 255326,
             'lastupdated': 1367074085,
             'poster': 'posters/255326-3.jpg',
-           # 'seasons' : TODO
+            # 'seasons' : TODO
             'zap2it_id': 'EP01562200',
         }
         return attributes
 
-    @staticmethod
-    def seasons(show):
-
+    @classmethod
+    def seasons(cls, show):
         season1 = Season(1, show)
 
         attributes = {
@@ -109,7 +101,7 @@ class DefianceExample(object):
             'seasonid': 492238,
             'seriesid': 255326,
         }
-        episode11 = Episode(attributes, season1)
+        episode11 = cls.create_episode(attributes, season1)
 
         attributes = {
             'Combined_episodenumber': 2,
@@ -123,7 +115,8 @@ class DefianceExample(object):
             'EpisodeName': 'Down in the Ground Where the Dead Men Go',
             'EpisodeNumber': 2,
             'FirstAired': date(2013, 4, 22),
-            'GuestStars': ['Robert Clarke', 'Nicole Munoz', 'Justin Rain', 'Jesse Rath'],
+            'GuestStars': ['Robert Clarke', 'Nicole Munoz', 'Justin Rain',
+                           'Jesse Rath'],
             'IMDB_ID': 'tt2361364',
             'Language': 'en',
             'Overview': b'Nolan and Datak clash over an ancient ritual, while the hunt for a killer is on.',
@@ -139,7 +132,7 @@ class DefianceExample(object):
             'seasonid': 492238,
             'seriesid': 255326,
         }
-        episode12 = Episode(attributes, season1)
+        episode12 = cls.create_episode(attributes, season1)
 
         attributes = {
             'Combined_episodenumber': 3,
@@ -169,14 +162,14 @@ class DefianceExample(object):
             'seasonid': 492238,
             'seriesid': 255326,
         }
-        episode13 = Episode(attributes, season1)
+        episode13 = cls.create_episode(attributes, season1)
 
         season1.episodes = {1: episode11, 2: episode12, 3: episode13}
 
         return {1: season1}
 
-    @staticmethod
-    def seasons_update(show):
+    @classmethod
+    def seasons_update(cls, show):
         update_season = Season(1, show)
 
         seasons = DefianceExample.seasons(show)
@@ -222,9 +215,10 @@ class DefianceExample(object):
             'seasonid': 492238,
             'seriesid': 255326,
         }
-        episode14 = Episode(attributes, update_season)
+        episode14 = cls.create_episode(attributes, update_season)
 
-        update_season.episodes = {1: episode11, 2: episode12, 3: episode13, 4: episode14}
+        update_season.episodes = {1: episode11, 2: episode12, 3: episode13,
+                                  4: episode14}
 
         return {1: update_season}
 

@@ -1,35 +1,38 @@
 This application uses or includes or is based on third party software;
 wherefore a list of that software is given in the following.
 
-pytvdbapi (Björn Larsson)  
-	https://github.com/fuzzycode/pytvdbapi/
-	Copyright 2011 - 2013, Björn Larsson
-	LGPLv3 License
+pytvdbapi (Björn Larsson)
+    https://github.com/fuzzycode/pytvdbapi
+    Copyright 2011 - 2014, Björn Larsson
+    LGPLv3 License
 PySide (Qt Project)
-	https://qt-project.org/wiki/PySide/
-	Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
-	LGPLv2.1 License
+    http://pyside.org
+    Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+    LGPLv2.1 License
 SQLAlchemy (Michael Bayer)
-	http://www.sqlalchemy.org/
-	Copyright (c) 2005-2013 the SQLAlchemy authors and contributors.
-	MIT License
+    http://www.sqlalchemy.org
+    Copyright (c) 2005-2015 the SQLAlchemy authors and contributors.
+    MIT License
 appdirs (ActiveState)
-	https://github.com/ActiveState/appdirs/
-	Copyright (c) 2010 ActiveState Software Inc.
-	MIT License
-Distribute (The fellowship of the packaging)
-	http://pythonhosted.org/distribute/
-	ZPL/PSF License
+    https://github.com/ActiveState/appdirs
+    Copyright (c) 2010 ActiveState Software Inc.
+    MIT License
+Setuptools (The fellowship of the packaging)
+    https://pythonhosted.org/setuptools
+    ZPL/PSF License
 cx_Freeze (Anthony Tuininga)
-	http://cx-freeze.sourceforge.net
-	Copyright (c) 2007-2012, Anthony Tuininga.
-	Copyright (c) 2001-2006, Computronix (Canada) Ltd., Edmonton, Alberta, Canada.
-	PSF License
+    http://cx-freeze.sourceforge.net
+    Copyright (c) 2007-2014, Anthony Tuininga.
+    Copyright (c) 2001-2006, Computronix (Canada) Ltd., Edmonton, Alberta, Canada.
+    PSF License
 py2app (Ronald Oussoren)
-	https://bitbucket.org/ronaldoussoren/py2app
-	Copyright (c) 2004 Bob Ippolito.
-	Some parts copyright (c) 2010-2013 Ronald Oussoren
-	MIT/PSF License
+    https://bitbucket.org/ronaldoussoren/py2app
+    Copyright (c) 2004 Bob Ippolito
+    Some parts copyright (c) 2010-2014 Ronald Oussoren
+    MIT/PSF License
 Tango Desktop Project (freedesktop.org)
-	http://tango.freedesktop.org/
-	Public Domain
+    http://tango.freedesktop.org
+    Public Domain
+Koloria Icon Set (Graphic Rating)
+    http://www.graphicrating.com/2012/06/14/koloria-free-icons-set
+    Koloria License

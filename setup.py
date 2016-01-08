@@ -1,7 +1,7 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
@@ -16,10 +16,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
-import sys
 import os
+import sys
+
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "py2app":
@@ -32,36 +33,39 @@ def main():
         specific_arguments = _setup_src()
 
     def read_description():
-        readme = open('README').read()
+        readme = open('README.rst').read()
 
         try:
-            changelog = open('CHANGELOG').read()
+            changelog = open('CHANGELOG.rst').read()
         except FileNotFoundError:
             changelog = ""
 
         return readme + changelog
 
     common_arguments = {
-        "name": application_name,  # @UndefinedVariable
-        "version": application_version,  # @UndefinedVariable
+        "name": application_name,
+        "version": application_version,
 
-        "author": application_author_name,  # @UndefinedVariable
-        "author_email": application_author_email,  # @UndefinedVariable
-        "url": application_url,  # @UndefinedVariable
+        "author": application_author_name,
+        "author_email": application_author_email,
+        "url": application_url,
 
-        "description": application_description,  # @UndefinedVariable
+        "description": application_description,
         "long_description": read_description(),
 
-        "license": application_license,  # @UndefinedVariable
-        "install_requires": application_dependencies,  # @UndefinedVariable
+        "license": application_license,
+        "install_requires": application_dependencies,
         "platforms": ["any"],
-        "classifiers": _classifier
+        "classifiers": _classifier,
+
+        "test_suite": "seriesmarker.test.test_runner"
     }
 
     arguments = dict(common_arguments)
     arguments.update(specific_arguments)
 
     setup(**arguments)
+
 
 def _setup_win():
     try:
@@ -71,20 +75,11 @@ def _setup_win():
         from PySide.QtCore import QLibraryInfo
     except ImportError as e:
         raise SystemExit("Missing module '{}'. Please install required modules"
-            " before trying to build a binary distribution.".format(e.name))
-
-    qt_plugins_path = os.path.relpath(os.path.join(os.path.dirname(PySide.__file__), "plugins"))
-    pytvdb_path = os.path.relpath(os.path.join(os.path.dirname(pytvdbapi.__file__)))
-
-    include_files = [
-        (os.path.join(pytvdb_path, "data"), "data"),
-        (os.path.join(qt_plugins_path, "imageformats"), os.path.join("plugins", "imageformats")),
-        (os.path.join("resources", "qt.conf"), "qt.conf")
-    ]
+                         " before trying to build a binary distribution.".format(e.name))
 
     exe = Executable(
-        script=_scripts[0],
-        base='Win32GUI'
+            script=_scripts[0],
+            base='Win32GUI'
     )
 
     # http://msdn.microsoft.com/en-us/library/windows/desktop/aa371847(v=vs.85).aspx
@@ -96,7 +91,7 @@ def _setup_win():
             "TARGETDIR",  # Component_
             "[TARGETDIR]seriesmarker.exe",  # Target
             None,  # Arguments
-            application_description,  # Description @UndefinedVariable
+            application_description,  # Description
             None,  # Hotkey
             None,  # Icon
             None,  # IconIndex
@@ -129,7 +124,6 @@ def _setup_win():
     }
 
     options = {
-        "include_files": include_files,
         "packages": _packages,
     }
 
@@ -139,6 +133,7 @@ def _setup_win():
     }
 
     return specific_arguments
+
 
 def _setup_mac():
     _import_setuptools()
@@ -151,29 +146,40 @@ def _setup_mac():
         'optimize': '01',
         'includes': _modules,
         'packages': ['sqlalchemy'],
-        'qt_plugins': ['imageformats']
+        'qt_plugins': ['imageformats'],
+        'plist': {
+            'CFBundleName': application_name,
+            'CFBundleIdentifier': ".".join([application_author, application_name]),
+            'CFBundleShortVersionString': application_version,
+            'CFBundleVersion': application_version,
+            'NSHumanReadableCopyright': (
+                "Copyright \u00A9 2013 - 2016 Tobias Röttger."
+                "\n"
+                "Licensed under the {}.".format(application_license)
+            )
+        }
     }
 
     setup(
-        app=APP,
-        data_files=DATA_FILES,
-        options={'py2app': OPTIONS},
-        setup_requires=['py2app'],
+            app=APP,
+            data_files=DATA_FILES,
+            options={'py2app': OPTIONS},
+            setup_requires=['py2app'],
     )
 
     def post_build():
         print("Created distribution, applying additional scripts...")
 
-        in_file = "seriesmarker"
-        out_file = application_name  # @UndefinedVariable
-        print("Renaming distribution file '{}.app' to '{}.app'.".format(in_file, out_file))
-        call(["mv", "dist/{}.app".format(in_file), "dist/{}.app".format(out_file)])
-
         print("Determining codename of the operating system.")
+
         def determine_codename():
             osx_version = str(check_output(["sw_vers", "-productVersion"]), encoding="UTF-8")
             osx_version = osx_version[:osx_version.rfind('.')]
-            if osx_version == "10.9":
+            if osx_version == "10.11":
+                return "ElCapitan"
+            elif osx_version == "10.10":
+                return "Yosemite"
+            elif osx_version == "10.9":
                 return "Mavericks"
             elif osx_version == "10.8":
                 return "MountainLion"
@@ -183,25 +189,27 @@ def _setup_mac():
                 return "SnowLeopard"
             else:
                 return "osx{}".format(osx_version)
+
         codename = determine_codename()
 
-        in_file = out_file
-        out_file = "SeriesMarker-{}-{}".format(application_version, codename)  # @UndefinedVariable
+        out_file = "SeriesMarker-{}-{}".format(application_version, codename)
         out_path = "dist/{}.dmg".format(out_file)
         print("Creating symbolic link to '/Applications'.")
         call(["ln", "-s", "/Applications", "dist/Applications"])
         try:
-            with open(out_path) as file:
+            with open(out_path):
                 print("Detected old disk image, removing '{}'.".format(out_path))
                 os.remove(out_path)
         except IOError:
             pass
         print("Creating disk image.")
-        call(["hdiutil", "create", out_path, "-srcfolder" , "dist", "-volname", out_file, "-format", "UDZO"])
+        call(["hdiutil", "create", out_path, "-srcfolder", "dist", "-volname", out_file, "-format", "UDZO"])
         print("Cleaning up symbolic link.")
         call(["rm", "dist/Applications"])
         print("[finished]")
+
     post_build()
+
 
 def _setup_src():
     _import_setuptools()
@@ -212,6 +220,7 @@ def _setup_src():
     }
 
     return specific_arguments
+
 
 _scripts = [
     'bin/seriesmarker'
@@ -257,32 +266,36 @@ _classifier = [
     'Topic :: Utilities '
 ]
 
+
 def _import_setuptools():
-    """Imports distribute_setup from the tools directory without
-    the need of converting it to a python package.
-    
+    """Imports setuptools, either from the system or from bootstrap.
+
+    If the system's setuptools is not found, imports ez_setup from the tools
+    directory without the need of converting it to a python package.
+
     """
     global setup
     import inspect
 
-    cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
-        os.path.split(inspect.getfile(inspect.currentframe()))[0], "tools")))
-    if cmd_subfolder not in sys.path:
-        sys.path.insert(0, cmd_subfolder)
-
     try:
         from setuptools import setup
     except ImportError:
-        from distribute_setup import use_setuptools
+        cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(
+                os.path.split(inspect.getfile(inspect.currentframe()))[0], "tools")))
+        if cmd_subfolder not in sys.path:
+            sys.path.insert(0, cmd_subfolder)
+
+        # noinspection PyUnresolvedReferences,PyPackageRequirements
+        from ez_setup import use_setuptools
         use_setuptools()
-        from setuptools import setup  # @UnusedImport
+        from setuptools import setup
 
 
 # Sets variables starting with 'application'; avoids the import of
 # config.py in case dependencies are not available on system.
-with open("seriesmarker/util/config.py") as f:
+with open("seriesmarker/util/config.py", encoding="UTF-8") as f:
     content = [line.strip() for line in f.readlines()
-        if line.startswith("application")]
+               if line.startswith("application")]
     for assignment in content:
         exec(assignment)
 

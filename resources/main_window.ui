@@ -33,7 +33,16 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QTreeView" name="tree_view">
+       <property name="locale">
+        <locale language="English" country="UnitedStates"/>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>false</bool>
+       </property>
        <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="allColumnsShowFocus">
         <bool>true</bool>
        </property>
       </widget>
@@ -73,7 +82,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -219,6 +228,30 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action_mark_watched">
+   <property name="icon">
+    <iconset resource="serieswatcher.qrc">
+     <normaloff>:/Koloria/icons/Checkmark.png</normaloff>:/Koloria/icons/Checkmark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark watched</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark all Episodes as watched</string>
+   </property>
+  </action>
+  <action name="action_mark_unwatched">
+   <property name="icon">
+    <iconset resource="serieswatcher.qrc">
+     <normaloff>:/Koloria/icons/Error_Symbol.png</normaloff>:/Koloria/icons/Error_Symbol.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark unwatched</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark all Episodes as unwatched</string>
    </property>
   </action>
  </widget>

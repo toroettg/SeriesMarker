@@ -1,7 +1,7 @@
-#==============================================================================
+# ==============================================================================
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
 #
 # This file is part of SeriesMarker.
 #
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# ==============================================================================
 
 """This module provides general information about SeriesMarker.
 
@@ -30,6 +30,7 @@ as well as in the distribution process.
 """
 
 import logging
+
 from appdirs import AppDirs
 
 application_name = "SeriesMarker"  #: The application's name.
@@ -37,11 +38,11 @@ application_author = "toroettg"  #: The application's author.
 application_author_name = "Tobias Roettger"  #: The author's name.
 application_author_email = "toroettg@gmail.com"  #: The author's contact information.
 
-application_version = "0.0.3"  #: The current version of the application.
+application_version = "0.1.0"  #: The current version of the application.
 
 application_description = "A TV series browser and tracker application."  #: A short description of the application.
 
-application_url = "http://toroettg.github.io/SeriesMarker"  #: The project-website of the application.
+application_url = "https://toroettg.github.io/SeriesMarker"  #: The project-website of the application.
 
 application_license = "GNU GPLv3"  #: The license, under which the application is distributed.
 

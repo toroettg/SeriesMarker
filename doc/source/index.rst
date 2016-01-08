@@ -7,16 +7,17 @@
 Welcome to SeriesMarker's documentation!
 ========================================
 
-Contents:
+Contents
+========
 
 .. toctree::
-	:maxdepth: 2
+    :maxdepth: 2
 
-	installdoc
-	userdoc
-	developerdoc
+    installdoc
+    userdoc
+    developerdoc
 
-==================
+
 Indices and tables
 ==================
 

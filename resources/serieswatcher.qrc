@@ -1,15 +1,24 @@
 <RCC>
   <qresource>
+    <file>icons/Checkmark.png</file>
     <file>icons/donate_button.gif</file>
-    <file>icons/image-missing.png</file>
-    <file>icons/image-missing.svg</file>
+    <file>icons/Error_Symbol.png</file>
+    <file>icons/go-home.svg</file>
+    <file>icons/help-browser.svg</file>
     <file>icons/image-loading.png</file>
     <file>icons/image-loading.svg</file>
-    <file>icons/system-log-out.svg</file>
-    <file>icons/go-home.svg</file>
-    <file>icons/list-remove.svg</file>
+    <file>icons/image-missing.png</file>
+    <file>icons/image-missing.svg</file>
     <file>icons/list-add.svg</file>
+    <file>icons/list-remove.svg</file>
+    <file>icons/system-log-out.svg</file>
     <file>icons/view-refresh.svg</file>
-    <file>icons/help-browser.svg</file>
+  </qresource>
+  <qresource prefix="misc">
+    <file>icons/SplashScreen.png</file>
+  </qresource>
+  <qresource prefix="Koloria">
+    <file>icons/Checkmark.png</file>
+    <file>icons/Error_Symbol.png</file>
   </qresource>
 </RCC>

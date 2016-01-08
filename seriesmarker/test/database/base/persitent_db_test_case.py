@@ -1,67 +1,83 @@
 #==============================================================================
 # -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2013 Tobias Röttger <toroettg@gmail.com>
-# 
+#
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
+#
 # This file is part of SeriesMarker.
-# 
+#
 # SeriesMarker is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
-# 
+#
 # SeriesMarker is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 
-import unittest
+import os
+import shutil
+import tempfile
+
+from seriesmarker.test.database.base.db_test_case import DBTestCase
 
 import seriesmarker.util.config as config
 
-import os
-import errno
-
-class AppDirsMock(object):
-    def __init__(self, user_data_dir, user_cache_dir):
-        self.user_data_dir = user_data_dir
-        self.user_cache_dir = user_cache_dir
-
-class PersistentDBTestCase(unittest.TestCase):
+class PersistentDBTestCase(DBTestCase):
+    """Prepares the execution of persistent test cases for deriving
+    classes, i.e., data is stored at a temporary location on the hard
+    disk and is available to multiple test cases."""
 
     @classmethod
     def setUpClass(cls):
-        cwd = os.getcwd()
+        """
+        Modifies SeriesMarker's database location to let it point at
+        a temporary directory.
 
-        testdir_path = ""
-        while not os.path.basename(cwd) == "test":  # Climb path if executing sub-testrunner
-            testdir_path += "../"
-            cwd = os.path.dirname(cwd)
-        testdir_path += "db_testdir"
+        :emphasis:`Overrides` :py:meth:`.unittest.TestCase.setUpClass`
 
-        config.dirs = AppDirsMock(testdir_path, config.dirs.user_cache_dir)
-
-        cls.db_path = '{db_path}/{db_name}.db'.format(db_path=config.dirs.user_data_dir, db_name=config.application_name)
-
-        # logging.basicConfig(level=logging.INFO)
+        """
+        data_dir_path = os.path.join(tempfile.gettempdir(),
+                                     config.application_name)
+        cache_dir_path = os.path.join(tempfile.gettempdir(),
+                                      config.application_name, "cache")
+        config.dirs = AppDirsMock(data_dir_path, cache_dir_path)
+        cls.deleteDatabase()
 
     @classmethod
     def deleteDatabase(cls):
-        try:
-            os.remove(cls.db_path)
-        except OSError as error:
-            if error.errno != errno.ENOENT:
-                raise
+        """Removes the temporary directory, created by :py:meth:`.setUpClass`."""
+        if os.path.commonprefix([config.dirs.user_data_dir,
+                                 tempfile.gettempdir()]) == tempfile.gettempdir():
+            # Prevent accidental deletion of real user data dir - should never happen
+            try:
+                shutil.rmtree(config.dirs.user_data_dir)
+            except FileNotFoundError:
+                pass
 
-        try:
-            os.rmdir(config.dirs.user_data_dir)
-        except OSError as error:
-            if error.errno != errno.ENOENT:
-                raise
-
-        if os.path.exists(cls.db_path):
+        if os.path.exists(config.dirs.user_data_dir):
             raise IOError("DB was not deleted")
 
+    @classmethod
+    def tearDownClass(cls):
+        cls.deleteDatabase()
+
+
+class AppDirsMock(object):
+    """Emulates the appdirs package with custom directories."""
+
+    def __init__(self, user_data_dir, user_cache_dir):
+        """Sets the path to custom directories, which shall be returned
+        by appdirs related method calls at runtime.
+
+        :param user_data_dir: The path of the user data directory to return.
+        :type user_data_dir: string
+        :param user_cache_dir: The path of the user cache directory to return.
+        :type user_cache_dir: string
+
+        """
+        self.user_data_dir = user_data_dir
+        self.user_cache_dir = user_cache_dir
