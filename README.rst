@@ -3,7 +3,7 @@ About
 #####
 
 SeriesMarker is a tool that lets you keep track of watched episodes of your
-favorite TV|nbsp|series. It is inspired by `Series Watcher`_, which has been
+favorite TV |nbsp| series. It is inspired by `Series Watcher`_, which has been
 discontinued by its original author, Corentin Chary (`iksaif`_). SeriesMarker
 is a complete re-implementation in Python.
 
