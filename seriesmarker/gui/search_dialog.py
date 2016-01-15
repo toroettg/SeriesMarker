@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
 from PySide.QtCore import Slot, Qt
 from PySide.QtGui import QDialog, QHeaderView
@@ -39,7 +39,7 @@ class SearchDialog(QDialog):
         :type parent: :class:`PySide.QtGui.QWidget`
 
         """
-        super(SearchDialog, self).__init__(parent)
+        super().__init__(parent)
 
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)

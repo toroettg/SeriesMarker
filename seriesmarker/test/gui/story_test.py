@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,17 +16,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
-from unittest.mock import MagicMock
 import unittest
+from unittest.mock import patch
 
 from PySide.QtCore import Qt, QPoint, QCoreApplication
 from PySide.QtGui import QTreeView, QListView
-from pytvdbapi.api import Show
 
 from seriesmarker.persistence.database import db_get_series
-from seriesmarker.net.tvdb import tvdb
 from seriesmarker.test.database.base.persitent_db_test_case import \
     PersistentDBTestCase
 from seriesmarker.test.gui.base.main_window_test import MainWindowTest
@@ -150,7 +148,9 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         self.assertEqual(list_view.toolTip(), "",
                          "ToolTip not cleared when leaving episode")
 
-    def test_04_update(self):
+    @patch("pytvdbapi.api.Show.load_banners")
+    @patch("pytvdbapi.api.TVDB.get_series")
+    def test_04_update(self, mock_get_series, mock_banner_load):
         """Tests the GUI related part of the series update routine.
 
         On update, nodes of removed or added episodes and should be removed or
@@ -164,11 +164,6 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         progress display in the GUI when removing or adding episodes/seasons.
 
         """
-        tvdb.get_series = MagicMock(
-            return_value=ExampleDataFactory.new_pytvdb_show("HIMYM-UPDATE"))
-        Show.update = MagicMock()
-        Show.load_banners = MagicMock()
-
         tree_view = self.window.findChild(QTreeView, "tree_view")
         viewport = tree_view.viewport()
 
@@ -221,7 +216,13 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
                          "Initial season node count not met")
         self.assertEqual(len(season2_node._children), 4,
                          "Initial episode node count not met")
+
+        mock_get_series.configure_mock(
+                return_value=ExampleDataFactory.new_pytvdb_show("HIMYM-UPDATE")
+        )
         self.click(update_button)
+
+
         self.assertEqual(len(series_node._children), 1,
                          "Season nodes not correctly removed from model")
         self.assertEqual(len(season2_node._children), 1,
@@ -264,11 +265,12 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
             tree_view.model().index(0, 2, series_node_index)), "100.0%",
                          "Season 2 progress not correctly updated after toggle.")
 
-        tvdb.get_series = MagicMock(
-            return_value=ExampleDataFactory.new_pytvdb_show("HIMYM"))
-
         # Adding episodes and seasons
+        mock_get_series.configure_mock(
+                return_value=ExampleDataFactory.new_pytvdb_show("HIMYM")
+        )
         self.click(update_button)
+
         self.assertEqual(len(series_node._children), 3,
                          "Season nodes not correctly added to model")
         self.assertEqual(len(season2_node._children), 4,
@@ -323,7 +325,7 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
 
         # Delete selected Series
         remove_button = self.window.ui.toolBar.widgetForAction(
-            self.window.ui.action_remove)
+                self.window.ui.action_remove)
         self.click(remove_button)
 
         self.assertEqual(self.window.model.rowCount(), 0,

@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
 import unittest
 from collections import namedtuple
@@ -35,6 +35,7 @@ Search = namedtuple("Search", "string,expected_row,expected_count")
 
 class SearchDialogTest(GUITestCase):
     def setUp(self):
+        super().setUp()
 
         self.search = Search(string="how i", expected_row=2, expected_count=6)
 

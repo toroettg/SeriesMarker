@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,17 +16,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
 import random
 import unittest
-from unittest.mock import MagicMock
 
 from PySide.QtCore import Qt, QModelIndex, QCoreApplication
-from pytvdbapi.api import Show
 
 from seriesmarker.persistence.database import db_get_series
-from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.test.database.base.persitent_db_test_case import \
     PersistentDBTestCase
 from seriesmarker.test.gui.base.main_window_test import MainWindowTest
@@ -64,8 +61,6 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         QCoreApplication.processEvents();
 
     def test_01_sort_on_add(self):
-        Show.update = MagicMock()
-
         series = []
         series_names = ["HIMYM", "DRWHO", "BUFFY", "MADLOVE", "ROMEPG",
                         "WONDERYEARS", "DEFIANCE"]
@@ -74,12 +69,9 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         for name in series_names:
             series.append(ExampleDataFactory.new_pytvdb_show(name))
 
-        SearchDialog.exec_ = MagicMock(return_value=SearchDialog.Accepted)
-        SearchDialog.result_value = MagicMock(side_effect=series)
-
         self.assertEqual(self.window.model.rowCount(), 0,
                          "Default model is not empty")
-        self.click_add_button(times=len(series))
+        self.click_add_button(times=len(series), to_add=series)
         self.assertEqual(self.window.model.rowCount(), 7,
                          "Selected series were not added")
 

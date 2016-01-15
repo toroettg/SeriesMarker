@@ -19,4 +19,6 @@ Submodules
 .. toctree::
 
    seriesmarker.test.util.example_data_factory
+   seriesmarker.test.util.screenshot
+   seriesmarker.test.util.screenshot_scene
 

@@ -1,4 +1,4 @@
-#==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,23 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
-
-"""This file is part of SeriesMarker.
-
-SeriesMarker is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 3 as
-published by the Free Software Foundation.
-
-SeriesMarker is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-
-"""
+# =============================================================================
 
 import sys
 import unittest
@@ -40,6 +24,7 @@ import unittest
 from PySide.QtCore import Qt, QPoint
 from PySide.QtGui import QApplication, QWidget, QCursor
 from PySide.QtTest import QTest
+
 
 class GUITestCase(unittest.TestCase):
     DELAY = 750
@@ -51,13 +36,14 @@ class GUITestCase(unittest.TestCase):
             cls.app = QApplication(sys.argv)
 
     def click(self, widget, target=QPoint(), double_click=False,
-            mouse_button=Qt.MouseButton.LeftButton):
+              mouse_button=Qt.MouseButton.LeftButton):
         self.move(widget, target)
         if double_click:
             QTest.mouseDClick(widget, mouse_button, pos=target,
-                delay=self.DELAY)
+                              delay=self.DELAY)
         else:
-            QTest.mouseClick(widget, mouse_button, pos=target, delay=self.DELAY)
+            QTest.mouseClick(widget, mouse_button, pos=target,
+                             delay=self.DELAY)
 
     def header_center(self, header, section):
         """Calculates the center of a view's header section.
@@ -75,17 +61,20 @@ class GUITestCase(unittest.TestCase):
         section_pos = header.sectionPosition(logical_index)
         section_width = header.sectionSize(logical_index)
         return QPoint(section_pos + (section_width / 2),
-            header.size().height() / 2)
+                      header.size().height() / 2)
 
     def move(self, widget, target=QPoint()):
         QTest.mouseMove(widget, pos=target, delay=self.DELAY)
 
-    def wait(self):
-        QTest.mouseMove(QWidget(), pos=QCursor.pos(), delay=self.DELAY * 10)
+    def wait(self, delay=None):
+        QTest.mouseMove(  # TODO Use QTest.qWait when available in PySide.
+                QWidget(),
+                pos=QCursor.pos(),
+                delay=delay if delay else self.DELAY
+        )
 
     def type(self, widget, text):
         QTest.keyClicks(widget, text, delay=self.DELAY_TYPING)
 
     def keyhit(self, widget, key):
-        QTest.keyClick(self.dialog.ui.search_text_field, key,
-            delay=self.DELAY_TYPING)
+        QTest.keyClick(widget, key, delay=self.DELAY_TYPING)

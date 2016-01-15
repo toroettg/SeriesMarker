@@ -1,9 +1,8 @@
-from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from PySide.QtCore import Qt, QPoint
 from PySide.QtGui import QTreeView, QListView
 from PySide.QtTest import QTest
-from pytvdbapi.api import Show
 
 from seriesmarker.gui.main_window import MainWindow
 from seriesmarker.gui.search_dialog import SearchDialog
@@ -17,6 +16,8 @@ class MainWindowTest(GUITestCase):
         super().setUpClass()
 
     def setUp(self):
+        super().setUp()
+
         self.window = MainWindow()
 
         self.window.show()
@@ -25,24 +26,40 @@ class MainWindowTest(GUITestCase):
         self.tree_view = self.window.findChild(QTreeView, "tree_view")
         self.list_view = self.window.findChild(QListView, "list_view")
 
-        SearchDialog.exec_ = MagicMock(return_value=SearchDialog.Accepted)
-        SearchDialog.result_value = MagicMock(
-            return_value=ExampleDataFactory.new_pytvdb_show("HIMYM"))
-        Show.update = MagicMock()
+        self.mock_patcher_dialog_exec = patch(
+                "seriesmarker.gui.main_window.SearchDialog.exec_",
+                return_value=SearchDialog.Accepted
+        )
+        self.mock_dialog_exec = self.mock_patcher_dialog_exec.start()
+        self.addCleanup(self.mock_patcher_dialog_exec.stop)
 
-    def click_add_button(self, times=1):
+        self.mock_patcher_show_update = patch("pytvdbapi.api.Show.update")
+        self.mock_patcher_show_update.start()
+        self.addCleanup(self.mock_patcher_show_update.stop)
+
+    def click_add_button(self, times=1, to_add=None):
         add_button = self.window.ui.toolBar.widgetForAction(
-            self.window.ui.action_add)
-        for i in range(times):
-            self.click(add_button)
-        self.assertEqual(SearchDialog.exec_.call_count, times,
+                self.window.ui.action_add)
+
+        if to_add and isinstance(to_add, list):
+            config = {"side_effect": to_add}
+        else:
+            config = {
+                "return_value": to_add if to_add else ExampleDataFactory.new_pytvdb_show(
+                    "HIMYM")
+            }
+        with patch("seriesmarker.gui.main_window.SearchDialog.result_value",
+                   **config):
+            for i in range(times):
+                self.click(add_button)
+        self.assertEqual(self.mock_dialog_exec.call_count, times,
                          "'Add' not called correctly")
 
     def expand_series(self, series_number=0):
         """Expands the series with given index in the main window.
 
-        :param series_number: The index of the series to expand, from top to
-            bottom as displayed in the main window, starting at zero.
+        :param series_number: The index of the series to expand, from
+            top to bottom as displayed in the main window, starting at zero.
         :type series_number: :class:`int`
 
         """
@@ -60,7 +77,7 @@ class MainWindowTest(GUITestCase):
         self.click(*self.find_click_target(series_number=series_number,
                                            season_number=season_number,
                                            episode_number=episode_number,
-                                           offset=QPoint(10, 10)))
+                                           offset=(10, 10)))
         episode_index = self.get_index(series_number=series_number,
                                        season_number=season_number,
                                        episode_number=episode_number,
@@ -84,12 +101,21 @@ class MainWindowTest(GUITestCase):
                           episode_number=None, offset=None):
         """Finds the coordinates of an item in the tree view.
 
-        :param series_number: The number of the series to find the coordinates for.
+        :param series_number: The number of the series to find the
+            coordinates for.
         :type series_number: :class:`int`
-            The number of the series to find the coordinates for.
-        :type season_number:
+        :param season_number: The number of the season to find the
+            coordinates for.
+        :type season_number: :class:`int`
+        :param episode_number: The number of the episode to find the
+            coordinates for.
+        :type episode_number: :class:`int`
+        :param offset: The offset from the top left corner of the item
+            to click at. Defaults to the center of the item if not set.
+        :type offset: tuple(:class:`int`, :class:`int`)
 
-        :returns: The viewport of the tree view and the coordinates of the item's center.
+        :returns: The viewport of the tree view and the coordinates of
+            the item's center.
 
         """
         if episode_number is not None:
@@ -103,13 +129,14 @@ class MainWindowTest(GUITestCase):
                                season_number=season_number,
                                episode_number=episode_number, model=model)
         if offset:
-            target = view.visualRect(index).topLeft() + offset
+            target = view.visualRect(index).topLeft() + QPoint(*offset)
         else:
             target = view.visualRect(index).center()
         return view.viewport(), target
 
     def check_list_view_displays(self, expected, series_number, season_number,
-                                 episode_number, column=1, role=Qt.DisplayRole):
+                                 episode_number, column=1,
+                                 role=Qt.DisplayRole):
         index = self.get_index(series_number=series_number,
                                season_number=season_number,
                                episode_number=episode_number, column=column,
@@ -125,7 +152,7 @@ class MainWindowTest(GUITestCase):
     def check_count_marked_episodes_equals(self, expected, series_number=0,
                                            season_number=0):
         season_node = self.tree_view.model().data(
-            self.get_index(series_number, season_number), Qt.UserRole)
+                self.get_index(series_number, season_number), Qt.UserRole)
 
         count_watched = 0
         for i in range(season_node.child_count()):
@@ -153,10 +180,10 @@ class MainWindowTest(GUITestCase):
         node_index = guard_index(model.index(series_number, column))
         if season_number is not None:
             node_index = guard_index(
-                model.index(season_number, column, node_index))
+                    model.index(season_number, column, node_index))
             if episode_number is not None:
                 node_index = guard_index(
-                    model.index(episode_number, column, node_index))
+                        model.index(episode_number, column, node_index))
 
         return node_index
 
@@ -165,6 +192,8 @@ class MainWindowTest(GUITestCase):
                          "Model does not contain expected number of Series.")
 
     def tearDown(self):
+        super().tearDown()
+
         QTest.mouseMove(self.window,
                         delay=2000)  # Emulates waiting, can be removed
 

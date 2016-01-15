@@ -4,6 +4,6 @@ seriesmarker
 ============
 
 .. toctree::
-    :maxdepth: 5
+   :maxdepth: 5
 
-    seriesmarker
+   seriesmarker
