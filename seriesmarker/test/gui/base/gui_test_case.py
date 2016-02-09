@@ -32,6 +32,8 @@ class GUITestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        super().setUpClass()
+
         if QApplication.instance() == None:
             cls.app = QApplication(sys.argv)
 

@@ -1,4 +1,4 @@
-#==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,15 +16,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# =============================================================================
 
 import os
 import shutil
 import tempfile
 
+import seriesmarker.util.config as config
 from seriesmarker.test.database.base.db_test_case import DBTestCase
 
-import seriesmarker.util.config as config
 
 class PersistentDBTestCase(DBTestCase):
     """Prepares the execution of persistent test cases for deriving
@@ -40,19 +40,28 @@ class PersistentDBTestCase(DBTestCase):
         :emphasis:`Overrides` :py:meth:`.unittest.TestCase.setUpClass`
 
         """
+        super().setUpClass()
+
         data_dir_path = os.path.join(tempfile.gettempdir(),
                                      config.application_name)
         cache_dir_path = os.path.join(tempfile.gettempdir(),
                                       config.application_name, "cache")
-        config.dirs = AppDirsMock(data_dir_path, cache_dir_path)
+        log_dir_path = os.path.join(tempfile.gettempdir(),
+                                    config.application_name, "log")
+        config_dir_path = os.path.join(tempfile.gettempdir(),
+                                       config.application_name, "config")
+        config.dirs = AppDirsMock(data_dir_path, cache_dir_path, log_dir_path,
+                                  config_dir_path)
+
         cls.deleteDatabase()
 
     @classmethod
     def deleteDatabase(cls):
         """Removes the temporary directory, created by :py:meth:`.setUpClass`."""
-        if os.path.commonprefix([config.dirs.user_data_dir,
-                                 tempfile.gettempdir()]) == tempfile.gettempdir():
-            # Prevent accidental deletion of real user data dir - should never happen
+
+        tmpdir = tempfile.gettempdir()
+        # Prevent accidental deletion of real user data dir - should never happen
+        if os.path.commonprefix([config.dirs.user_data_dir, tmpdir]) == tmpdir:
             try:
                 shutil.rmtree(config.dirs.user_data_dir)
             except FileNotFoundError:
@@ -64,12 +73,14 @@ class PersistentDBTestCase(DBTestCase):
     @classmethod
     def tearDownClass(cls):
         cls.deleteDatabase()
+        super().tearDownClass()
 
 
 class AppDirsMock(object):
     """Emulates the appdirs package with custom directories."""
 
-    def __init__(self, user_data_dir, user_cache_dir):
+    def __init__(self, user_data_dir, user_cache_dir, user_log_dir,
+                 user_config_dir):
         """Sets the path to custom directories, which shall be returned
         by appdirs related method calls at runtime.
 
@@ -77,7 +88,14 @@ class AppDirsMock(object):
         :type user_data_dir: string
         :param user_cache_dir: The path of the user cache directory to return.
         :type user_cache_dir: string
+        :param user_log_dir: The path of the user log directory to return.
+        :type user_log_dir: string
+        :param user_config_dir: The path of the user config directory to return.
+        :type user_config_dir: string
+
 
         """
         self.user_data_dir = user_data_dir
         self.user_cache_dir = user_cache_dir
+        self.user_log_dir = user_log_dir
+        self.user_config_dir = user_config_dir
