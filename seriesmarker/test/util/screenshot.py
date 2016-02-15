@@ -34,6 +34,7 @@ class _Screenshot:
     COUNTER = 1
 
     def __init__(self, id, area):
+        super().__init__()
         self.screenshot_dir_path = os.path.join(tempfile.gettempdir(),
                                                 "screenshots",
                                                 id)
@@ -47,18 +48,18 @@ class _Screenshot:
         screenshot_path = os.path.join(self.screenshot_dir_path,
                                        "{}.png".format(self.COUNTER))
 
-        subprocess.call(
-                [
-                    "maim",
-                    "--showcursor" if show_cursor else "",
-                    "-g {}x{}+{}+{}".format(
+        arguments = [
+            "maim",
+            "--showcursor" if show_cursor else None,
+            "-g {}x{}+{}+{}".format(
                             self.area.width(),
                             self.area.height(),
                             self.area.x(),
                             self.area.y()
-                    ),
-                    screenshot_path
-                ]
-        )
+            ),
+            screenshot_path
+        ]
+
+        subprocess.call(filter(None, arguments))
 
         self.COUNTER += 1

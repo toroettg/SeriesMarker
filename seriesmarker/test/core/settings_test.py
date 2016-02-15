@@ -20,13 +20,14 @@
 
 import os
 import tempfile
-from unittest.mock import patch, MagicMock
+import unittest
 
-from seriesmarker.test.database.base.persitent_db_test_case import \
-    PersistentDBTestCase
-from seriesmarker.test.gui.base.gui_test_case import GUITestCase
+from seriesmarker.util import config
+from seriesmarker.util.settings import settings
+from seriesmarker.test.core.base.application_test_case import ApplicationTestCase
 
-class SettingsTest(PersistentDBTestCase, GUITestCase):
+
+class SettingsTest(ApplicationTestCase):
     """Performs tests related to the handling of end-user settings.
 
     .. note::
@@ -35,44 +36,17 @@ class SettingsTest(PersistentDBTestCase, GUITestCase):
 
     """
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-    def setUp(self):
-        super().setUp()
-
-        from gui.main_window import MainWindow
-        self.window = MainWindow()
-
-        app_patcher = patch("seriesmarker.seriesmarker.QApplication",
-                            return_value=self.app)
-        window_patcher = patch("seriesmarker.seriesmarker.MainWindow",
-                               return_value=self.window)
-        exit_patcher = patch("seriesmarker.seriesmarker.sys.exit")
-
-        for patcher in [app_patcher, window_patcher, exit_patcher]:
-            mock = patcher.start()
-            self.addCleanup(patcher.stop)
-
-            if patcher is app_patcher:
-                mock.return_value.exec_ = MagicMock()
-
     def test_01_initial_behavior(self):
         """Tests handling of non-existing settings file."""
-        from seriesmarker.util import config
-        from seriesmarker.util.settings import settings
-
         self.assertEqual(
+            tempfile.gettempdir(),
             os.path.commonprefix(
                 [
                     settings._CONFIG_FILE,
                     tempfile.gettempdir()
                 ]
             ),
-            tempfile.gettempdir(),
             "Settings file should reside in tmp directory for tests."
-
         )
 
         self.assertFalse(os.path.exists(config.dirs.user_config_dir),
@@ -81,8 +55,7 @@ class SettingsTest(PersistentDBTestCase, GUITestCase):
         self.assertFalse(os.path.exists(settings._CONFIG_FILE),
                          "Settings file should not exist.")
 
-        from seriesmarker import seriesmarker
-        seriesmarker.main()
+        self.run_main()
 
         self.assertTrue(
             os.path.exists(config.dirs.user_config_dir),
@@ -94,11 +67,20 @@ class SettingsTest(PersistentDBTestCase, GUITestCase):
             "Settings file should not be created at application start."
         )
 
-    def tearDown(self):
         self.window.close()
-        super().tearDown()
+
+        self.assertTrue(
+            os.path.exists(settings._CONFIG_FILE),
+            "Settings file should be created at application exit."
+        )
 
 
-    @classmethod
-    def tearDownClass(cls):
-        super().tearDownClass()
+
+def get_suit():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(SettingsTest))
+    return suite
+
+
+if __name__ == "__main__":
+    unittest.TextTestRunner(verbosity=2).run(get_suit())

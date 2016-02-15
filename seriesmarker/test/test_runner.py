@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,20 +16,27 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
 
 import unittest
 
 from seriesmarker.test.database import database_test_runner
 from seriesmarker.test.gui import gui_test_runner
+from seriesmarker.test.core import core_test_runner
 
 
 def get_suit():
     all_suites = unittest.TestSuite()
 
-    all_suites.addTests(database_test_runner.get_suit())
-    all_suites.addTests(gui_test_runner.get_suit())
+    suites = [
+        database_test_runner.get_suit(),
+        gui_test_runner.get_suit(),
+        core_test_runner.get_suit()
+    ]
+
+    for suite in suites:
+        all_suites.addTests(suite)
 
     return all_suites
 

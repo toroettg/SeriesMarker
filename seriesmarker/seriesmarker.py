@@ -18,10 +18,10 @@
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 # =============================================================================
 
-from logging.handlers import RotatingFileHandler
 import logging
 import os
 import sys
+from logging.handlers import RotatingFileHandler
 
 from PySide.QtGui import QApplication
 
@@ -29,6 +29,7 @@ from seriesmarker.gui.main_window import MainWindow
 from seriesmarker.gui.splash_screen import SplashScreen
 from seriesmarker.persistence.database import db_init, db_get_series
 from seriesmarker.util import config
+from seriesmarker.util.settings import settings
 
 
 def main():
@@ -45,6 +46,8 @@ def main():
     """
     _init_paths()
     _init_logging()
+
+    settings.load()
 
     app = QApplication(sys.argv)
 
@@ -65,9 +68,18 @@ def main():
 
     sys.exit(app.exec_())
 
+
 def _init_paths():
     """Creates application relevant directories if they do not exist already."""
-    for directory in [config.dirs.user_log_dir, config.dirs.user_config_dir]:
+
+    paths = [
+        config.dirs.user_log_dir,
+        config.dirs.user_config_dir,
+        config.dirs.user_data_dir,
+        config.dirs.user_cache_dir
+    ]
+
+    for directory in paths:
         if not os.path.exists(directory):
             os.makedirs(directory)
 
@@ -102,4 +114,3 @@ def _init_logging(loglevel=config.loglevel):
         logging.critical("Unhandled exception:\n\n", exc_info=exception_info)
 
     sys.excepthook = log_uncaught_exception
-

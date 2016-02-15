@@ -1,4 +1,4 @@
-#==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,28 +16,25 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# =============================================================================
 
 import unittest
 
-from seriesmarker.test.gui import search_dialog_test, story_test, \
-    sorting_test, context_menu_test
-
+from seriesmarker.test.core import directory_test, settings_test
 
 def get_suit():
-    gui_suites = unittest.TestSuite()
+    core_suits = unittest.TestSuite()
 
     suites = [
-        search_dialog_test.get_suit(),
-        story_test.get_suit(),
-        sorting_test.get_suit(),
-        context_menu_test.get_suit()
+        directory_test.get_suit(),
+        settings_test.get_suit(),
+
     ]
 
     for suite in suites:
-        gui_suites.addTest(suite)
+        core_suits.addTests(suite)
 
-    return gui_suites
+    return core_suits
 
 
 def load_tests(loader, tests, pattern):

@@ -20,14 +20,12 @@
 
 import unittest
 
-from seriesmarker.test.database import database_model_test, database_persistence_test, \
-    database_story_test, database_factory_test
+from seriesmarker.test.database import database_model_test, database_story_test, database_factory_test
 
 def get_suit():
     database_suites = unittest.TestSuite()
 
     database_suites.addTest(database_model_test.get_suit())
-    database_suites.addTest(database_persistence_test.get_suit())
     database_suites.addTest(database_story_test.get_suit())
     database_suites.addTest(database_factory_test.get_suit())
 

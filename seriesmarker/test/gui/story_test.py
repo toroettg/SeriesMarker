@@ -21,17 +21,17 @@
 import unittest
 from unittest.mock import patch
 
-from PySide.QtCore import Qt, QPoint, QCoreApplication
+from PySide.QtCore import Qt, QPoint
 from PySide.QtGui import QTreeView, QListView
 
-from seriesmarker.persistence.database import db_get_series
-from seriesmarker.test.database.base.persitent_db_test_case import \
-    PersistentDBTestCase
-from seriesmarker.test.gui.base.main_window_test import MainWindowTest
+from seriesmarker.test.core.base.application_test_case import \
+    ApplicationTestCase
+from seriesmarker.test.gui.base.main_window_test_mixin import \
+    MainWindowMockedSearchMixin
 from seriesmarker.test.util.example_data_factory import ExampleDataFactory
 
 
-class StoryTest(MainWindowTest, PersistentDBTestCase):
+class StoryTest(MainWindowMockedSearchMixin, ApplicationTestCase):
     """Performs tests of the application's main window.
 
     .. note::
@@ -40,21 +40,9 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
 
     """
 
-    @classmethod
-    def setUpClass(cls):
-        MainWindowTest.setUpClass()
-        PersistentDBTestCase.setUpClass()
-
-        from seriesmarker.persistence.database import db_init
-
-        db_init()
-
     def setUp(self):
         super().setUp()
-
-        for series in db_get_series():
-            self.window.model.add_item(series)
-        QCoreApplication.processEvents();
+        self.run_main()
 
     def test_01_add(self):
         """Checks if a series can be added via the add-button."""
@@ -68,13 +56,15 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         Also checks if the progress information is updated accordingly.
 
         """
-        self.expand_series()
+        self.expand(series_number=0)
         self.select(series_number=0, season_number=0)
 
         self.check_tree_view_displays("  0 / 7  ",
-                                      self.get_index(series_number=0, column=1))
+                                      self.get_index(series_number=0,
+                                                     column=1))
         self.check_tree_view_displays("0.0%",
-                                      self.get_index(series_number=0, column=2))
+                                      self.get_index(series_number=0,
+                                                     column=2))
         self.check_tree_view_displays(2, self.get_index(series_number=0,
                                                         season_number=0,
                                                         column=1))
@@ -86,9 +76,11 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         self.mark_episode(series_number=0, season_number=0, episode_number=0)
 
         self.check_tree_view_displays("  1 / 7  ",
-                                      self.get_index(series_number=0, column=1))
+                                      self.get_index(series_number=0,
+                                                     column=1))
         self.check_tree_view_displays("14.3%",
-                                      self.get_index(series_number=0, column=2))
+                                      self.get_index(series_number=0,
+                                                     column=2))
         self.check_tree_view_displays(2, self.get_index(series_number=0,
                                                         season_number=0,
                                                         column=1))
@@ -103,49 +95,30 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
         list view.
 
         """
-        tree_view = self.window.findChild(QTreeView, "tree_view")
-        viewport = tree_view.viewport()
-
-        # Expand series
-        item = tree_view.model().index(0, 0)
-        itemRect = tree_view.visualRect(item)
-        target = itemRect.center()
-
-        self.click(viewport, target)
-        self.click(viewport, target, double_click=True)
-
-        # Expand season
-        item = tree_view.model().index(0, 0, item)
-        itemRect = tree_view.visualRect(item)
-        target = itemRect.center()
-
-        self.click(viewport, target)
-        self.click(viewport, target, double_click=True)
+        self.expand(series_number=0)
+        self.expand(series_number=0, season_number=0)
 
         # Toggle episode
-        list_view = self.window.findChild(QListView, "list_view")
-        self.assertEqual(list_view.toolTip(), "",
+        self.assertEqual(self.list_view.toolTip(), "",
                          "ToolTip is not empty at system start")
 
-        viewport = list_view.viewport()
+        viewport = self.list_view.viewport()
         self.move(viewport, QPoint(100, 10))
-        self.move(viewport, QPoint(100,
-                                   10))  # Needs to wait a little to let list_view recognize its new tooltip.
-        self.assertEqual(list_view.toolTip(),
+        self.wait()  # Let list_view recognize its new tooltip.
+
+        self.assertEqual(self.list_view.toolTip(),
                          "<FONT COLOR=black>Dummy Overview, ToolTip test</FONT>",
                          "ToolTip not set after mouse over")
 
         self.move(viewport, QPoint(100, 20))
-        self.move(viewport, QPoint(100,
-                                   20))  # Needs to wait a little to let list_view recognize its new tooltip.
-        self.assertEqual(list_view.toolTip(),
+        self.wait()  # Let list_view recognize its new tooltip.
+        self.assertEqual(self.list_view.toolTip(),
                          "<FONT COLOR=black>Music video to go with Episode 03x16 - Sandcastles In the Sand. Full video was originally posted on YouTube: http://www.youtube.com/watch?v=bgBMFwVeIGI</FONT>",
                          "ToolTip not changed when mouse over different series")
 
         self.move(viewport, QPoint(100, 300))
-        self.move(viewport, QPoint(100,
-                                   300))  # Needs to wait a little to let list_view recognize its new tooltip.
-        self.assertEqual(list_view.toolTip(), "",
+        self.wait()  # Let list_view recognize its new tooltip.
+        self.assertEqual(self.list_view.toolTip(), "",
                          "ToolTip not cleared when leaving episode")
 
     @patch("pytvdbapi.api.Show.load_banners")
@@ -191,22 +164,22 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
                          "14.3%", "Initial series progress not met.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 1, series_node_index)), 2,
-                         "Initial season 0 episode count not met.")
+            "Initial season 0 episode count not met.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 2, series_node_index)), "50.0%",
-                         "Initial season 0 progress not met.")
+            "Initial season 0 progress not met.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(1, 1, series_node_index)), 4,
-                         "Initial season 1 episode count not met.")
+            "Initial season 1 episode count not met.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(1, 2, series_node_index)), "0.0%",
-                         "Initial season 1 progress not zero.")
+            "Initial season 1 progress not zero.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(2, 1, series_node_index)), 1,
-                         "Initial season 2 episode count not met.")
+            "Initial season 2 episode count not met.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(2, 2, series_node_index)), "0.0%",
-                         "Initial season 2 progress not met.")
+            "Initial season 2 progress not met.")
 
         update_button = self.window.ui.toolBar.widgetForAction(
             self.window.ui.action_update)
@@ -218,10 +191,9 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
                          "Initial episode node count not met")
 
         mock_get_series.configure_mock(
-                return_value=ExampleDataFactory.new_pytvdb_show("HIMYM-UPDATE")
+            return_value=ExampleDataFactory.new_pytvdb_show("HIMYM-UPDATE")
         )
         self.click(update_button)
-
 
         self.assertEqual(len(series_node._children), 1,
                          "Season nodes not correctly removed from model")
@@ -241,10 +213,10 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
                          "Series progress not corrected after first update.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 1, series_node_index)), 1,
-                         "Season 2 episode count display not corrected after removing episodes.")
+            "Season 2 episode count display not corrected after removing episodes.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 2, series_node_index)), "0.0%",
-                         "Season 2 progress not corrected after removing episodes.")
+            "Season 2 progress not corrected after removing episodes.")
 
         # Toggle episode, check display state to ensure it has updated
         list_view = self.window.findChild(QListView, "list_view")
@@ -257,17 +229,17 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
                          "Series episode count not correctly updated after toggle.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 1, series_node_index)), 1,
-                         "Season 2 episode count should not be changed after toggle.")
+            "Season 2 episode count should not be changed after toggle.")
         self.assertEqual(tree_view.model().data(tree_view.model().index(0, 2)),
                          "100.0%",
                          "Series progress not correctly updated after toggle.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 2, series_node_index)), "100.0%",
-                         "Season 2 progress not correctly updated after toggle.")
+            "Season 2 progress not correctly updated after toggle.")
 
         # Adding episodes and seasons
         mock_get_series.configure_mock(
-                return_value=ExampleDataFactory.new_pytvdb_show("HIMYM")
+            return_value=ExampleDataFactory.new_pytvdb_show("HIMYM")
         )
         self.click(update_button)
 
@@ -292,44 +264,30 @@ class StoryTest(MainWindowTest, PersistentDBTestCase):
                          "Series progress not corrected after second update.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 1, series_node_index)), 2,
-                         "Season 0 episode count display not met after adding season.")
+            "Season 0 episode count display not met after adding season.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(0, 2, series_node_index)), "0.0%",
-                         "Season 0 progress not met after adding season.")
+            "Season 0 progress not met after adding season.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(1, 1, series_node_index)), 4,
-                         "Season 1 episode count display not met after adding episodes.")
+            "Season 1 episode count display not met after adding episodes.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(1, 2, series_node_index)), "25.0%",
-                         "Season 1 progress not corrected after adding episodes.")
+            "Season 1 progress not corrected after adding episodes.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(2, 1, series_node_index)), 1,
-                         "Season 2 episode count display not met after adding season.")
+            "Season 2 episode count display not met after adding season.")
         self.assertEqual(tree_view.model().data(
             tree_view.model().index(2, 2, series_node_index)), "0.0%",
-                         "Season 2 progress not met after adding season.")
+            "Season 2 progress not met after adding season.")
 
     def test_05_remove(self):
-        self.assertEqual(self.window.model.rowCount(), 1,
-                         "Selected series was not added to model")
+        self.check_count_series_equals(1)
 
-        # Select Series
-        tree_view = self.window.findChild(QTreeView, "tree_view")
-        viewport = tree_view.viewport()
+        self.select(series_number=0)
+        self.click_remove_button()
 
-        item = tree_view.model().index(0, 0)
-        itemRect = tree_view.visualRect(item)
-        target = itemRect.center()
-
-        self.click(viewport, target)
-
-        # Delete selected Series
-        remove_button = self.window.ui.toolBar.widgetForAction(
-                self.window.ui.action_remove)
-        self.click(remove_button)
-
-        self.assertEqual(self.window.model.rowCount(), 0,
-                         "Model was not cleared")
+        self.check_count_series_equals(0)
 
 
 def get_suit():

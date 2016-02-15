@@ -138,9 +138,7 @@ class SearchDialogTest(GUITestCase):
                          "Accept with selection did not return correct search result")
 
     def tearDown(self):
-        QTest.mouseMove(self.dialog,
-                        delay=2000)  # Emulates waiting, can be removed
-
+        self.wait(delay=2000)
         self.dialog.close()
 
 

@@ -24,13 +24,16 @@ from PySide.QtGui import QTableView
 from PySide.QtTest import QTest
 
 from seriesmarker.gui.search_dialog import SearchDialog
-from seriesmarker.test.database.base.persitent_db_test_case import \
-    PersistentDBTestCase
-from seriesmarker.test.gui.base.main_window_test import MainWindowTest
+from seriesmarker.test.core.base.application_test_case import \
+    ApplicationTestCase
+from seriesmarker.test.database.base.memory_db_test_case import \
+    MemoryDBTestCase
+from seriesmarker.test.gui.base.main_window_test_mixin import \
+    MainWindowMockedSearchMixin
 from seriesmarker.test.util.screenshot import _Screenshot
 
 
-class ScreenshotScene(MainWindowTest, PersistentDBTestCase):
+class ScreenshotScene(MemoryDBTestCase, MainWindowMockedSearchMixin, ApplicationTestCase):
     """Pseudo test to create scenes to take screenshots from.
 
     .. note::
@@ -39,17 +42,9 @@ class ScreenshotScene(MainWindowTest, PersistentDBTestCase):
 
     """
 
-    @classmethod
-    def setUpClass(cls):
-        MainWindowTest.setUpClass()
-        PersistentDBTestCase.setUpClass()
-
-        from seriesmarker.persistence.database import db_init
-
-        db_init()
-
     def setUp(self):
         super().setUp()
+        self.run_main()
         self.screenshot = _Screenshot(self.id(), self.window.frameGeometry())
 
     def _create_dialog(self, parent=None):
@@ -71,7 +66,7 @@ class ScreenshotScene(MainWindowTest, PersistentDBTestCase):
 
         for search in ["House", "Game of Thrones", "Scrubs", "The X-Files",
             "How I met your mother"]:
-            dialog = self._create_dialog()
+            dialog = self._create_dialog(self.window)
 
             self.type(dialog.ui.search_text_field, search)
             self.click(dialog.ui.search_button)
@@ -85,7 +80,7 @@ class ScreenshotScene(MainWindowTest, PersistentDBTestCase):
             results.append(dialog.result_value())
         return results
 
-    def test_01_introduction(self):
+    def test_introduction(self):
         """Takes the screenshots for the project website and readme file."""
 
         # Temporarily allow remote show updates.
@@ -96,17 +91,17 @@ class ScreenshotScene(MainWindowTest, PersistentDBTestCase):
         self.click_add_button(times=len(series), to_add=series)
 
         self.click(
-                self.tree_view.header().viewport(),
-                self.header_center(self.tree_view.header(), 0)
+            self.tree_view.header().viewport(),
+            self.header_center(self.tree_view.header(), 0)
         )
         self.click(
-                self.tree_view.header().viewport(),
-                self.header_center(self.tree_view.header(), 0)
+            self.tree_view.header().viewport(),
+            self.header_center(self.tree_view.header(), 0)
         )
         self.screenshot.take_screenshot(show_cursor=False)
 
-        self.expand_series(2)
-        self.select(2, 1)
+        self.expand(series_number=2)
+        self.select(series_number=2, season_number=1)
 
         for episode in range(8):
             self.mark_episode(2, 1, episode)
@@ -131,7 +126,7 @@ class ScreenshotScene(MainWindowTest, PersistentDBTestCase):
         self.screenshot.take_screenshot()
         self.click(dialog.ui.ok_button)
 
-    def test_02_startup(self):
+    def test_startup(self):
         """Takes a screenshot after the first application start."""
         self.screenshot.take_screenshot(show_cursor=False)
 

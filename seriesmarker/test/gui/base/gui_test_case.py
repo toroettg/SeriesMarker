@@ -19,14 +19,15 @@
 # =============================================================================
 
 import sys
-import unittest
 
 from PySide.QtCore import Qt, QPoint
 from PySide.QtGui import QApplication, QWidget, QCursor
 from PySide.QtTest import QTest
 
+from seriesmarker.test.core.base.core_test_case import CoreTestCase
 
-class GUITestCase(unittest.TestCase):
+
+class GUITestCase(CoreTestCase):
     DELAY = 750
     DELAY_TYPING = 50
 
@@ -34,8 +35,10 @@ class GUITestCase(unittest.TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        if QApplication.instance() == None:
+        if not QApplication.instance():
             cls.app = QApplication(sys.argv)
+        else:
+            cls.app = QApplication.instance()
 
     def click(self, widget, target=QPoint(), double_click=False,
               mouse_button=Qt.MouseButton.LeftButton):
@@ -70,9 +73,9 @@ class GUITestCase(unittest.TestCase):
 
     def wait(self, delay=None):
         QTest.mouseMove(  # TODO Use QTest.qWait when available in PySide.
-                QWidget(),
-                pos=QCursor.pos(),
-                delay=delay if delay else self.DELAY
+            QWidget(),
+            pos=QCursor.pos(),
+            delay=delay if delay else self.DELAY
         )
 
     def type(self, widget, text):

@@ -31,21 +31,19 @@ class Settings(ConfigParser):
     _CONFIG_FILE = os.path.join(config.dirs.user_config_dir,
                                 "settings.ini")
 
-    def __init__(self):
-        super().__init__()
-
+    def load(self):
         self.read(self._CONFIG_FILE, encoding="UTF-8")
         try:
             self.add_section("MainWindow")
         except DuplicateSectionError:
             pass
+        log.info("Loaded settings from '{}'.".format(self._CONFIG_FILE))
 
     def store(self):
         with open(self._CONFIG_FILE, mode="w",
                   encoding="UTF-8") as config_file:
             self.write(config_file)
-        log.info(
-            "Stored settings in '{}'.".format(config.dirs.user_config_dir))
+        log.info("Stored settings in '{}'.".format(self._CONFIG_FILE))
 
 
 settings = Settings()

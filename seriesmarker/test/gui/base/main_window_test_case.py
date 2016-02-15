@@ -1,72 +1,58 @@
-from unittest.mock import patch
+# =============================================================================
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
+#
+# This file is part of SeriesMarker.
+#
+# SeriesMarker is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 3 as
+# published by the Free Software Foundation.
+#
+# SeriesMarker is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
+# =============================================================================
 
 from PySide.QtCore import Qt, QPoint
 from PySide.QtGui import QTreeView, QListView
 from PySide.QtTest import QTest
 
-from seriesmarker.gui.main_window import MainWindow
-from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.test.gui.base.gui_test_case import GUITestCase
-from seriesmarker.test.util.example_data_factory import ExampleDataFactory
 
 
-class MainWindowTest(GUITestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+class MainWindowTestCase(GUITestCase):
+    """Test base that adds main window controls."""
 
     def setUp(self):
         super().setUp()
 
+        from seriesmarker.gui.main_window import MainWindow
         self.window = MainWindow()
-
-        self.window.show()
-        QTest.qWaitForWindowShown(self.window)
 
         self.tree_view = self.window.findChild(QTreeView, "tree_view")
         self.list_view = self.window.findChild(QListView, "list_view")
 
-        self.mock_patcher_dialog_exec = patch(
-                "seriesmarker.gui.main_window.SearchDialog.exec_",
-                return_value=SearchDialog.Accepted
-        )
-        self.mock_dialog_exec = self.mock_patcher_dialog_exec.start()
-        self.addCleanup(self.mock_patcher_dialog_exec.stop)
-
-        self.mock_patcher_show_update = patch("pytvdbapi.api.Show.update")
-        self.mock_patcher_show_update.start()
-        self.addCleanup(self.mock_patcher_show_update.stop)
-
-    def click_add_button(self, times=1, to_add=None):
-        add_button = self.window.ui.toolBar.widgetForAction(
-                self.window.ui.action_add)
-
-        if to_add and isinstance(to_add, list):
-            config = {"side_effect": to_add}
-        else:
-            config = {
-                "return_value": to_add if to_add else ExampleDataFactory.new_pytvdb_show(
-                    "HIMYM")
-            }
-        with patch("seriesmarker.gui.main_window.SearchDialog.result_value",
-                   **config):
-            for i in range(times):
-                self.click(add_button)
-        self.assertEqual(self.mock_dialog_exec.call_count, times,
-                         "'Add' not called correctly")
-
-    def expand_series(self, series_number=0):
-        """Expands the series with given index in the main window.
+    def expand(self, series_number, season_number=None):
+        """Expands a series or a season in the main window.
 
         :param series_number: The index of the series to expand, from
             top to bottom as displayed in the main window, starting at zero.
         :type series_number: :class:`int`
+        :param season_number: The index of the season to expand, from
+            top to bottom as displayed in the main window, starting at zero.
+        :type season_number: :class:`int`
 
         """
-        viewport, target = self.find_click_target(series_number)
+        viewport, target = self.find_click_target(series_number, season_number)
 
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
+
 
     def select(self, series_number, season_number=None):
         self.click(*self.find_click_target(series_number=series_number,
@@ -96,6 +82,16 @@ class MainWindowTest(GUITestCase):
                          "Node did not return expected value from checked() method.")
         self.assertEqual(expected_boolean, episode_node.data.extra.watched,
                          "Episode was not toggled")
+
+    def click_add_button(self):
+        add_button = self.window.ui.toolBar.widgetForAction(
+                self.window.ui.action_add)
+        self.click(add_button)
+
+    def click_remove_button(self):
+        remove_button = self.window.ui.toolBar.widgetForAction(
+            self.window.ui.action_remove)
+        self.click(remove_button)
 
     def find_click_target(self, series_number=0, season_number=None,
                           episode_number=None, offset=None):
@@ -191,10 +187,14 @@ class MainWindowTest(GUITestCase):
         self.assertEqual(self.window.model.rowCount(), expected,
                          "Model does not contain expected number of Series.")
 
+    def waitForWindow(self):
+        self.window.raise_()
+        QTest.qWaitForWindowShown(self.window)
+
     def tearDown(self):
+        self.wait(delay=2000)
+
+        if self.window.isVisible():
+            self.window.close()
+
         super().tearDown()
-
-        QTest.mouseMove(self.window,
-                        delay=2000)  # Emulates waiting, can be removed
-
-        self.window.close()
