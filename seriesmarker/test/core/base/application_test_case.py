@@ -20,7 +20,6 @@
 
 from unittest.mock import MagicMock, patch
 
-from seriesmarker.gui.search_dialog import SearchDialog
 from seriesmarker.test.gui.base.main_window_test_case import MainWindowTestCase
 
 

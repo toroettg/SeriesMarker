@@ -22,6 +22,7 @@ from PySide.QtCore import Qt, QPoint
 from PySide.QtGui import QTreeView, QListView
 from PySide.QtTest import QTest
 
+from seriesmarker.gui.main_window import MainWindow
 from seriesmarker.test.gui.base.gui_test_case import GUITestCase
 
 
@@ -31,7 +32,6 @@ class MainWindowTestCase(GUITestCase):
     def setUp(self):
         super().setUp()
 
-        from seriesmarker.gui.main_window import MainWindow
         self.window = MainWindow()
 
         self.tree_view = self.window.findChild(QTreeView, "tree_view")
@@ -52,7 +52,6 @@ class MainWindowTestCase(GUITestCase):
 
         self.click(viewport, target)
         self.click(viewport, target, double_click=True)
-
 
     def select(self, series_number, season_number=None):
         self.click(*self.find_click_target(series_number=series_number,
@@ -85,7 +84,8 @@ class MainWindowTestCase(GUITestCase):
 
     def click_add_button(self):
         add_button = self.window.ui.toolBar.widgetForAction(
-                self.window.ui.action_add)
+            self.window.ui.action_add
+        )
         self.click(add_button)
 
     def click_remove_button(self):
@@ -148,7 +148,9 @@ class MainWindowTestCase(GUITestCase):
     def check_count_marked_episodes_equals(self, expected, series_number=0,
                                            season_number=0):
         season_node = self.tree_view.model().data(
-                self.get_index(series_number, season_number), Qt.UserRole)
+            self.get_index(series_number, season_number),
+            Qt.UserRole
+        )
 
         count_watched = 0
         for i in range(season_node.child_count()):
@@ -176,10 +178,12 @@ class MainWindowTestCase(GUITestCase):
         node_index = guard_index(model.index(series_number, column))
         if season_number is not None:
             node_index = guard_index(
-                    model.index(season_number, column, node_index))
+                model.index(season_number, column, node_index)
+            )
             if episode_number is not None:
                 node_index = guard_index(
-                        model.index(episode_number, column, node_index))
+                    model.index(episode_number, column, node_index)
+                )
 
         return node_index
 

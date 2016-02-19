@@ -33,10 +33,6 @@ class Settings(ConfigParser):
 
     def load(self):
         self.read(self._CONFIG_FILE, encoding="UTF-8")
-        try:
-            self.add_section("MainWindow")
-        except DuplicateSectionError:
-            pass
         log.info("Loaded settings from '{}'.".format(self._CONFIG_FILE))
 
     def store(self):
@@ -44,6 +40,15 @@ class Settings(ConfigParser):
                   encoding="UTF-8") as config_file:
             self.write(config_file)
         log.info("Stored settings in '{}'.".format(self._CONFIG_FILE))
+
+    def register_section(self, section):
+        try:
+            self.add_section(section)
+            log.debug("Registered section '{}'.".format(section))
+        except DuplicateSectionError:
+            pass
+
+        return self[section]
 
 
 settings = Settings()
