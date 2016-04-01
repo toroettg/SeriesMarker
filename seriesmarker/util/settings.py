@@ -32,16 +32,33 @@ class Settings(ConfigParser):
                                 "settings.ini")
 
     def load(self):
-        self.read(self._CONFIG_FILE, encoding="UTF-8")
-        log.info("Loaded settings from '{}'.".format(self._CONFIG_FILE))
+        """Read the settings from a predefined location."""
+        loaded = self.read(self._CONFIG_FILE, encoding="UTF-8")
+
+        for file in loaded:
+            log.info("Loaded settings from '{}'.".format(file))
+
+        if not loaded:
+            log.info("No settings stored at '{}', using defaults.".format(
+                self._CONFIG_FILE))
 
     def store(self):
+        """Write the settings to a predefined location."""
         with open(self._CONFIG_FILE, mode="w",
                   encoding="UTF-8") as config_file:
             self.write(config_file)
-        log.info("Stored settings in '{}'.".format(self._CONFIG_FILE))
+        log.info("Stored settings at '{}'.".format(self._CONFIG_FILE))
 
     def register_section(self, section):
+        """
+        Add the given section to the settings unless it already exists.
+
+        :param section: The name of the section to add.
+        :type section: str
+
+        :return: The registered section.
+
+        """
         try:
             self.add_section(section)
             log.debug("Registered section '{}'.".format(section))
