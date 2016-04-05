@@ -12,4 +12,5 @@ Submodules
 .. toctree::
 
    seriesmarker.util.config
+   seriesmarker.util.settings
 

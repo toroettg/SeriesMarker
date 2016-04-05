@@ -20,7 +20,6 @@ Submodules
 
    seriesmarker.test.database.database_factory_test
    seriesmarker.test.database.database_model_test
-   seriesmarker.test.database.database_persistence_test
    seriesmarker.test.database.database_story_test
    seriesmarker.test.database.database_test_runner
 

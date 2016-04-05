@@ -11,7 +11,5 @@ Submodules
 
 .. toctree::
 
-   seriesmarker.test.database.base.db_test_case
    seriesmarker.test.database.base.memory_db_test_case
-   seriesmarker.test.database.base.persitent_db_test_case
 

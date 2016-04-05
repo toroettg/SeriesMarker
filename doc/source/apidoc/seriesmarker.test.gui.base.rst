@@ -12,5 +12,6 @@ Submodules
 .. toctree::
 
    seriesmarker.test.gui.base.gui_test_case
-   seriesmarker.test.gui.base.main_window_test
+   seriesmarker.test.gui.base.main_window_test_case
+   seriesmarker.test.gui.base.main_window_test_mixin
 

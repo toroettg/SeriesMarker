@@ -11,6 +11,7 @@ Subpackages
 
 .. toctree::
 
+    seriesmarker.test.core
     seriesmarker.test.database
     seriesmarker.test.gui
     seriesmarker.test.util
