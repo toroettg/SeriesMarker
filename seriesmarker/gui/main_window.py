@@ -37,7 +37,7 @@ from seriesmarker.persistence.database import db_get_series, db_add_series, \
     db_remove_series, db_commit
 from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
-from seriesmarker.util.settings import settings
+from seriesmarker.util.settings import WindowSettings
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         """
         super().__init__(parent)
 
-        self.settings = settings.register_section("MainWindow")
+        self.settings = WindowSettings("MainWindow")
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -296,16 +296,11 @@ class MainWindow(QMainWindow):
         :emphasis:`Extends` `.QWidget.showEvent`
 
         """
-        if self.settings.getboolean("maximized", False):
+        if self.settings.maximized:
             self.setWindowState(Qt.WindowMaximized)
         else:
-            properties = (
-                "position.x",
-                "position.y",
-                "size.width",
-                "size.length"
-            )
-            x, y, width, length = [self.settings.getint(p) for p in properties]
+            width, length = self.settings.size
+            x, y = self.settings.position
 
             if width and length:
                 self.resize(width, length)
@@ -335,13 +330,11 @@ class MainWindow(QMainWindow):
         pos = self.pos()
         size = self.size()
 
-        self.settings["maximized"] = str(self.isMaximized())
-        self.settings["position.x"] = str(pos.x())
-        self.settings["position.y"] = str(pos.y())
-        self.settings["size.width"] = str(size.width())
-        self.settings["size.length"] = str(size.height())
+        self.settings.maximized = self.isMaximized()
+        self.settings.position = pos.x(), pos.y()
+        self.settings.size = size.width(), size.height()
 
-        settings.store()
+        self.settings.store()
 
         super().closeEvent(event)
 
