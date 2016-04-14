@@ -30,6 +30,7 @@ class MainWindowTestCase(GUITestCase):
     """Test base that adds main window controls."""
 
     def setUp(self):
+        """Create a new `MainWindow` instance to control."""
         super().setUp()
 
         self.window = MainWindow()
@@ -38,7 +39,7 @@ class MainWindowTestCase(GUITestCase):
         self.list_view = self.window.findChild(QListView, "list_view")
 
     def expand(self, series_number, season_number=None):
-        """Expands a series or a season in the main window.
+        """Expand a series or a season in the main window.
 
         :param series_number: The index of the series to expand, from
             top to bottom as displayed in the main window, starting at zero.
@@ -83,6 +84,7 @@ class MainWindowTestCase(GUITestCase):
                          "Episode was not toggled")
 
     def click_add_button(self):
+        """Click the button for adding series."""
         add_button = self.window.ui.toolBar.widgetForAction(
             self.window.ui.action_add
         )
@@ -95,7 +97,7 @@ class MainWindowTestCase(GUITestCase):
 
     def find_click_target(self, series_number=0, season_number=None,
                           episode_number=None, offset=None):
-        """Finds the coordinates of an item in the tree view.
+        """Find the coordinates of an item in the tree view.
 
         :param series_number: The number of the series to find the
             coordinates for.

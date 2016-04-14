@@ -26,7 +26,16 @@ from seriesmarker.test.util.example_data_factory import ExampleDataFactory
 
 
 class MainWindowMockedSearchMixin(MainWindowTestCase):
+    """Class that emulates the search for series for test cases."""
     def setUp(self):
+        """Mock the invocation of `SearchDialog` from `MainWindow`.
+
+        Also prevent network related calls by the resulting
+        `.pytvdbapi.api.Show` from the search.
+
+        :emphasis:`Extends` `.MainWindowTestCase.setUp`.
+
+        """
         super().setUp()
 
         self.mock_patcher_dialog_exec = patch(
@@ -41,6 +50,22 @@ class MainWindowMockedSearchMixin(MainWindowTestCase):
         self.addCleanup(self.mock_patcher_show_update.stop)
 
     def click_add_button(self, times=1, to_add=None):
+        """Click the button for adding series.
+
+        Simulates the search of a series with the `SearchDialog`. Each
+        time the button is clicked, the next item of the given list is
+        consumed, and assumed to be the result of the mocked search. If
+        no list of items is given, a default show is returned for each
+        click.
+
+        :param times: Number of times to click the button.
+        :type times: int
+        :param to_add: List of shows to add by the button.
+        :type to_add: [`.pytvdbapi.api.Show`]
+
+        :emphasis:`Extends` `.MainWindowTestCase.click_add_button`.
+
+        """
         if to_add and isinstance(to_add, list):
             config = {"side_effect": to_add}
         else:

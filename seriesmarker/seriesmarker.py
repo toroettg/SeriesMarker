@@ -70,7 +70,7 @@ def main():
 
 
 def _init_paths():
-    """Creates application relevant directories if they do not exist already."""
+    """Create application relevant directories if they do not already exist."""
 
     paths = [
         config.dirs.user_log_dir,
