@@ -95,7 +95,6 @@ class SettingsTest(ApplicationTestCase):
 
         self.run_main()
 
-        # Prepare next test case
         self.window.move(50, 30)
         self.window.resize(800, 600)
         self.window.close()
@@ -103,7 +102,7 @@ class SettingsTest(ApplicationTestCase):
         self._check_settings_file_contains(
             [
                 "[MainWindow]",
-                "maximized = False",
+                "state = 0",
                 "position.x = 50",
                 "position.y = 30",
                 "size.width = 800",
@@ -120,7 +119,7 @@ class SettingsTest(ApplicationTestCase):
         self._check_settings_file_contains(
             [
                 "[MainWindow]",
-                "maximized = False",
+                "state = 0",
                 "position.x = 50",
                 "position.y = 30",
                 "size.width = 800",
@@ -129,6 +128,12 @@ class SettingsTest(ApplicationTestCase):
         )
 
         self.run_main()
+
+        self.assertEqual(
+            self.window.windowState(),
+            Qt.WindowNoState,
+            "MainWindow should not be in a special state."
+        )
 
         self.assertEqual(
             self.window.size(),
@@ -148,7 +153,7 @@ class SettingsTest(ApplicationTestCase):
         self._check_settings_file_contains(
             [
                 "[MainWindow]",
-                "maximized = False",
+                "state = 0",
             ]
         )
 
@@ -159,10 +164,20 @@ class SettingsTest(ApplicationTestCase):
             "MainWindow should not already be displayed maximized."
         )
 
-        self.window.setWindowState(Qt.WindowMaximized)
+        self.window.showMaximized()
+
         self.assertTrue(
             self.window.isMaximized(),
             "MainWindow should be displayed maximized."
+        )
+
+        self.window.close()
+
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 2",
+            ]
         )
 
     def test_05_restore_window_maximized(self):
@@ -170,7 +185,7 @@ class SettingsTest(ApplicationTestCase):
         self._check_settings_file_contains(
             [
                 "[MainWindow]",
-                "maximized = True",
+                "state = 2",
             ]
         )
 
@@ -179,6 +194,157 @@ class SettingsTest(ApplicationTestCase):
         self.assertTrue(
             self.window.isMaximized(),
             "MainWindow should be displayed maximized after application start."
+        )
+
+        self.reset_window_state()
+
+    def test_06_store_window_minimized(self):
+        """Test if the minimized window state is stored at application exit."""
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 0",
+            ]
+        )
+
+        self.run_main()
+
+        self.assertFalse(
+            self.window.isMinimized(),
+            "MainWindow should not already be displayed minimized."
+        )
+
+        self.window.showMinimized()
+
+        self.assertTrue(
+            self.window.isMinimized(),
+            "MainWindow should be displayed minimized."
+        )
+
+        self.window.close()
+
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 1",
+            ]
+        )
+
+    def test_07_restore_window_minimized(self):
+        """Test if the application's main window is recreated minimized."""
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 1",
+            ]
+        )
+
+        self.run_main()
+
+        self.assertTrue(
+            self.window.isMinimized(),
+            "MainWindow should be displayed minimized after application start."
+        )
+
+        self.reset_window_state()
+
+    def test_08_store_window_fullscreen(self):
+        """Test if the minimized window state is stored at application exit."""
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 0",
+            ]
+        )
+
+        self.run_main()
+
+        self.assertFalse(
+            self.window.isFullScreen(),
+            "MainWindow should not already be displayed fullscreen."
+        )
+
+        self.window.showFullScreen()
+
+        self.assertTrue(
+            self.window.isFullScreen(),
+            "MainWindow should be displayed fullscreen."
+        )
+
+        self.window.close()
+
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 4",
+            ]
+        )
+
+    def test_09_restore_window_fullscreen(self):
+        """Test if the application's main window is recreated minimized."""
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 4",
+            ]
+        )
+
+        self.run_main()
+
+        self.assertTrue(
+            self.window.isFullScreen(),
+            "MainWindow should be displayed fullscreen after application start."
+        )
+
+        self.reset_window_state()
+
+    def test_10_store_window_maximized_minimized(self):
+        """Test if the minimized window state is stored at application exit."""
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 0",
+            ]
+        )
+
+        self.run_main()
+
+        self.assertFalse(
+            self.window.isMinimized() or self.window.isMaximized(),
+            "MainWindow should neither already be displayed maximized nor minimized."
+        )
+
+        self.window.showMaximized()
+        self.window.showMinimized()
+
+        self.assertTrue(
+            self.window.isMinimized() and self.window.isMaximized(),
+            "MainWindow should be displayed minimized after maximizing."
+        )
+
+        self.window.close()
+
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 3",
+            ]
+        )
+
+    def test_11_restore_window_maximized_minimized(self):
+        """Test if the application's main window is recreated minimized."""
+        self._check_settings_file_contains(
+            [
+                "[MainWindow]",
+                "state = 3",
+            ]
+        )
+
+        self.run_main()
+
+        self.assertTrue(
+            self.window.isMinimized() and self.window.isMaximized(),
+            "MainWindow should be displayed minimized after maximizing."
         )
 
     def _check_settings_file_contains(self, lines):
@@ -191,12 +357,17 @@ class SettingsTest(ApplicationTestCase):
 
     def run_main(self):
         """
-        Ensures the main window is displayed after executing the application.
+        Ensure the main window is displayed after executing the application.
 
         :emphasis: `Extends` `.ApplicationTestCase.run_main`
+
         """
         super().run_main()
         self.waitForWindow()
+
+    def reset_window_state(self):
+        """Reset the settings' stored window state."""
+        self.window.setWindowState(Qt.WindowNoState)
 
 
 def get_suit():

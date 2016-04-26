@@ -109,34 +109,41 @@ class SettingsDecorator:
 
 class WindowSettings(SettingsDecorator):
     """Offers convenience methods to access window settings."""
-    _MAXIMIZED = "maximized"
+    _STATE = "state"
     _POSITION_X = "position.x"
     _POSITION_Y = "position.y"
     _SIZE_WIDTH = "size.width"
     _SIZE_LENGTH = "size.length"
 
     @property
-    def maximized(self):
+    def state(self):
         """
-        Property that indicates whether a window was set to maximize.
+        Property that indicates whether a window was set to a specific state.
 
-        When getting the property, retrieve the window's maximized state
-        from the settings as boolean.
+        The values of the property correspond to the integer
+        representation of OR'ed `.Qt.WindowState` flags.
+
+        When getting the property, retrieve the window's state
+        from the settings as integer.
 
         When setting the property, convert the given value to a string
         and store it in the settings.
 
-        :param value: The window's maximized state to store in the settings.
-        :type value: bool
-        :return: True if the window is set to maximize, False otherwise.
-        :rtype: bool
+        :param value: The window's state to store in the settings.
+        :type value: int
+        :return: The state a window was set to.
+        :rtype: int
+
+        .. seealso::
+
+            `.QWidget.windowState`
 
         """
-        return self._section.getboolean(self._MAXIMIZED, False)
+        return self._section.getint(self._STATE)
 
-    @maximized.setter
-    def maximized(self, value):
-        self._section[self._MAXIMIZED] = str(value)
+    @state.setter
+    def state(self, value):
+        self._section[self._STATE] = str(value)
 
     @property
     def position(self):

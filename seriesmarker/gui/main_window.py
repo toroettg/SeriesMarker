@@ -39,7 +39,7 @@ from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
 from seriesmarker.util.settings import WindowSettings
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class MainWindow(QMainWindow):
@@ -101,7 +101,7 @@ class MainWindow(QMainWindow):
                 db_add_series(series)
                 self.model.add_item(series)
             except EntityExistsException:
-                logger.warning("Series '{name}' already exists, "
+                log.warning("Series '{name}' already exists, "
                                "ignoring add request".format(
                     name=series.series_name))
 
@@ -127,7 +127,7 @@ class MainWindow(QMainWindow):
         series_factory = SeriesFactory()
 
         for series in db_get_series():
-            logger.info("Updating series '{}'".format(series.series_name))
+            log.info("Updating series '{}'".format(series.series_name))
 
             tvdb_show = tvdb.get_series(series.id, "en", cache=False)
             tvdb_show.update()
@@ -144,18 +144,18 @@ class MainWindow(QMainWindow):
                 )
                 season_row = self.model.node_at(season_index).child_index()
                 self.model.removeRow(season_row, series_index)
-                logger.info("  Removed season {} from series '{}'".format(
+                log.info("  Removed season {} from series '{}'".format(
                     removed_season.season_number, series.series_name))
 
             for added_season in series_factory.added:
                 self.model.add_item(added_season, series_index)
-                logger.info(
+                log.info(
                     "  Added season {}".format(added_season.season_number))
 
             for updated_season in series_factory.updated:
                 season, added_episodes, removed_episodes = updated_season
 
-                logger.info(
+                log.info(
                     "  Updated season {} (Episodes added: {}, removed: {})".format(
                         season.season_number, len(added_episodes),
                         len(removed_episodes)))
@@ -296,9 +296,9 @@ class MainWindow(QMainWindow):
         :emphasis:`Extends` `.QWidget.showEvent`
 
         """
-        if self.settings.maximized:
-            self.setWindowState(Qt.WindowMaximized)
-        else:
+        previous_state = self.settings.state
+
+        if previous_state == Qt.WindowNoState:
             width, length = self.settings.size
             x, y = self.settings.position
 
@@ -307,8 +307,10 @@ class MainWindow(QMainWindow):
 
             if x and y:
                 self.move(x, y)
+        elif previous_state:
+            self.setWindowState(previous_state)
 
-        super().showEvent(event)
+        event.accept()
 
     def closeEvent(self, event):
         """
@@ -324,19 +326,19 @@ class MainWindow(QMainWindow):
         :param event: The event to handle.
         :type event: `.QtGui.QCloseEvent`
 
-        :emphasis:`Extends` `.QWidget.closeEvent`
+        :emphasis:`Overrides` `.QWidget.closeEvent`.
 
         """
         pos = self.pos()
         size = self.size()
 
-        self.settings.maximized = self.isMaximized()
+        self.settings.state = int(self.windowState())
         self.settings.position = pos.x(), pos.y()
         self.settings.size = size.width(), size.height()
 
         self.settings.store()
 
-        super().closeEvent(event)
+        event.accept()
 
     @Slot()
     def on_action_exit_triggered(self):
