@@ -293,7 +293,7 @@ class MainWindow(QMainWindow):
         :param event: The event to handle.
         :type event: `.QtGui.QShowEvent`
 
-        :emphasis:`Extends` `.QWidget.showEvent`
+        :emphasis:`Overrides` `.QWidget.showEvent`
 
         """
         previous_state = self.settings.state
@@ -308,7 +308,8 @@ class MainWindow(QMainWindow):
             if x and y:
                 self.move(x, y)
         elif previous_state:
-            self.setWindowState(previous_state)
+            # PySide / Qt4.8 unable to restore minimized window on Windows-OS.
+            self.setWindowState(previous_state & ~Qt.WindowMinimized)
 
         event.accept()
 

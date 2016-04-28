@@ -231,7 +231,13 @@ class SettingsTest(ApplicationTestCase):
         )
 
     def test_07_restore_window_minimized(self):
-        """Test if the application's main window is recreated minimized."""
+        """
+        Test if the application's main window is recreated minimized.
+
+        The current wanted behavior for restoring a previously minimized
+        application, is to restore it visible to the user.
+
+        """
         self._check_settings_file_contains(
             [
                 "[MainWindow]",
@@ -241,9 +247,9 @@ class SettingsTest(ApplicationTestCase):
 
         self.run_main()
 
-        self.assertTrue(
+        self.assertFalse(
             self.window.isMinimized(),
-            "MainWindow should be displayed minimized after application start."
+            "MainWindow should not be displayed minimized after application start."
         )
 
         self.reset_window_state()
@@ -332,7 +338,13 @@ class SettingsTest(ApplicationTestCase):
         )
 
     def test_11_restore_window_maximized_minimized(self):
-        """Test if the application's main window is recreated minimized."""
+        """
+        Test if the application's main window is recreated minimized.
+
+        The current wanted behavior for restoring a previously minimized
+        application, is to restore it visible to the user.
+
+        """
         self._check_settings_file_contains(
             [
                 "[MainWindow]",
@@ -342,9 +354,14 @@ class SettingsTest(ApplicationTestCase):
 
         self.run_main()
 
+        self.assertFalse(
+            self.window.isMinimized(),
+            "MainWindow should not be displayed minimized after application start."
+        )
+
         self.assertTrue(
-            self.window.isMinimized() and self.window.isMaximized(),
-            "MainWindow should be displayed minimized after maximizing."
+            self.window.isMaximized(),
+            "MainWindow should be displayed maximized after application start."
         )
 
     def _check_settings_file_contains(self, lines):
