@@ -3,6 +3,12 @@ Changelog
 #########
 
 ==========================
+Version x.x.x (xxxx-xx-xx)
+==========================
+
+* The last window state is remembered between application sessions.
+
+==========================
 Version 0.1.0 (2016-01-08)
 ==========================
 
