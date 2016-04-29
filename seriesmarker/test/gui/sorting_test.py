@@ -21,16 +21,15 @@
 import random
 import unittest
 
-from PySide.QtCore import Qt, QModelIndex, QCoreApplication
+from PySide.QtCore import Qt, QModelIndex
 
-from seriesmarker.persistence.database import db_get_series
-from seriesmarker.test.database.base.persitent_db_test_case import \
-    PersistentDBTestCase
-from seriesmarker.test.gui.base.main_window_test import MainWindowTest
+
+from seriesmarker.test.core.base.application_test_case import ApplicationTestCase
+from seriesmarker.test.gui.base.main_window_test_mixin import MainWindowMockedSearchMixin
 from seriesmarker.test.util.example_data_factory import ExampleDataFactory
 
 
-class SortingTest(MainWindowTest, PersistentDBTestCase):
+class SortingTest(MainWindowMockedSearchMixin, ApplicationTestCase):
     """Performs tests of the application's main window's features
     related to sorting.
 
@@ -38,27 +37,10 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
         Cases in this test depend on a specific execution order.
         Therefore, case names are numbered.
 
-    .. todo::
-        Might be merged with :class:`.StoryTest` in separate test-class to
-        reduce boilerplate code (setUpClass, setUp).
-
     """
-
-    @classmethod
-    def setUpClass(cls):
-        MainWindowTest.setUpClass()
-        PersistentDBTestCase.setUpClass()
-
-        from seriesmarker.persistence.database import db_init
-
-        db_init()
-
     def setUp(self):
         super().setUp()
-
-        for series in db_get_series():
-            self.window.model.add_item(series)
-        QCoreApplication.processEvents();
+        self.run_main()
 
     def test_01_sort_on_add(self):
         series = []
@@ -148,13 +130,9 @@ class SortingTest(MainWindowTest, PersistentDBTestCase):
                                    "Sort view after descending sort by name")
 
     def test_04_sort_season_by_name(self):
-        # Expand series
-        viewport = self.tree_view.viewport()
-        series_node_index = self.tree_view.model().index(2, 0)
-        item_rect = self.tree_view.visualRect(series_node_index)
-        target = item_rect.center()
-        self.click(viewport, target)
-        self.click(viewport, target, double_click=True)
+        self.expand(series_number=2)
+
+        series_node_index = self.get_index(2)
 
         result = [
             ("Season 0", 1, "100.0%"),

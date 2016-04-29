@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
 """This module provides general information about SeriesMarker.
 
@@ -29,7 +29,7 @@ as well as in the distribution process.
 
 """
 
-import logging
+import logging as log
 
 from appdirs import AppDirs
 
@@ -50,5 +50,4 @@ application_dependencies = ['pytvdbapi', 'PySide', 'appdirs', 'SQLAlchemy']  #: 
 
 dirs = AppDirs(application_name, application_author)  #: Defines platform-independent directories, used by the application.
 
-loglevel = logging.INFO  #: The default log level (=INFO) of the application.
-
+loglevel = log.INFO  #: The default log level (=INFO) of the application.

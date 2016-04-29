@@ -64,16 +64,10 @@ def db_init():
     """
     global db_engine, db_session
 
-    logger.info("Initializing database '{db_name}' in '{db_location}'".format(
+    logger.info("Initializing database '{db_name}' at '{db_location}'.".format(
         db_name=config.application_name,
         db_location=config.dirs.user_data_dir)
     )
-
-    try:
-        os.makedirs(config.dirs.user_data_dir)
-    except OSError as error:
-        if error.errno != errno.EEXIST:
-            raise
 
     db_URL = 'sqlite:///{db_location}{sep}{db_name}.db'.format(
         db_location=config.dirs.user_data_dir, sep=os.sep,

@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,13 +16,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
 import logging
 
 from PySide.QtCore import Slot, QModelIndex, Qt, QCoreApplication
 from PySide.QtGui import QMainWindow, QListView, QMessageBox, QIcon, \
-    QHeaderView, QApplication, QMenu
+    QHeaderView, QMenu
 
 from seriesmarker.gui.about_dialog import AboutDialog
 from seriesmarker.gui.model.episode_node import EpisodeNode
@@ -37,15 +37,17 @@ from seriesmarker.persistence.database import db_get_series, db_add_series, \
     db_remove_series, db_commit
 from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
+from seriesmarker.util.settings import WindowSettings
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class MainWindow(QMainWindow):
     """Displays the main application window."""
 
     def __init__(self, parent=None):
-        """Creates a new window instance.
+        """
+        Create a new window instance.
 
         Initializes the different views and loads series information
         from the database into the view's models for displaying them.
@@ -53,14 +55,19 @@ class MainWindow(QMainWindow):
         :param parent: The parent widget of the window.
         :type parent: :class:`PySide.QtGui.QWidget`
 
+        :emphasis:`Extends` `.QMainWindow.__init__`
+
         """
-        super(MainWindow, self).__init__(parent)
+        super().__init__(parent)
+
+        self.settings = WindowSettings("MainWindow")
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         self.ui.action_about_qt.setIcon(
-            QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"))
+            QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png")
+        )
         self.ui.action_about.setMenu(self.ui.menuAbout)
         self.ui.menubar.setVisible(False)
 
@@ -74,7 +81,8 @@ class MainWindow(QMainWindow):
         self.ui.tree_view.header().setResizeMode(QHeaderView.ResizeToContents)
         self.ui.tree_view.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.tree_view.customContextMenuRequested.connect(
-            self._handle_context_menu)
+            self._handle_context_menu
+        )
 
         self.ui.list_view.setModel(self.model)
         self.ui.list_view.setMouseTracking(True)
@@ -93,7 +101,7 @@ class MainWindow(QMainWindow):
                 db_add_series(series)
                 self.model.add_item(series)
             except EntityExistsException:
-                logger.warning("Series '{name}' already exists, "
+                log.warning("Series '{name}' already exists, "
                                "ignoring add request".format(
                     name=series.series_name))
 
@@ -119,7 +127,7 @@ class MainWindow(QMainWindow):
         series_factory = SeriesFactory()
 
         for series in db_get_series():
-            logger.info("Updating series '{}'".format(series.series_name))
+            log.info("Updating series '{}'".format(series.series_name))
 
             tvdb_show = tvdb.get_series(series.id, "en", cache=False)
             tvdb_show.update()
@@ -130,21 +138,24 @@ class MainWindow(QMainWindow):
             series_index = self.model.index_of(series)
 
             for removed_season in series_factory.removed:
-                season_index = self.model.index_of(removed_season, series_index)
+                season_index = self.model.index_of(
+                    removed_season,
+                    series_index
+                )
                 season_row = self.model.node_at(season_index).child_index()
                 self.model.removeRow(season_row, series_index)
-                logger.info("  Removed season {} from series '{}'".format(
+                log.info("  Removed season {} from series '{}'".format(
                     removed_season.season_number, series.series_name))
 
             for added_season in series_factory.added:
                 self.model.add_item(added_season, series_index)
-                logger.info(
+                log.info(
                     "  Added season {}".format(added_season.season_number))
 
             for updated_season in series_factory.updated:
                 season, added_episodes, removed_episodes = updated_season
 
-                logger.info(
+                log.info(
                     "  Updated season {} (Episodes added: {}, removed: {})".format(
                         season.season_number, len(added_episodes),
                         len(removed_episodes)))
@@ -272,7 +283,64 @@ class MainWindow(QMainWindow):
         """Displays a dialog with information about Qt."""
         QMessageBox.aboutQt(self)
 
+    def showEvent(self, event):
+        """
+        Handle a request to show the main window.
+
+        At first restore the window properties from the user
+        settings. Then handle the event as usual.
+
+        :param event: The event to handle.
+        :type event: `.QtGui.QShowEvent`
+
+        :emphasis:`Overrides` `.QWidget.showEvent`
+
+        """
+        previous_state = self.settings.state
+
+        if previous_state == Qt.WindowNoState:
+            width, length = self.settings.size
+            x, y = self.settings.position
+
+            if width and length:
+                self.resize(width, length)
+
+            if x and y:
+                self.move(x, y)
+        elif previous_state:
+            # PySide / Qt4.8 unable to restore minimized window on Windows-OS.
+            self.setWindowState(previous_state & ~Qt.WindowMinimized)
+
+        event.accept()
+
+    def closeEvent(self, event):
+        """
+        Handle a request to close the main window.
+
+        At first store the current window properties to the user
+        settings. Then handle the event as usual.
+
+        .. note::
+
+            Closing the main window terminates the application normally.
+
+        :param event: The event to handle.
+        :type event: `.QtGui.QCloseEvent`
+
+        :emphasis:`Overrides` `.QWidget.closeEvent`.
+
+        """
+        pos = self.pos()
+        size = self.size()
+
+        self.settings.state = int(self.windowState())
+        self.settings.position = pos.x(), pos.y()
+        self.settings.size = size.width(), size.height()
+
+        self.settings.store()
+
+        event.accept()
+
     @Slot()
     def on_action_exit_triggered(self):
-        """Terminates the application normally."""
-        QApplication.exit()
+        self.close()

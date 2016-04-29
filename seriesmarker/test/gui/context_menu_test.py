@@ -1,4 +1,4 @@
-#==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,17 +16,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# =============================================================================
 
 import unittest
 
 from PySide.QtCore import Qt
 
+from seriesmarker.test.core.base.application_test_case import ApplicationTestCase
 from seriesmarker.test.database.base.memory_db_test_case import MemoryDBTestCase
-from seriesmarker.test.gui.base.main_window_test import MainWindowTest
+from seriesmarker.test.gui.base.main_window_test_mixin import MainWindowMockedSearchMixin
 
 
-class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
+class ContextMenuTest(MemoryDBTestCase, MainWindowMockedSearchMixin,
+                      ApplicationTestCase):
     """Checks the functionality of the context menu in the main view.
 
     .. todo:
@@ -34,14 +36,11 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         right click via QTest does not emit the proper signal).
     """
 
-    @classmethod
-    def setUpClass(cls):
-        MemoryDBTestCase.setUpClass()
-        MainWindowTest.setUpClass()
-
     def setUp(self):
-        MemoryDBTestCase.setUp(self)
-        MainWindowTest.setUp(self)
+        super().setUp()
+
+        self.run_main()
+        self.waitForWindow()
 
         self.check_count_series_equals(0)
         self.click_add_button()
@@ -66,7 +65,7 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
 
     def test_delete_by_season(self):
         """Tests the removal of a series via context menu, by clicking on a season."""
-        self.expand_series()
+        self.expand(series_number=0)
         self.select(series_number=0, season_number=0)
         self.window.ui.action_remove.trigger()
 
@@ -122,14 +121,15 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
 
             for i in range(season_episode_count):
                 self.check_list_view_displays(check_state, series_number=0,
-                                              season_number=1, episode_number=i,
+                                              season_number=1,
+                                              episode_number=i,
                                               column=0, role=Qt.CheckStateRole)
 
                 self.check_tree_view_displays(
                     "  {} / {}  ".format(target_count, episode_count),
                     series_index)
 
-        self.expand_series()
+        self.expand(series_number=0)
         self.select(series_number=0, season_number=1)
 
         _check_result(Qt.Unchecked)
@@ -144,7 +144,7 @@ class ContextMenuTest(MainWindowTest, MemoryDBTestCase):
         _check_result(Qt.Unchecked)
 
     def test_mark_watched_when_partial_watched(self):
-        self.expand_series()
+        self.expand(series_number=0)
         self.select(series_number=0, season_number=1)
 
         self.mark_episode(series_number=0, season_number=1, episode_number=0)

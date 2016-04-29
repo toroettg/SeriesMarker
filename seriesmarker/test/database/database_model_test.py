@@ -97,5 +97,4 @@ def get_suit():
     return suite
 
 if __name__ == "__main__":
-    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

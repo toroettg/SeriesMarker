@@ -1,4 +1,4 @@
-# ==============================================================================
+# =============================================================================
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 - 2016 Tobias Röttger <toroettg@gmail.com>
@@ -16,12 +16,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
-# ==============================================================================
+# =============================================================================
 
-from logging.handlers import RotatingFileHandler
 import logging
 import os
 import sys
+from logging.handlers import RotatingFileHandler
 
 from PySide.QtGui import QApplication
 
@@ -29,6 +29,7 @@ from seriesmarker.gui.main_window import MainWindow
 from seriesmarker.gui.splash_screen import SplashScreen
 from seriesmarker.persistence.database import db_init, db_get_series
 from seriesmarker.util import config
+from seriesmarker.util.settings import settings
 
 
 def main():
@@ -43,7 +44,10 @@ def main():
         could speed up the application's start.
 
     """
+    _init_paths()
     _init_logging()
+
+    settings.load()
 
     app = QApplication(sys.argv)
 
@@ -65,6 +69,21 @@ def main():
     sys.exit(app.exec_())
 
 
+def _init_paths():
+    """Create application relevant directories if they do not already exist."""
+
+    paths = [
+        config.dirs.user_log_dir,
+        config.dirs.user_config_dir,
+        config.dirs.user_data_dir,
+        config.dirs.user_cache_dir
+    ]
+
+    for directory in paths:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+
 def _init_logging(loglevel=config.loglevel):
     """Initializes logging with the given log level, default as
     specified by the configuration file.
@@ -74,9 +93,6 @@ def _init_logging(loglevel=config.loglevel):
     :param loglevel: The level of logging to use.
 
     """
-    if not os.path.exists(config.dirs.user_log_dir):
-        os.makedirs(config.dirs.user_log_dir)
-
     log_path = os.path.join(config.dirs.user_log_dir,
                             config.application_name + ".log")
 
@@ -98,4 +114,3 @@ def _init_logging(loglevel=config.loglevel):
         logging.critical("Unhandled exception:\n\n", exc_info=exception_info)
 
     sys.excepthook = log_uncaught_exception
-

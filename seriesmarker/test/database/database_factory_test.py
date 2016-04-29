@@ -279,12 +279,10 @@ class DatabaseFactoryTest(MemoryDBTestCase):
         self.assertEqual(role.role, "Narrator, Adult Kevin", "Multi-Role was not joined to single string correctly")
 
 
-
 def get_suit():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(DatabaseFactoryTest))
     return suite
 
 if __name__ == "__main__":
-    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
