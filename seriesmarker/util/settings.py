@@ -197,3 +197,25 @@ class WindowSettings(SettingsDecorator):
         width, length = map(str, value)
         self._section[self._SIZE_WIDTH] = width
         self._section[self._SIZE_LENGTH] = length
+
+class ViewSettings(SettingsDecorator):
+    """Offers convenience methods to access view settings."""
+
+    _SORT_COLUMN = "sort.column"
+    _SORT_ORDER = "sort.order"
+
+    @property
+    def sort(self):
+        column = self._section.getint(self._SORT_COLUMN)
+        order = self._section.getint(self._SORT_ORDER)
+        return column, order
+
+    @sort.setter
+    def sort(self, value):
+        column, order = map(str, value)
+        self._section[self._SORT_COLUMN] = column
+        self._section[self._SORT_ORDER] = order
+
+class MainWindowSettings(WindowSettings, ViewSettings):
+    """Offers convenience methods to access main window settings."""
+    pass

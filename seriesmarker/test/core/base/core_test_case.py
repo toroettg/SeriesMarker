@@ -63,6 +63,8 @@ class CoreTestCase(unittest.TestCase):
         settings.Settings._CONFIG_FILE = os.path.join(
             config.dirs.user_config_dir, "settings.ini")
 
+        settings.settings = settings.Settings()
+
         cls.cleanupData()
 
     @classmethod

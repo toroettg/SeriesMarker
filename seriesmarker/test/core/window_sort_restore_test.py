@@ -21,12 +21,22 @@ import os
 import tempfile
 import unittest
 
+from PySide.QtCore import Qt
+
 from seriesmarker.test.core.base.settings_test_case import SettingsTestCase
 from seriesmarker.util import config
 from seriesmarker.util.settings import settings
 
 
 class WindowSortRestoreTest(SettingsTestCase):
+    """Performs tests related to the main window end-user settings.
+
+     .. note::
+         Cases in this test depend on a specific execution order.
+         Therefore, case names are numbered.
+
+     """
+
     def test_01_initial_behavior(self):
         """Tests handling of non-existing settings file."""
         self.assertEqual(
@@ -68,10 +78,72 @@ class WindowSortRestoreTest(SettingsTestCase):
         self.check_settings_file_contains(
             [
                 "sort.column = 0",
+                "sort.order = 0",
+            ],
+            section="MainWindow"
+        )
+
+    def test_02_sort_order_store(self):
+        """Test whether sort by progress is stored in the settings file."""
+        self.check_settings_file_contains(
+            [
+                "sort.column = 0",
+                "sort.order = 0",
+            ],
+            section="MainWindow"
+        )
+
+        self.run_main()
+
+        target = self.header_center(self.tree_view.header(), 2)
+        self.click(self.tree_view.header().viewport(), target)
+        self.click(self.tree_view.header().viewport(), target)
+
+        self.window.close()
+
+        self.check_settings_file_contains(
+            [
+                "sort.column = 2",
                 "sort.order = 1",
             ],
             section="MainWindow"
         )
+
+    def test_03_sort_order_restore(self):
+        """Test whether sort by progress is restored from the settings file."""
+        self.check_settings_file_contains(
+            [
+                "sort.column = 2",
+                "sort.order = 1",
+            ],
+            section="MainWindow"
+        )
+
+        self.assertEqual(
+            self.tree_view.header().sortIndicatorSection(),
+            0,
+            "Should be sorted by default column."
+        )
+        self.assertEqual(
+            self.tree_view.header().sortIndicatorOrder(),
+            Qt.AscendingOrder,
+            "Should be sorted by default order."
+        )
+
+        self.run_main()
+
+        self.assertEqual(
+            self.tree_view.header().sortIndicatorSection(),
+            2,
+            "Should be sorted by progress column."
+        )
+        self.assertEqual(
+            self.tree_view.header().sortIndicatorOrder(),
+            Qt.DescendingOrder,
+            "Should be sorted by descending order."
+        )
+
+        self.window.close()
 
 def get_suit():
     suite = unittest.TestSuite()

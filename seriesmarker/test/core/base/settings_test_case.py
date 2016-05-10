@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with SeriesMarker.  If not, see <http://www.gnu.org/licenses/>.
 # =============================================================================
-import re
+from PySide.QtCore import Qt
 
 from seriesmarker.test.core.base.application_test_case import \
     ApplicationTestCase
@@ -43,7 +43,14 @@ class SettingsTestCase(ApplicationTestCase):
 
             if section:
                 start = content.find("[{}]".format(section))
-                end = content.find("[", start+1)
+
+                if start == -1:
+                    raise ValueError(
+                        "Could not find section '{}' in settings file.".format(
+                            section)
+                    )
+
+                end = content.find("[", start + 1)
                 content = content[start:end]
 
         self.assertIn(
