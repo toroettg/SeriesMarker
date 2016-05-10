@@ -22,16 +22,15 @@ import os
 import tempfile
 import unittest
 
-from PySide.QtCore import QSize, Qt, QPoint
+from PySide.QtCore import QSize, QPoint, Qt
 
-from seriesmarker.test.core.base.application_test_case import \
-    ApplicationTestCase
+from seriesmarker.test.core.base.settings_test_case import SettingsTestCase
 from seriesmarker.util import config
 from seriesmarker.util.settings import settings
 
 
-class SettingsTest(ApplicationTestCase):
-    """Performs tests related to the handling of end-user settings.
+class WindowStateRestoreTest(SettingsTestCase):
+    """Performs tests related to the main window end-user settings.
 
     .. note::
         Cases in this test depend on a specific execution order.
@@ -86,11 +85,12 @@ class SettingsTest(ApplicationTestCase):
 
         # Test for the defaults, given by the qt designer. Does not
         # check for position as it may vary because of window manager.
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "size.width = 761",
                 "size.length = 642"
-            ]
+            ],
+            section="MainWindow"
         )
 
         self.run_main()
@@ -99,7 +99,7 @@ class SettingsTest(ApplicationTestCase):
         self.window.resize(800, 600)
         self.window.close()
 
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 0",
@@ -116,7 +116,7 @@ class SettingsTest(ApplicationTestCase):
         previous size and position.
 
         """
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 0",
@@ -150,7 +150,7 @@ class SettingsTest(ApplicationTestCase):
     def test_04_store_window_maximized(self):
         """Test if the maximized window state is stored at application exit."""
 
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 0",
@@ -173,7 +173,7 @@ class SettingsTest(ApplicationTestCase):
 
         self.window.close()
 
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 2",
@@ -182,7 +182,7 @@ class SettingsTest(ApplicationTestCase):
 
     def test_05_restore_window_maximized(self):
         """Test if the application's main window is recreated maximized."""
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 2",
@@ -200,7 +200,7 @@ class SettingsTest(ApplicationTestCase):
 
     def test_06_store_window_minimized(self):
         """Test if the minimized window state is stored at application exit."""
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 0",
@@ -223,7 +223,7 @@ class SettingsTest(ApplicationTestCase):
 
         self.window.close()
 
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 1",
@@ -238,7 +238,7 @@ class SettingsTest(ApplicationTestCase):
         application, is to restore it visible to the user.
 
         """
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 1",
@@ -256,7 +256,7 @@ class SettingsTest(ApplicationTestCase):
 
     def test_08_store_window_fullscreen(self):
         """Test if the minimized window state is stored at application exit."""
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 0",
@@ -279,7 +279,7 @@ class SettingsTest(ApplicationTestCase):
 
         self.window.close()
 
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 4",
@@ -288,7 +288,7 @@ class SettingsTest(ApplicationTestCase):
 
     def test_09_restore_window_fullscreen(self):
         """Test if the application's main window is recreated minimized."""
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 4",
@@ -306,7 +306,7 @@ class SettingsTest(ApplicationTestCase):
 
     def test_10_store_window_maximized_minimized(self):
         """Test if the minimized window state is stored at application exit."""
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 0",
@@ -330,7 +330,7 @@ class SettingsTest(ApplicationTestCase):
 
         self.window.close()
 
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 3",
@@ -345,7 +345,7 @@ class SettingsTest(ApplicationTestCase):
         application, is to restore it visible to the user.
 
         """
-        self._check_settings_file_contains(
+        self.check_settings_file_contains(
             [
                 "[MainWindow]",
                 "state = 3",
@@ -364,32 +364,10 @@ class SettingsTest(ApplicationTestCase):
             "MainWindow should be displayed maximized after application start."
         )
 
-    def _check_settings_file_contains(self, lines):
-        with open(settings._CONFIG_FILE) as file:
-            content = file.read()
-            self.assertIn(
-                "\n".join(lines),
-                content
-            )
-
-    def run_main(self):
-        """
-        Ensure the main window is displayed after executing the application.
-
-        :emphasis: `Extends` `.ApplicationTestCase.run_main`
-
-        """
-        super().run_main()
-        self.waitForWindow()
-
-    def reset_window_state(self):
-        """Reset the settings' stored window state."""
-        self.window.setWindowState(Qt.WindowNoState)
-
 
 def get_suit():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(SettingsTest))
+    suite.addTest(unittest.makeSuite(WindowStateRestoreTest))
     return suite
 
 
