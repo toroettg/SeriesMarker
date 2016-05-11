@@ -20,5 +20,6 @@ Submodules
 
    seriesmarker.test.core.core_test_runner
    seriesmarker.test.core.directory_test
-   seriesmarker.test.core.settings_test
+   seriesmarker.test.core.window_sort_restore_test
+   seriesmarker.test.core.window_state_restore_test
 

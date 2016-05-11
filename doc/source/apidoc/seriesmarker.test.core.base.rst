@@ -13,4 +13,5 @@ Submodules
 
    seriesmarker.test.core.base.application_test_case
    seriesmarker.test.core.base.core_test_case
+   seriesmarker.test.core.base.settings_test_case
 
