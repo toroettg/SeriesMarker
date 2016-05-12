@@ -37,7 +37,7 @@ from seriesmarker.persistence.database import db_get_series, db_add_series, \
     db_remove_series, db_commit
 from seriesmarker.persistence.exception import EntityExistsException
 from seriesmarker.persistence.factory.series_factory import SeriesFactory
-from seriesmarker.util.settings import WindowSettings
+from seriesmarker.util.settings import MainWindowSettings
 
 log = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         """
         super().__init__(parent)
 
-        self.settings = WindowSettings("MainWindow")
+        self.settings = MainWindowSettings("MainWindow")
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -102,7 +102,7 @@ class MainWindow(QMainWindow):
                 self.model.add_item(series)
             except EntityExistsException:
                 log.warning("Series '{name}' already exists, "
-                               "ignoring add request".format(
+                            "ignoring add request".format(
                     name=series.series_name))
 
     @Slot()
@@ -311,6 +311,17 @@ class MainWindow(QMainWindow):
             # PySide / Qt4.8 unable to restore minimized window on Windows-OS.
             self.setWindowState(previous_state & ~Qt.WindowMinimized)
 
+        previous_sort = self.settings.sort
+
+        if None not in previous_sort:
+            column, order = previous_sort
+
+            self.ui.tree_view.sortByColumn(
+                column,
+                Qt.SortOrder(order)
+            )
+
+
         event.accept()
 
     def closeEvent(self, event):
@@ -336,6 +347,11 @@ class MainWindow(QMainWindow):
         self.settings.state = int(self.windowState())
         self.settings.position = pos.x(), pos.y()
         self.settings.size = size.width(), size.height()
+
+        self.settings.sort = (
+            self.ui.tree_view.header().sortIndicatorSection(),
+            int(self.ui.tree_view.header().sortIndicatorOrder())
+        )
 
         self.settings.store()
 

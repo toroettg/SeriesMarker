@@ -20,15 +20,17 @@
 
 import unittest
 
-from seriesmarker.test.core import directory_test, settings_test
+from seriesmarker.test.core import directory_test, window_sort_restore_test, \
+    window_state_restore_test
+
 
 def get_suit():
     core_suits = unittest.TestSuite()
 
     suites = [
         directory_test.get_suit(),
-        settings_test.get_suit(),
-
+        window_sort_restore_test.get_suit(),
+        window_state_restore_test.get_suit()
     ]
 
     for suite in suites:

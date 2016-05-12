@@ -129,6 +129,9 @@ class SortingTest(MainWindowMockedSearchMixin, ApplicationTestCase):
                                    list(reversed(result)),
                                    "Sort view after descending sort by name")
 
+        #Restore default sort order.
+        self.click(self.tree_view.header().viewport(), target)
+
     def test_04_sort_season_by_name(self):
         self.expand(series_number=2)
 
